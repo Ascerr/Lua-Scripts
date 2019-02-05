@@ -6,8 +6,6 @@ Where I should put lua scripts?
 
 Add it to dir: MyDocuments\Rifbot\Script\
 
-
-
 ------------------------------------------------
   How to add script using only code? 
 ------------------------------------------------
