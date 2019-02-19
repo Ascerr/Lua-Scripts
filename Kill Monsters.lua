@@ -4,20 +4,19 @@
     Author: 			Ascer - example
 ]]
 
-local TARGET_LIST = {"Cyclops", "wolf"} -- add here monster names
+local TARGET_LIST = {"Cyclops", "Warlock"} -- add here monster names
 local RUNEID = 3155 -- rune have to be visible in containers
-local MAIN_DELAY = {2000, 3000} -- random delay using rune with creatures
 
 -- DONT'T EDIT BELOW THIS LINE
 
 tbl = table.lower(TARGET_LIST)
 
 Module.New("Kill monsters", function (mod)
-    for i, mob in pairs(Creature.getCreatures()) do
+    for i, mob in pairs(Creature.iMonsters(7, false)) do
         if table.find(tbl, string.lower(mob.name)) then
             Self.UseItemWithCreature(mob, RUNEID) -- use rune with creature.
+            wait(500)
             break -- break loop
         end
     end            
-    mod:Delay(MAIN_DELAY[1], MAIN_DELAY[2])
 end)
