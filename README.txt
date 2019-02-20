@@ -1,10 +1,10 @@
-This are examples of lua scripts.
+These are examples of lua scripts.
 
 ------------------------------------------------
         Where I should put lua scripts?
 ------------------------------------------------
 
-Add it to dir: MyDocuments\Rifbot\Script\
+Add it to dir: MyDocuments\Rifbot\Scripts\
 
 ------------------------------------------------
         How to add script using only code? 
