@@ -5,7 +5,7 @@
 ]]
 
 local AMMO = {
-    id = 2667,      -- ammo id
+    id = 3447,      -- ammo id
     amount = 90     -- when amount drop down to .. value restore.
 }    
 
