@@ -4,7 +4,7 @@
     Author: 			Ascer - example
 ]]
 
-local ITEMS = {2148, 2667}              -- items to stack
+local ITEMS = {3031, 3447}              -- items to stack
 local MAIN_DELAY = {300, 700}           -- delay moving items
 
 -- DON'T EDIT BELOW THIS LINE
