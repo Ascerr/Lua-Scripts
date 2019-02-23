@@ -10,7 +10,7 @@ local BELOW = true															-- check for players below you
 local ABOVE = false															-- check for player above you
 local LEVELS = 1															-- search for one floor above or below / limit is 2 / do not check floors below on level 7. To search only on your floor put 0.
 local SAFE_POS = {32318, 32254, 6}											-- safe position to step when player detected {x, y, z}
-local STEP_BACK = {enabled = true, pos = {32318, 32255, 6}, delay = 0.3} 	-- return to previus position when will safe, @eabled - true/false, @pos - {x, y, z}, @delay - minutes
+local STEP_BACK = {enabled = true, pos = {32318, 32255, 6}, delay = 6} 	-- return to previus position when will safe, @eabled - true/false, @pos - {x, y, z}, @delay - minutes
 local RECCONNECT = true														-- reconnect to game when lost connection or game issue @true/false
 
 
