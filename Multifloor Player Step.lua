@@ -1,5 +1,5 @@
 --[[
-    Script Name: 		Multifloor Player Logout
+    Script Name: 		Multifloor Player Step
     Description: 		Step to safe position when character detected on multiple floors.
     Required:			Valid position of safe pos example house door and pos to return sqm front of house. To get this position go to Rifbot -> Options -> GetCurrentPos
     Author: 			Ascer - example
