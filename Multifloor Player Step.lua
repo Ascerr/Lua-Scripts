@@ -9,8 +9,8 @@ local FRIENDS = {"friend1", "friend2"} 										-- list of friends
 local BELOW = true															-- check for players below you
 local ABOVE = false															-- check for player above you
 local LEVELS = 1															-- search for one floor above or below / limit is 2 / do not check floors below on level 7. To search only on your floor put 0.
-local SAFE_POS = {32318, 32254, 6}											-- safe position to step when player detected {x, y, z}
-local STEP_BACK = {enabled = true, pos = {32318, 32255, 6}, delay = 6} 	-- return to previus position when will safe, @eabled - true/false, @pos - {x, y, z}, @delay - minutes
+local SAFE_POS = {32323, 32263, 6}											-- safe position to step when player detected {x, y, z}
+local STEP_BACK = {enabled = true, pos = {32318, 32263, 6}, delay = 0.1} 	-- return to previus position when will safe, @eabled - true/false, @pos - {x, y, z}, @delay - minutes
 local RECCONNECT = true														-- reconnect to game when lost connection or game issue @true/false
 
 
@@ -89,7 +89,7 @@ Module.New("Multifloor Player Step", function (mod)
 				if distance > 0 then
 
 					-- load a direction to step.
-					local dir = Self.getDirectionFromPosition(SAFE_POS[1], SAFE_POS[2], SAFE_POS[3])
+					local dir = Self.getDirectionFromPosition(SAFE_POS[1], SAFE_POS[2], SAFE_POS[3], distance)
 
 					-- step to direction.
 					Self.Step(dir)
@@ -149,7 +149,7 @@ Module.New("Multifloor Player Step", function (mod)
 					if distance > 0 then
 
 						-- load direction to step.
-						local dir = Self.getDirectionFromPosition(STEP_BACK.pos[1], STEP_BACK.pos[2], STEP_BACK.pos[3])
+						local dir = Self.getDirectionFromPosition(STEP_BACK.pos[1], STEP_BACK.pos[2], STEP_BACK.pos[3], distance)
 
 						-- step to this direction.
 						Self.Step(dir)
@@ -225,4 +225,4 @@ Module.New("Multifloor Player Step", function (mod)
 			
 	end
 		
-end)				  
+end) 
