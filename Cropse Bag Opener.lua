@@ -31,7 +31,7 @@ function isItem(array, item)
     
     for i,element in ipairs(array) do
         if table.find(item, element.id) then
-            return true
+            return {id = element.id, count = element.count, slot = (i - 1)}
         end    
     end    
 
@@ -57,14 +57,17 @@ Module.New("Cropse Bag Opener", function ()
             -- load items of containers.
             local items = container.items
 
-            -- check if bag is inside.
-            if isItem(items, BAG_ID) then
+            -- load bag
+            local bag = isItem(items, BAG_ID) 
+
+            -- when bag is inside dead cropse
+            if table.count(bag) > 1 then
 
                 -- check if all items are already collected.
                 if not isItem(items, OPEN_IF_NOT_FOUND_ITEMS) then
 
                     -- finally open bag.
-                    return Container.Open(container.index, BAG_ID, false)
+                    return Container.UseItem(container.index, bag.slot, bag.id, false, 500)
 
                 end
 
