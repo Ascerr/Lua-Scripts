@@ -1,6 +1,6 @@
 --[[
     Script Name: 		Multifloor Creature Step
-    Description: 		Step to safe position when player detected on multiple floors, monster detected on your floor.
+    Description: 		Step to safe position when detect creature on multifloors.
     Required:			Valid position of safe pos example house door and pos to return sqm front of house. To get this position go to Rifbot -> Options -> GetCurrentPos
     Author: 			Ascer - example
 ]]
@@ -49,14 +49,12 @@ function getPlayer(pos)
 			-- when var contains true a player was found
 			if var then
 
-				-- when creature is monster check only self floor.
-				if (Creature.isMonster(player) and pos.z == player.z) or Creature.isPlayer(player) then
+				
+				-- return table with creature
+				return player
 
-					-- return table with creature
-					return player
-
-				end	
-
+				
+			end
 	        end
 
 	    end
