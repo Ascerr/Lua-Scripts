@@ -57,8 +57,6 @@ function getPlayer(pos)
 			end
 	        end
 
-	    end
-
 	end
 
 	-- return false noone player found.
