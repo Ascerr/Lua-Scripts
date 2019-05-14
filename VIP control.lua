@@ -9,13 +9,24 @@ local RELOGIN = {enabled = true, delay = 5} -- relogin to game when player detec
 
 -- DONT'T EDIT BELOW THIS LINE 
 
-local list, logoutTime, printfTime = table.lower(LIST), 0, 0
+local list, logoutTime, printfTime, rec = table.lower(LIST), 0, 0, false
 
 
 Module.New("VIP control", function ()
 	
 	-- when we are connected.
 	if Self.isConnected() then
+
+		-- when rec is true then wait to avoid multiple logouts.
+		if rec then
+
+			-- wait 5000ms
+			wait(5000)
+
+			-- set rec false
+			rec = false
+
+		end	
 		
 		-- check if vip is online
 		if not VIP.isOnline(list) then
@@ -41,6 +52,9 @@ Module.New("VIP control", function ()
 
 	        	-- press enter key
 	            Rifbot.PressKey(13, 3000)
+
+	            -- set status for rec.
+	            rec = true
 
 	        else
 
