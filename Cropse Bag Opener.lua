@@ -13,8 +13,8 @@ local OPEN_IF_NOT_FOUND_ITEMS = {3031, 3492} -- open only if this items not foun
 function getCropse(name)
 
     -- in loop for all cropse names.
-    for _, element in ipairs(CROPSE) do
-        if name:find(element) then
+    for _, element in ipairs(table.lower(CROPSE)) do
+        if string.lower(name):find(element) then
             return true
         end
     end
