@@ -1,7 +1,7 @@
 --[[
     Script Name: 		Pickup Blanks Drop GFBs
-    Description: 		Character will pickup one single rune to handl slot from backpack (this could lay on ground or smth). 
-    					Later throw created rune example GFB to house spot.
+    Description: 		Character will pickup one single rune to hand slot from backpack (this could lay on ground or smth). 
+    				Later throw created rune example GFB to house spot.
     Author: 			Ascer - example
 ]]
 
