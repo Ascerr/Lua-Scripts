@@ -25,8 +25,6 @@ Module.New("Random UH", function ()
     	randomWait = math.random(RANDOM_SLOW_MOTION[1], RANDOM_SLOW_MOTION[2])/1000
     	startTime = os.clock()
 
-    	printf("set time")
-    	
     end
     
     -- when time is already set (our hp was below value)
@@ -34,8 +32,6 @@ Module.New("Random UH", function ()
 
     	-- when time to use rune already come.
     	if (os.clock() - startTime) >= randomWait then
-
-    		printf("time is ok")
 
     		-- check for hpperc. If this is still below value use rune.
     		if hpperc <= hppercBelow then
