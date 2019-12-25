@@ -5,12 +5,12 @@
     Author: 			Ascer - example
 ]]
 
-local FRIENDS = {"friend1", "friend2"} 										-- list of friends
+local FRIENDS = {"Chauncy Billups", "arcantol megatron"} 										-- list of friends
 local BELOW = true															-- check for players below you
 local ABOVE = false															-- check for player above you
 local LEVELS = 1															-- search for one floor above or below / limit is 2 / do not check floors below on level 7. To search only on your floor put 0.
-local SAFE_POS = {32323, 32263, 6}											-- safe position to step when player detected {x, y, z}
-local STEP_BACK = {enabled = true, pos = {32318, 32263, 6}, delay = 0.1} 	-- return to previus position when will safe, @eabled - true/false, @pos - {x, y, z}, @delay - minutes
+local SAFE_POS = {32616, 31914, 5}											-- safe position to step when player detected {x, y, z}
+local STEP_BACK = {enabled = true, pos = {32615, 31914, 5}, delay = 0.9} 	-- return to previus position when will safe, @eabled - true/false, @pos - {x, y, z}, @delay - minutes
 local RECCONNECT = true														-- reconnect to game when lost connection or game issue @true/false
 
 
