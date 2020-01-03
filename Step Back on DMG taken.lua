@@ -104,6 +104,11 @@ Module.New("Step back on DMG taken", function (mod)
 
                 -- show message time to back
                 printf(lastProxy .. " Back within " .. STEP_BACK.delay .. " minutes")
+                    
+            else
+               
+                -- reset time we dont want to back.
+                stepTime = 0 
 
             end
                 
