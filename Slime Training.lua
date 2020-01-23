@@ -5,8 +5,9 @@
 ]]
 
 local MAIN_DELAY = {500, 1800}		-- set your delay
-local MONSTER = "Slime" 			-- monster name
-local RANGE = 1						-- attack when moster distance from self = 1, set more if u're paladin
+local MONSTER = "Slime" 		-- monster name
+local RANGE = 1				-- attack when moster distance from self = 1, set more if u're paladin
+local OFFSET_CREATURE_ADDON = 72	-- addon mob offset in memory (Realesta 68) Retrocores (72)
 
 -- DONT'T EDIT BELOW THIS LINE
 
@@ -21,7 +22,7 @@ Module.New("Slime Training", function (mod)
 			if mob.name == MONSTER then
 				if target == mob.id then
 					mother = mob.id
-					Rifbot.MemoryWrite(mob.addr + 68 , 35, "dword") -- change mother slime to Demon XD working until you change floor or logout
+					Rifbot.MemoryWrite(mob.addr + OFFSET_CREATURE_ADDON , 35, "dword") -- change mother slime to Demon XD working until you change floor or logout
 					Self.Stop() -- stop attack mother.
 					break
 				end
