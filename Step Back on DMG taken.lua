@@ -8,7 +8,7 @@ local STEP_POS = {32323, 32349, 5}  -- our house position or safe area to hide w
 local STEP_BACK = {enabled = false, pos = {32323, 32349, 5}, delay = 6}    -- return to previus position when will safe, @eabled - true/false, @pos - {x, y, z}, @delay - minutes
 
 local KEY_WORDS = {"You lose"}              -- set keyword for activate
-local FRIENDS = {"friend1", "friend2"}      -- friend list to avoid, name with capital letters.
+local FRIENDS = {"Friend1", "Friend2"}      -- friend list to avoid, name with capital letters.
 
 -- DON'T EDIT BELOW THIS LINE
 
