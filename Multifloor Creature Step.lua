@@ -12,7 +12,7 @@ local LEVELS = 1															-- search for one floor above or below / limit is
 local SAFE_POS = {32323, 32263, 6}											-- safe position to step when player detected {x, y, z}
 local STEP_BACK = {enabled = true, pos = {32318, 32263, 6}, delay = 0.1} 	-- return to previus position when will safe, @eabled - true/false, @pos - {x, y, z}, @delay - minutes
 local RECCONNECT = true														-- reconnect to game when lost connection or game issue @true/false
-
+local USE_ON_MULTIPLE_CHARS = false											-- false or true if true then char will use x2 step to go into door and alana sio to out of house.
 
 -- DON'T EDIT BELOW THIS LINE
 
@@ -94,7 +94,18 @@ Module.New("Multifloor Creature Step", function (mod)
 
 					-- step to direction.
 					Self.Step(dir)
-
+					
+					-- when we use it on multiple chars
+					if USE_ON_MULTIPLE_CHARS then
+					  	
+						-- wait some time 
+						wait(200)
+						
+						-- extra step
+						Self.Step(dir)
+							
+					end
+						
 					-- show message about stepping.
 					printf("Stepping to safe pos due a player: " .. player.name)
 
@@ -151,10 +162,18 @@ Module.New("Multifloor Creature Step", function (mod)
 
 						-- load direction to step.
 						local dir = Self.getDirectionFromPosition(STEP_BACK.pos[1], STEP_BACK.pos[2], STEP_BACK.pos[3], distance)
-
+			
 						-- step to this direction.
 						Self.Step(dir)
-
+						
+						-- if we use on multiple chars
+						if USE_ON_MULTIPLE_CHARS then
+								
+							-- say alana sio to kick char from house
+							Self.Say("alana sio")
+						
+						end		
+								
 						-- wait some time to avoid over dashing.
 						wait(500, 1000)
 
