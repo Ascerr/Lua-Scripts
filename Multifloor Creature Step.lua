@@ -141,6 +141,10 @@ Module.New("Multifloor Creature Step", function (mod)
 		        	
 					end
 					
+					-- set player.name and date
+					stepTime = os.time()
+					lastPlayer = player.name	
+					
 				end	
 
 			end	
