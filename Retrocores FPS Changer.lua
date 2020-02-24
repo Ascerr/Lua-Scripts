@@ -4,7 +4,7 @@
     Author: 			Ascer - example
 ]]
 
-local FPS = 25 -- amount of fps to set
+local FPS = 5 -- amount of fps to set
 local FPS_ADDRESS = 0x525FF4 -- memory address with fps value to set (edit only when game update if you've knowladge)
 
 -- DON'T EDIT BELOW THIS LINE
