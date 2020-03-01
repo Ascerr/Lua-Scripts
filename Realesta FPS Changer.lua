@@ -5,7 +5,7 @@
 ]]
 
 local FPS = 333333 -- value to set into memory. while 333333 is 3 fps, 1000000 is 1 fps and 100000 is 10 fps  
-local FPS_ADDRESS = 0x43C608 -- memory address with fps value to set (edit only when game update if you've knowladge)
+local FPS_ADDRESS = 0x43D608 -- memory address with fps value to set (edit only when game update if you've knowladge)
 
 -- DON'T EDIT BELOW THIS LINE
 
