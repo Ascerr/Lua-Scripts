@@ -4,7 +4,7 @@
     Author: 			Ascer - example
 ]]
 
-local ENERGY_RING = {on = 3089, off = 3052} -- set id for ering on - equiped, off - not
+local ENERGY_RING = {on = 3088, off = 3051} -- set id for ering on - equiped, off - not
 local HPPERC = 75							-- when hpperc below or equal equip ring else dequip
 
 Module.New("Switch Ering", function (mod)
