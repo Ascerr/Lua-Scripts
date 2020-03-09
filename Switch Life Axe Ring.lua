@@ -6,7 +6,7 @@
 
 local LIFE_RING = {on = 3089, off = 3052}       -- set id for life ring on - equiped, off - not
 local AXE_RING = {on = 3095, off = 3092}        -- set id for axe ring on - equiped, off - not
-local MONSTERS = {"Dragon", "Dragon Lord", "Rat"}        -- set monsters names with Capital letter.
+local MONSTERS = {"Dragon", "Dragon Lord"}      -- set monsters names with Capital letter.
 local RANGE = 2                                 -- equip ring when moster distance sqm.
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
