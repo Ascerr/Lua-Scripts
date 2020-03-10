@@ -1,11 +1,11 @@
 --[[
     Script Name: 		Step back on DMG taken 
-    Description: 		Step to ground x, y, z when any dmg taken. // Edited: 2019-02-15, Added: step to position far than 1 sqm
+    Description: 		Step to ground x, y, z when any dmg taken.
     Author: 			Ascer - example
 ]]
 
 local STEP_POS = {32323, 32349, 5}  -- our house position or safe area to hide when dmg
-local STEP_BACK = {enabled = false, pos = {32323, 32349, 5}, delay = 6}    -- return to previus position when will safe, @eabled - true/false, @pos - {x, y, z}, @delay - minutes
+local STEP_BACK = {enabled = false, logout = false, pos = {32323, 32349, 5}, delay = 6}    -- return to previus position when will safe, @eabled - true/false, @logout - true/false after step to save pos @pos - {x, y, z}, @delay - minutes
 
 local KEY_WORDS = {"You lose"}              -- set keyword for activate
 local FRIENDS = {"Friend1", "Friend2"}      -- friend list to avoid, name with capital letters.
@@ -179,9 +179,27 @@ Module.New("Step back on DMG taken", function ()
 
                     -- reset time we dont want to back.
                     stepTime = 0
-
-                    -- set backPos false
-                    backPos = false    
+                    
+                    -- when logout enabled.
+                    if STEP_BACK.logout then
+                        
+                       -- if no pz flag
+                       if not Self.isInFight() then
+                                
+                            -- logout.
+                            Self.Logout()
+                            
+                           -- set backPos false
+                           backPos = false        
+                                
+                       end         
+                     
+                    else
+                          
+                       -- set backPos false
+                       backPos = false        
+                            
+                    end 
 
                 end
                     
