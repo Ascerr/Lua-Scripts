@@ -1,12 +1,12 @@
 --[[
-    Script Name: 		Step back on DMG taken 
-    Description: 		Step to ground x, y, z when any dmg taken.
-    Author: 			Ascer - example
+    Script Name:        Step back on DMG taken 
+    Description:        Step to ground x, y, z when any dmg taken.
+    Author:             Ascer - example
 ]]
 
-local STEP_POS = {32323, 32349, 5}  -- our house position or safe area to hide when dmg
-local STEP_BACK = {enabled = false, logout = false, pos = {32323, 32349, 5}, delay = 6}    -- return to previus position when will safe, @eabled - true/false, @logout - true/false after step to save pos @pos - {x, y, z}, @delay - minutes
-
+local STEP_POS = {32383, 32236, 7}  -- our house position or safe area to hide when dmg
+local STEP_BACK = {enabled = true, logout = false, pos = {32383, 32237, 7}, delay = 6}    -- return to previus position when will safe, @eabled - true/false, @logout - true/false after step to save pos @pos - {x, y, z}, @delay - minutes
+local IF_PUSHED_GO_TO_SAFE_POS = true       -- when your char will pushed then will back to safe pos (you can edit wait time inside file to make step faster.)
 local KEY_WORDS = {"You lose"}              -- set keyword for activate
 local FRIENDS = {"Friend1", "Friend2"}      -- friend list to avoid, name with capital letters.
 
@@ -72,14 +72,38 @@ Module.New("Step back on DMG taken", function ()
     -- load if we found proxy key
     local proxy = getProxy(KEY_WORDS, FRIENDS)
 
+    -- load self pos.
+    local selfPos = Self.Position()
+
+    -- set var default false.
+    local var = false
+
+    -- when param contains true
+    if IF_PUSHED_GO_TO_SAFE_POS then
+
+        -- set var to check range.
+        var = (selfPos.x ~= STEP_BACK.pos[1] and selfPos.x ~= STEP_POS[1]) or (selfPos.y ~= STEP_BACK.pos[2] and selfPos.y ~= STEP_POS[2])
+
+    end    
+
     -- if proxy is different than ""
-    if proxy ~= "" then
+    if proxy ~= "" or var then
 
         -- set param isDmg true
         isDmg = true
 
-        -- store last proxy
-        lastProxy = proxy
+        -- if var set diff msg.
+        if var then
+
+            -- set msg about pushing.
+            lastProxy = "You are pushed by some player."
+
+        else    
+            
+            -- store last proxy
+            lastProxy = proxy
+
+        end 
 
     end    
 
@@ -171,6 +195,23 @@ Module.New("Step back on DMG taken", function ()
 
                     -- show message time to back
                     printf(lastProxy .. " Back within " .. STEP_BACK.delay .. " minutes")
+
+                    -- load distance to pos.
+                    local distance = Self.DistanceFromPosition(STEP_BACK.pos[1], STEP_BACK.pos[2], STEP_BACK.pos[3])
+
+                    -- when dostance is equal 0 we back to pos.
+                    if distance == 0 then  
+                        
+                        -- set message to console.
+                        printf("Successfully return to position due a " .. lastProxy)
+
+                        -- reset time
+                        stepTime = 0
+
+                        -- set backPos false
+                        backPos = false
+
+                    end    
 
                 else
                     
