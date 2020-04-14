@@ -19,7 +19,7 @@ Module.New("Pickup Free items", function ()
 				if table.find(FREE_ITEMS, item.id) then
 					
 					-- Pickup item
-					Self.PickupItem(square.x, square.y, square.z, item.id, 1, 0, 0)
+					Self.PickupItem(square.x, square.y, square.z, item.id, item.count, 0, 0)
 
 					break
 	
