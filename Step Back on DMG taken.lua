@@ -4,15 +4,43 @@
     Author:             Ascer - example
 ]]
 
-local STEP_POS = {32383, 32236, 7}  -- our house position or safe area to hide when dmg
-local STEP_BACK = {enabled = true, logout = false, pos = {32383, 32237, 7}, delay = 6}    -- return to previus position when will safe, @eabled - true/false, @logout - true/false after step to save pos @pos - {x, y, z}, @delay - minutes
+local STEP_POS = {32312, 31795, 6}  -- our house position or safe area to hide when dmg
+local STEP_BACK = {enabled = true, logout = false, pos = {32311, 31795, 6}, delay = 6}    -- return to previus position when will safe, @eabled - true/false, @logout - true/false after step to save pos @pos - {x, y, z}, @delay - minutes
 local IF_PUSHED_GO_TO_SAFE_POS = true       -- when your char will pushed then will back to safe pos (you can edit wait time inside file to make step faster.)
+local IF_CREATURE_GO_TO_SAFE_POS = false    -- when creature, monster or player go to safe pos.
 local KEY_WORDS = {"You lose"}              -- set keyword for activate
 local FRIENDS = {"Friend1", "Friend2"}      -- friend list to avoid, name with capital letters.
 
 -- DON'T EDIT BELOW THIS LINE
 
 local stepTime, lastProxy, isDmg, backPos = 0, "", false, false
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Function:       getCreature()
+--> Description:    Get creature monster or player on screen.
+--> Class:          Self
+--> Params:         None              
+--> Return:         boolean true or false
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+function getCreature()
+
+    -- inside loop for all found creatures on multiple floors do:
+    for i, c in pairs(Creature.iCreatures(7, false)) do
+
+        -- when we can not find a friends and creature is not NPC.
+        if not table.find(FRIENDS, player.name) and not Creature.isNpc(c) then
+            
+            -- return creature.    
+            return true
+
+        end        
+        
+    end
+
+    -- return false noone player found.
+    return false
+
+end 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 --> Function:       getProxy(keywords, friends)
@@ -76,7 +104,7 @@ Module.New("Step back on DMG taken", function ()
     local selfPos = Self.Position()
 
     -- set var default false.
-    local var = false
+    local var, var2 = false, false
 
     -- when param contains true
     if IF_PUSHED_GO_TO_SAFE_POS then
@@ -84,10 +112,18 @@ Module.New("Step back on DMG taken", function ()
         -- set var to check range.
         var = (selfPos.x ~= STEP_BACK.pos[1] and selfPos.x ~= STEP_POS[1]) or (selfPos.y ~= STEP_BACK.pos[2] and selfPos.y ~= STEP_POS[2])
 
+    end
+
+    -- when we check for creatures too.
+    if IF_CREATURE_GO_TO_SAFE_POS then
+
+        -- load creatures
+        var2 = getCreature()
+
     end    
 
     -- if proxy is different than ""
-    if proxy ~= "" or var then
+    if proxy ~= "" or var or var2 then
 
         -- set param isDmg true
         isDmg = true
@@ -97,6 +133,11 @@ Module.New("Step back on DMG taken", function ()
 
             -- set msg about pushing.
             lastProxy = "You are pushed by some player."
+
+        elseif var2 then
+        
+            -- set msg about creature.
+            lastProxy = "Step back due creature."    
 
         else    
             
@@ -151,8 +192,8 @@ Module.New("Step back on DMG taken", function ()
     -- if no dmg taken or we are in house    
     else
 
-        -- if backPos is enabled
-        if backPos then
+        -- if backPos is enabled and not creatures.
+        if backPos and not var2 then
 
             -- when time is valid.
             if os.time() - stepTime > (STEP_BACK.delay * 60) then
@@ -169,7 +210,7 @@ Module.New("Step back on DMG taken", function ()
                     Self.Step(dir)
 
                     -- You can also use alana sio to tp yourself.
-                    -- Self.Say("alana sio")
+                    Self.Say("alana sio")
 
                     -- wait some time to avoid over dashing.
                     wait(500, 1000)
