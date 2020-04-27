@@ -14,7 +14,6 @@ local ENTER_GAME_POS = {x = 120, y = 500} -- position x, y of enter game button 
 --> Params:
 -->					@x - number position x to click Enter Game button.
 -->					@y - number position y to click Enter Game button
--->					@side - number 0 = left mouse, 1 = right mouse.
 --> Return: 		boolean true or false.
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 function customReconnect(x, y)
