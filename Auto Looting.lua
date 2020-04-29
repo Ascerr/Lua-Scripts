@@ -43,7 +43,7 @@ function sortItems()
 				for k, lootCont in ipairs(LOOT) do
 
 					-- check if table contains loot items and index is different.
-					if table.find(lootCont.items, item.id) and (i-1) ~= lootCont.index then
+					if table.find(lootCont.items, item.id) and (cont.index) ~= lootCont.index then
 
 						-- get empty slot in loot bp.
 						local destCont = Container.getInfo(lootCont.index)
@@ -58,7 +58,7 @@ function sortItems()
 						end
 
 						-- move item to destination container.
-						return Container.MoveItemToContainer((i-1), (j-1), lootCont.index, (toSlot -1), item.id, item.count, math.random(DELAY[1], DELAY[2]))
+						return Container.MoveItemToContainer(cont.index, (j-1), lootCont.index, (toSlot -1), item.id, item.count, math.random(DELAY[1], DELAY[2]))
 
 					end
 				
@@ -71,6 +71,7 @@ function sortItems()
 	end
 
 end	
+
 
 
 Module.New("Auto Looting", function (mod)
