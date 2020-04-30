@@ -4,7 +4,8 @@
     Author: 			Ascer - example
 ]]
 
-local HEALTH = 200  -- when hp points below then disable bot else enable
+local HEALTH = 30  -- when hp points below then disable bot else enable
+local WAIT = 20		-- wait 20 seconds before enable bot again when you health growth.
 
 
 -- DONT'T EDIT BELOW THIS LINE 
@@ -27,6 +28,9 @@ Module.New("Stop Bot on Health", function ()
         -- if not is running bot
         if not Rifbot.isEnabled() then
             
+	    -- wait time
+	    wait(WAIT)
+				
             -- enable bot 
             Rifbot.setEnabled(true) 
 
