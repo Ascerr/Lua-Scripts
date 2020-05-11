@@ -10,7 +10,8 @@ local BACKPACK_ID = 2854		-- id of backpack with manafluids
 -- DON'T EDIT BELOW
 
 Module.New("Open Backpack for MF", function(mod)
-	if not Container.FindItem(MF_ID) then
+	local mf = Container.FindItem(MF_ID)
+	if not mf or (mf and mf.count ~= MANA_FLUID.count) then
 		local newCont = Container.FindItem(BACKPACK_ID) 
 		if table.count(newCont) > 1 then
 			Container.UseItem(newCont.index, newCont.slot, newCont.id, false) -- open new container in this same index
