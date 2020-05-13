@@ -1,6 +1,6 @@
 --[[
     Script Name:        Bed Regeneration
-    Description:        Relogin tom game every some time for a couple of seconds for make runes example and use bed (sleep)
+    Description:        Relogin to game every some time for a couple of seconds for make runes and use bed (sleep)
     Author:             Ascer - example
 ]]
 
