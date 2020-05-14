@@ -28,7 +28,7 @@ function getCreature()
     for i, c in pairs(Creature.iCreatures(7, false)) do
 
         -- when we can not find a friends and creature is not NPC.
-        if not table.find(FRIENDS, player.name) and not Creature.isNpc(c) then
+        if not table.find(FRIENDS, c.name) and not Creature.isNpc(c) then
             
             -- return creature.    
             return true
