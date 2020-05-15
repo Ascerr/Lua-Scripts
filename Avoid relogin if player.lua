@@ -81,31 +81,31 @@ Module.New("Avoid relogin if player", function ()
 
 			end	
 
-		end	
+			-- when check for player is enabled.
+			if checkForPlayer then
 
-		-- when check for player is enabled.
-		if checkForPlayer then
+				-- when time difference is ok
+				if os.clock() - checkForPlayerTime <= SEARCH_PLAYER_TIME then
 
-			-- when time difference is ok
-			if os.clock() - checkForPlayerTime <= SEARCH_PLAYER_TIME then
+					-- when player detected.
+					if getPlayer() then
 
-				-- when player detected.
-				if getPlayer() then
+						-- set param logout true.
+						forceLogout = true
 
-					-- set param logout true.
-					forceLogout = true
+					end
 
-				end
+				else
 
-			else
-			
-				-- reset time and checking
-				checkForPlayer = false
-				checkForPlayerTime = 0	
+					-- reset time and checking
+					checkForPlayer = false
+					checkForPlayerTime = 0	
 
-			end	
+				end	
 
-		end	
+			end
+				
+		end		
 
 	else
 
