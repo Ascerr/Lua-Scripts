@@ -72,14 +72,12 @@ Module.New("Avoid relogin if player", function ()
 					-- set time to calculate how long we will checking.
 					checkForPlayerTime = os.clock()
 
-				else
-					
-					-- rest time, we was short offline example lag in game.	
-					logoutStartTime = 0
-
 				end	
 
-			end	
+				-- rest time.	
+				logoutStartTime = 0
+
+			end
 
 			-- when check for player is enabled.
 			if checkForPlayer then
@@ -96,16 +94,16 @@ Module.New("Avoid relogin if player", function ()
 					end
 
 				else
-
+				
 					-- reset time and checking
 					checkForPlayer = false
 					checkForPlayerTime = 0	
 
 				end	
 
-			end
-				
-		end		
+			end			
+
+		end	
 
 	else
 
