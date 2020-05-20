@@ -27,5 +27,5 @@ Module.New("Pickup MF around you", function (mod)
 			end			
 		end
 	end
-	mod:Delay(300, 500)	
+	mod:Delay(1000)	
 end) 
