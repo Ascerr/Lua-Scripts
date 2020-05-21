@@ -6,7 +6,7 @@
 ]]
 
 local HELMET = 3229    -- id of helmet of ancients (used) no longer regenerate hp/mana, 
-local RUBBY = {id = 3030, slot = SLOT_AMMO} -- if of rubby to charge helmet, (slot) in equipment where rubbies are located.
+local RUBBY = {id = 3030, slot = SLOT_AMMO} -- id of rubby to charge helmet, (slot) in equipment where rubbies are located.
 
 -- DONT'T EDIT BELOW THIS LINE
 
