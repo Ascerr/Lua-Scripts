@@ -5,14 +5,14 @@
     Author: 			Ascer - example
 ]]
 
-local FRIENDS = {"friend1", "friend2"} 										-- list of friends
+local FRIENDS = {"friend1", "friend2"} 										-- list of friends or use in Rifbot v1.64+ func Rifbot.FriendsList()
 local BELOW = true															-- check for players below you
 local ABOVE = false															-- check for player above you
-local LEVELS = 1															-- search for one floor above or below / limit is 2 / do not check floors below on level 7. To search only on your floor put 0.
-local SAFE_POS = {32323, 32263, 6}											-- safe position to step when player detected {x, y, z}
-local STEP_BACK = {enabled = true, pos = {32318, 32263, 6}, delay = 5} 	-- return to previus position when will safe, @eabled - true/false, @pos - {x, y, z}, @delay - minutes
+local LEVELS = 0															-- search for one floor above or below / limit is 2 / do not check floors below on level 7. To search only on your floor put 0.
+local SAFE_POS = {32387, 32268, 5}											-- safe position to step when player detected {x, y, z}
+local STEP_BACK = {enabled = true, pos = {32386, 32268, 5}, delay = 5} 	    -- return to previus position when will safe, @eabled - true/false, @pos - {x, y, z}, @delay - minutes
 local RECCONNECT = true														-- reconnect to game when lost connection or game issue @true/false
-
+local DASH_STEP = true														-- if any character stay in house door set true to dash within pos.
 
 -- DON'T EDIT BELOW THIS LINE
 
@@ -102,7 +102,17 @@ Module.New("Multifloor Player Step", function (mod)
 					lastPlayer = player.name
 
 					-- wait some time to avoid over dashing.
-					wait(500, 1000)
+					wait(200)
+
+					-- when dash is enabled
+					if DASH_STEP then
+						
+						-- dash
+						Self.Step(dir)
+
+						wait(200)
+
+					end	
 
 				-- we are on safe pos.
 				else	
@@ -153,6 +163,9 @@ Module.New("Multifloor Player Step", function (mod)
 
 						-- step to this direction.
 						Self.Step(dir)
+
+						-- say alana sio
+						Self.Say("alana sio")
 
 						-- wait some time to avoid over dashing.
 						wait(500, 1000)
