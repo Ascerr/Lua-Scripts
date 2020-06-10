@@ -5,7 +5,7 @@
 ]]
             
 local PLAYERS = 1                           -- amount of players on screen to put ring
-local RING = 3151                           -- ID of no-active ring.
+local RING = 3051                           -- ID of no-active ring.
 local RING_ACTIVE = 3088                    -- id of active ring in eq.
 local DEQUIP = true                         -- true/false dequip ring when players leave screen.
 local SAFE_LIST = {"Friend1", "Friend2"}    -- add here friends to avoid.
