@@ -1,16 +1,18 @@
 --[[
     Script Name:        Party Training
-    Description:        Attack player if hp above x % and stop attack when below.
+    Description:        Attack player if hp above x % and attack other if meet requirements.
     Author:             Ascer - example
 ]]
 
 
 local TRAINING_PLAYER = {
-	name = "Player Name",
+	names = {"Player Name", "Player Name2", "Player Name3"},
 	hpperc = 50
 }
 
 -- DON'T EDIT BELOW THIS LINE
+
+targets = table.lower(TRAINING_PLAYER.names)
 
 Module.New("Party Training", function (mod)
 
@@ -27,7 +29,7 @@ Module.New("Party Training", function (mod)
             local player = players[i]
             
             -- check for name
-            if string.lower(TRAINING_PLAYER.name) == string.lower(player.name) then
+            if table.find(targets, string.lower(player.name)) then
 
             	-- when hpperc is above we can attack.
             	if player.hpperc > TRAINING_PLAYER.hpperc then
