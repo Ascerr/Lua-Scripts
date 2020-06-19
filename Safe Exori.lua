@@ -9,7 +9,7 @@ local MANA = 200						-- min mana need to cast spell
 local FRIENDS = {"Friend1", "Friend2"} 	-- list of friends we can use exori Capital letters like a Character Name
 local MONSTERS_AMOUNT_TO_USE = 4		-- min monsters amount to cast spell
 local DONT_CAST_WHEN_PLAYER_DIST = 2	-- don't use spell when player distance from self is equal or below this sqms.
-
+local SELF_MIN_HPPERC = 70              -- don't cast spell if your character health percent is below this value
 
 -- DON'T EDIT BELOW THIS LINE.
 
@@ -85,7 +85,7 @@ end
 Module.New("Safe Exori", function ()
 
 	-- check for mana
-	if Self.Mana() >= MANA then
+	if Self.Mana() >= MANA and Self.HealthPercent() >= SELF_MIN_HPPERC then
 
 		-- if time is ok.
 		if os.time() - useSpellTime >= 2 then
