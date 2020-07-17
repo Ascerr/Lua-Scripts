@@ -23,7 +23,7 @@ Module.New("Charge Ancient Helmet with Rubby", function (mod)
         if item ~= false then
             
             -- use rubby on helmet.
-            Container.UseItemWithEquipment(item.index, item.slot, item.id, SLOT_HEAD, HELMET)
+            Container.UseItemWithEquipmentOnContainer(SLOT_HEAD, HELMET, item.index, item.slot, item.id)
 
         end    
         
