@@ -7,8 +7,8 @@
 local FRIENDS = {"friend1", "friend2"} 		-- list of friends
 local BELOW = true							-- check for players below you
 local ABOVE = false							-- check for player above you
-local LEVELS = 1							-- search for one floor above or below / limit is 2 / do not check floors below on level 7
-local RELOGIN = {enabled = true, delay = 6} -- relogin to game when player detected or lost connection. enabled = true/false, delay = 6 min or immediately when lost connection
+local LEVELS = 2							-- search for one floor above or below / limit is 2 / do not check floors below on level 7
+local RELOGIN = {enabled = false, delay = 6} -- relogin to game when player detected or lost connection. enabled = true/false, delay = 6 min or immediately when lost connection
 
 -- DON'T EDIT BELOW THIS LINE
 
@@ -45,7 +45,16 @@ Module.New("Multifloor Player Logout", function (mod)
 	        end	
 	        if os.clock() - logoutTime > (60 * RELOGIN.delay) then
 	            Rifbot.PressKey(13, 2000)  -- press enter key 
-	        end   
+	        end
+	    else
+	    	if logoutTime ~= -1 then
+	    		if LAST_PLAYER ~= "" then
+	        		printf("[" .. LOGOUT_TIME .. "] Successfully logout due a player detected [" .. LAST_PLAYER .. "] Relogin is disabled.")
+	        	else
+	        		printf("You lost connection to game. Relogin is disabled.")	
+	        	end	
+	        	logoutTime = -1
+	    	end       
 	    end                
 	end												
 end)
