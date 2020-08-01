@@ -15,7 +15,7 @@ Module.New("Stop Bot on Player", function ()
     for i = 1, #players do
         local player = players[i]
         if not table.find(list, string.lower(player.name)) then
-            return Rifbot.setEnabled(false) -- disable player when player on screen.
+            return Rifbot.setEnabled(false) -- disable bot when player on screen.
         end
     end
     Rifbot.setEnabled(true) -- enable bot not players found
