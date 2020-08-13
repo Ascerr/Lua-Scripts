@@ -22,7 +22,7 @@ Module.New("Eat Food", function (mod)
             useTries = math.random(USE_TRIES[1], USE_TRIES[2]) -- set random tries
         else
             if (os.clock() - useTime) >= useDelay and Self.isConnected() then -- check for time and connection
-                Map.UseItem(HOUSE_DOOR[1], HOUSE_DOOR[2], HOUSE_DOOR[3], FOOD_ID, 0)
+                Map.UseItem(HOUSE_DOOR[1], HOUSE_DOOR[2], HOUSE_DOOR[3], FOOD_ID, 1, 0) -- using item on stack nr 1
                 useTime = os.clock()
                 useDelay = math.random(USE_DELAY[1], USE_DELAY[2])/1000
                 tries = tries + 1
