@@ -42,6 +42,9 @@ Module.New("VIP control", function ()
 			
 			-- logout
 			Self.Logout()
+
+			-- disable runemaking.
+			noBlanks = true
 			
 			-- set message to Rifbot console
 			printf("Logged out due a no players in vip list.")
