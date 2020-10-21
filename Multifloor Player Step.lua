@@ -164,8 +164,8 @@ Module.New("Multifloor Player Step", function (mod)
 						-- step to this direction.
 						Self.Step(dir)
 
-						-- say alana sio
-						Self.Say("alana sio")
+						-- You can also use alana sio to tp yourself.
+                   				Self.Say("alana sio \"" .. Self.Name())
 
 						-- wait some time to avoid over dashing.
 						wait(500, 1000)
