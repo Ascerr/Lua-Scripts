@@ -4,7 +4,7 @@
     Author: 			Ascer - example
 ]]
 
-local MANA = 200  -- when mana points below then enable bot else disable
+local MANA = 120  -- when mana points below then enable bot else disable
 
 
 -- DONT'T EDIT BELOW THIS LINE 
