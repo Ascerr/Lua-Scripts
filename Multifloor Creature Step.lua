@@ -174,7 +174,7 @@ Module.New("Multifloor Creature Step", function (mod)
 						if USE_ON_MULTIPLE_CHARS then
 								
 							-- say alana sio to kick char from house
-							Self.Say("alana sio")
+							Self.Say("alana sio \"" .. Self.Name())
 						
 						end		
 								
