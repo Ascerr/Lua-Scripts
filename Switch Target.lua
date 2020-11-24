@@ -59,7 +59,7 @@ function getNewTarget(list, range)
 	    	local creature = creatures[i]
 
 	    	-- check if valid name
-	    	if table.find(list, creature.name) then
+	    	if table.find(list, creature.name) and creature.hpperc > HPPERC then
 
 	    		-- we found creature return.
 	    		return creature
