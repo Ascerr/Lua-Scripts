@@ -29,7 +29,7 @@ function getCreature()
     for i, c in pairs(Creature.iPlayers(7, false)) do
 
         -- when we can not find a friends..
-        if not table.find(FRIENDS, c.name) then
+        if not table.find(FRIENDS, string.lower(c.name)) then
             
             -- return creature.    
             return os.date("%X") .. " " .. c.name .. " just appear on screen."
