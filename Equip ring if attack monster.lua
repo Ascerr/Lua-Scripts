@@ -40,7 +40,7 @@ Module.New("Equip ring if attack monster", function ()
 		local attack = getAttackedMonster()
 
 		-- when is target
-		if table.count(attack) > 2 then
+		if attack ~= nil then
 
 			-- check if creature has valid name.
 			if table.find(MONSTERS, string.lower(attack.name)) then
