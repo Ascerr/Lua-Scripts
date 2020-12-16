@@ -12,7 +12,8 @@ local LEVELS = 0															-- search for one floor above or below / limit is
 local SAFE_POS = {32387, 32268, 5}											-- safe position to step when player detected {x, y, z}
 local STEP_BACK = {enabled = true, pos = {32386, 32268, 5}, delay = 5} 	    -- return to previus position when will safe, @eabled - true/false, @pos - {x, y, z}, @delay - minutes
 local RECCONNECT = true														-- reconnect to game when lost connection or game issue @true/false
-local DASH_STEP = true														-- if any character stay in house door set true to dash within pos.
+local DASH_STEP = true														-- if any character stay in house door set true to dash within pos. It also allow to later use alana sio.
+local HIDE_IF_SKULL = false													-- hide (make step to house) when white or red skull appear on screen.
 
 -- DON'T EDIT BELOW THIS LINE
 
@@ -46,8 +47,10 @@ function getPlayer(pos)
 			-- load complicated var to check which players we searching, above, belowe or both and also amount of levels
 			local var = (BELOW and (pos.z - player.z) <= 0 and (pos.z - player.z) >= (-LEVELS)) or (ABOVE and (pos.z - player.z) >= 0 and (pos.z - player.z) <= LEVELS)
 			
-			-- when var contains true a player was found
-			if var then
+			local var2 = ((HIDE_IF_SKULL and Creature.isSkull(player) >= SKULL_WHITE) or (not HIDE_IF_SKULL))
+
+			-- when var contains true then player was found and var2 contains true player is skulled.
+			if var and var2 then
 
 				-- return table with creature
 				return player
@@ -164,8 +167,13 @@ Module.New("Multifloor Player Step", function (mod)
 						-- step to this direction.
 						Self.Step(dir)
 
-						-- You can also use alana sio to tp yourself.
-                   				Self.Say("alana sio \"" .. Self.Name())
+						-- when dashing is enabled.
+						if DASH_STEP then
+
+							-- You can also use alana sio to tp yourself.
+	                   		Self.Say("alana sio \"" .. Self.Name())
+
+	                   	end	
 
 						-- wait some time to avoid over dashing.
 						wait(500, 1000)
