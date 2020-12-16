@@ -14,6 +14,7 @@ local STEP_BACK = {enabled = true, pos = {32386, 32268, 5}, delay = 5} 	    -- r
 local RECCONNECT = true														-- reconnect to game when lost connection or game issue @true/false
 local DASH_STEP = true														-- if any character stay in house door set true to dash within pos. It also allow to later use alana sio.
 local HIDE_IF_SKULL = false													-- hide (make step to house) when white or red skull appear on screen.
+local PLAY_SOUND = true														-- notify when character making step to house.
 
 -- DON'T EDIT BELOW THIS LINE
 
@@ -99,6 +100,14 @@ Module.New("Multifloor Player Step", function (mod)
 
 					-- show message about stepping.
 					printf("Stepping to safe pos due a player: " .. player.name)
+
+					-- when able to play sound
+					if PLAY_SOUND then
+
+						-- play sound
+						Rifbot.PlaySound("Creature Detected.mp3")
+
+					end	
 
 					-- set player.name and date
 					stepTime = os.time()
