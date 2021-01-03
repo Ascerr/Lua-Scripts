@@ -4,7 +4,7 @@
     Author:             Ascer - example
 ]]
 
-local SOUL = 50		-- whe your soul points will equal or below this amount play sound.
+local SOUL = 50		-- when your soul points will equal or below this amount play sound.
 
 --  DON'T EDIT BELOW THIS LINE
 
