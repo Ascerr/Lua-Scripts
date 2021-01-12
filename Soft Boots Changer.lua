@@ -4,8 +4,8 @@
     Author: 			Ascer - example
 ]]
 
-local SOFT_BOOTS_NEW_ID = 3549          -- id of new soft boots 
-local SOFT_BOOTS_USING = 3246           -- id of already using soft boots on feet.
+local SOFT_BOOTS_NEW_ID = 6529          -- id of new soft boots 
+local SOFT_BOOTS_USING = 3549           -- id of already using soft boots on feet.
 
 -- DON'T EDIT BELOW THIS LINE
 
