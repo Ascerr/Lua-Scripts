@@ -10,9 +10,29 @@ local SOFT_BOOTS_USING = 3246           -- id of already using soft boots on fee
 -- DON'T EDIT BELOW THIS LINE
 
 Module.New("Soft Boots Changer", function (mod)
-    if Self.Feet().id ~= SOFT_BOOTS_USING then
-        Self.EquipItem(SLOT_FEET, SOFT_BOOTS_NEW_ID, 1)
-    end    
+    
+	-- load feet.
+	local feet = Self.Feet().id
+
+	-- when no boots on feet.
+    if feet <= 0 then
+
+    	-- equip brand new softs.
+    	Self.EquipItem(SLOT_FEET, SOFT_BOOTS_NEW_ID, 1)
+
+    else	
+
+    	-- when on feet are different boots than already using softs.
+    	if feet ~= SOFT_BOOTS_USING then
+
+    		-- dequip boots to any opened container.
+    		Self.DequipItem(SLOT_FEET)
+
+    	end	
+        
+    end
+
     mod:Delay(500, 1200) -- set a delay
+    
 end)
 
