@@ -4,7 +4,7 @@
     Author: 			Ascer - example
 ]]
 
-local SPELL = "exori vis"   -- spell to cast
+local SPELL = "exori con"   -- spell to cast
 local HPPERC = 50			-- don't cast if hp below %
 
 Module.New("Auto Exori Con", function (mod)
