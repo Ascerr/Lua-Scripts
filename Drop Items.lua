@@ -9,7 +9,7 @@ local DROP_DELAY = {300, 1000} 		-- time between actions
 
 -- DON'T EDIT BELOW THIS LINE
 
-Module.New("Drop Items", function ()
+Module.New("Drop Items", function (mod)
 	local item = Container.FindItem(ITEMS)
 	if item ~= false then
 		local pos = Self.Position()
