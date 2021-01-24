@@ -4,8 +4,7 @@
     Author:             Ascer - example
 ]]
 
-local OPEN_DELAY = 200		-- use ground every 300 miliseconds (default)
-local USE_STACK = 2			-- which stack we use. 0 - ground, 1 - sometimes ground or blood sometimes item, 2 - most of time dead body
+local OPEN_DELAY = 200		-- use ground every 200 miliseconds (default)
 local CROPSE_IDS = {3994, 5964}	-- enter here ids of dead monsters to open.
 
 
