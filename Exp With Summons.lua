@@ -4,7 +4,7 @@
     Author: 			Ascer - example
 ]]
 
-local SUMMON_NAMES = {"Monk", "Orc Berserker", }		-- type here your summon names
+local SUMMON_NAMES = {"Monk", "Orc Berserker"}		-- type here your summon names
 local AMMOUNT = 1										-- type amount of summons to verify
 local RANGE = 3											-- distance from summons to stop walker.
 local MAX_WAIT_TIME = 60								-- maximum time in seconds to wait for summon
