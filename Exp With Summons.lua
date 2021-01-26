@@ -23,7 +23,7 @@ local waitTime = 0
 -->					@names - table, names of creatures to check
 -->					@range - int, distance between you and creature to check
 -->					@amount - int, amount of creatures to check.
---> Return: 		void nothing.
+--> Return: 		boolean true or false.
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 function getSummons(names, range, amount)
 
