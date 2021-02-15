@@ -9,24 +9,30 @@
     Author:             Ascer - example
 ]]
 
-local SD_BACKPACK_ID = 2870 -- id of backpack with sds.
-local MF_BACKPACK_ID = 2868 -- id of backpack with mana fluids
+local SD_BACKPACK_ID = 2870     -- id of backpack with sds.
+local MF_BACKPACK_ID = 2868     -- id of backpack with mana fluids
 local DROP_FINISHED_BP_POS = {x = 32311, y = 31139, z = 7} -- place where we drop full bps of sds.
 local DROP_EMPTY_BP_MF_POS = {x = 32311, y = 31140, z = 7} -- place where we drop empty bp after using mana fluids.
-local SD_ID = 3155      -- id of sd rune
-
+local SD_ID = 3155              -- id of sd rune
+local DRINK_MF_BELOW = 50       -- drink mana fluids below 50% of mpperc
 
 -- DON'T EDIT BELOW THIS LINE
 local sayTime = 0
 
 
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Function:       delayedSay(text)
+--> Description:    Sey message on default channel using delay 2.5s
+--> Params:         
+-->                 @text - string message to say
+--> Return:         void - nothing.
+----------------------------------------------------------------------------------------------------------------------------------------------------------
 function delayedSay(text)
     if os.clock() - sayTime > 2.5 then
         Self.Say(text)
         sayTime = os.clock()
     end        
 end 
-
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 --> Function:       backpackIsOpen(id)
@@ -105,6 +111,16 @@ Module.New("Make SDs on fluids house near shop", function()
 
                                 -- drop backpack to ground pos.
                                 Self.DropItem(DROP_FINISHED_BP_POS.x, DROP_FINISHED_BP_POS.y, DROP_FINISHED_BP_POS.z, SD_BACKPACK_ID, 1, math.random(1000, 1500))
+
+                            else
+
+                                -- when self.mp is below 50% drink mf.
+                                if Self.ManaPercent() < DRINK_MF_BELOW then
+
+                                    -- drink mana
+                                    Self.UseItemWithMe(MANA_FLUID.id, 1000)
+
+                                end
 
                             end
 
