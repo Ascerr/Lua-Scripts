@@ -4,10 +4,9 @@
     Author:             Ascer - example
 ]]
 
+local BACKPACK = {index = 0, contid = 4387, runeid = 2273}          -- [index] container nr where we looking for runes, [contid] = id of backpack next to open, [runeid] = rune we search for
 
 -- DONT EDIT BELOW THIS LINE
-
-local BACKPACK = {index = 0, contid = 4387, runeid = 2273}          -- [index] container nr where we looking for runes, [contid] = id of backpack next to open, [runeid] = rune we search for
 
 -- loop module
 Module.New("Open Next Bp for Runes", function (mod)
