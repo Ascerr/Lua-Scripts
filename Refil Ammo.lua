@@ -7,7 +7,7 @@
 local AMMO = {
     id = 2667,      -- ammo id
     amount = 50,     -- when amount drop down to .. value restore.
-    slot = SLOT_WEAPON -- where we should put new part of ammo. SLOT_SHIELD, SLOT_WEAPON, SLOT_AMMO
+    slot = SLOT_AMMO -- where we should put new part of ammo. SLOT_SHIELD, SLOT_WEAPON, SLOT_AMMO
 }    
 
 -- DON'T EDIT BELOW THIS LINE
