@@ -21,7 +21,7 @@ Module.New("Switch Soft Boots with other", function (mod)
     if Self.ManaPercent() < MANA_PERCENT then
 
     	-- when no softs on
-        if feet.id ~= SOFT_BOOTS.using then
+        if feet ~= SOFT_BOOTS.using then
 
         	-- equip softs.
         	Self.EquipItem(SLOT_FEET, SOFT_BOOTS.notUsing, 1)
@@ -31,7 +31,7 @@ Module.New("Switch Soft Boots with other", function (mod)
     else 	
 
         -- when no other boots.
-        if feet.id ~= OTHER_BOOTS then
+        if feet ~= OTHER_BOOTS then
 
             -- equip other boots.
             Self.EquipItem(SLOT_FEET, OTHER_BOOTS, 1)
