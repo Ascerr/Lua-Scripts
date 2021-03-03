@@ -1,6 +1,7 @@
 --[[
     Script Name:        Imitate Player While Caveboting
     Description:        Players can easy mark you as bot when you walking on follow and don't do anything else. Lets try to be more human. 
+    Required:			Rifbot 1.83+ 2021-03-03+ date     
     Author:             Ascer - example
 ]]
 
