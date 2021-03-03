@@ -5,7 +5,7 @@
 ]]
 
 local SOFT_BOOTS = {using = 3549, notUsing = 6529}  -- if of soft boots using (in equipment feet slot) and not using (in backpack)
-local OTHER_BOOTS = 1324                            -- switch to this boots when mana above MANA_PERCENT
+local OTHER_BOOTS = 3079                            -- switch to this boots when mana above MANA_PERCENT
 local MANA_PERCENT = 80                             -- check this mana percent to wear softs or not.
 
 
