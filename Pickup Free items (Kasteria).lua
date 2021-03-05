@@ -27,7 +27,7 @@ Module.New("Pickup Free items", function ()
 				if table.find(FREE_ITEMS, map.id) then
 
 					-- Pickup item
-					Self.PickupItem(pos.x + x, pos.y + y, pos.z, map.id, map.count, Container.GetWithEmptySlots(nr), 0)
+					Self.PickupItem(pos.x + x, pos.y + y, pos.z, map.id, map.count, Container.GetWithEmptySlots(nr), 0, 0)
 
 					-- break loop
 					break
