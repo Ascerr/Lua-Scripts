@@ -1,7 +1,8 @@
 --[[
     Script Name:        Imitate Player While Caveboting
-    Description:        Players can easy mark you as bot when you walking on follow and don't do anything else. Lets try to be more human. 
-    Required:			Rifbot 1.83+ 2021-03-03+ date     
+    Description:        Players can easy mark you as bot when you walking on follow and don't do anything else. Lets try to be more human.
+    Required:			Rifbot 1.83+
+    Last Update:		2021-04-03 
     Author:             Ascer - example
 ]]
 
@@ -10,18 +11,18 @@ local MOD_STEP = {900, 1300}			-- execute step near target every this time
 local MOD_TURN = {600, 1100}			-- execute turn to target every this time
 local MOD_DANCE = {6000, 8000}			-- execute dance every this time
 local MOD_PUSH = {3000, 5000, true}		-- execute push items every this time in miliseconds, enabled true/false
-local MOD_DRAG = {7000, 10000, true}		-- execut drag item while moving without target, enabled true/false
+local MOD_DRAG = {7000, 10000, true}		-- execute drag item while moving without target, enabled true/false
 
 local STEP_DIAGONAL = true 				-- allow step diagonal near target.
 local STEP_DELAY = 500					-- step every x ms to avoid overdash.
 local ALLOW_WALK_IDS = {123}			-- enter here id such as parcels, boxes etc we check for it.
 
 -- DON'T EDIT BELOW THIS LINE
-local stepTime, modStepTime, modStepRand, modTurnTime, modTurnRand, modDanceTime, modDanceRand, modDancePosTime, modDancePos, modPushTime, modPushRand, modDragTime, modDragRand, modDragTries, modDragMaxTries = 0, 0, 0, 0, 0, 0, 0, 0, {0, 0, 0}, 0, 0, 0, 0, 0, 7
+local stepTime, modStepTime, modStepRand, modTurnTime, modTurnRand, modDanceTime, modDanceRand, modDancePosTime, modDancePos, modPushTime, modPushRand, modDragTime, modDragRand, modDragTries, modDragMaxTries = 0, 0, 0, 0, 0, 0, 0, 0, {0, 0, 0}, 0, 0, 0, 0, 0, 13
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
---> Function:		tileIsWalkable(x, y, z)
---> Description: 	Check is tile is walkable // Medivia only	
+--> Function:		tileIsWalkable(x, y, z, player)
+--> Description: 	Check is tile is walkable	
 --> Params:			
 -->					@x coordinate in the map on the x-axis
 -->					@y coordinate in the map on the y-axis
@@ -145,22 +146,24 @@ end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 --> Function:		getPushPositionFromDir
 --> Description: 	Get push item direction from current self position
---> Params:			None			
+--> Params:			
+-->					@len - number distance from your character (default 1)			
 -->
 --> Return: 		table pos
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
-function getPushPositionFromDir()
+function getPushPositionFromDir(len)
 	local dir = Self.Direction()
 	local s = Self.Position()
 	local pos = {-1, -1, -1}
+	if len == nil then len = 1 end
 	if dir == 0 then
-		pos = {s.x, s.y - 1, s.z}
+		pos = {s.x, s.y - len, s.z}
 	elseif dir == 1 then
-		pos = {s.x + 1, s.y, s.z}
+		pos = {s.x + len, s.y, s.z}
 	elseif dir == 2 then
-		pos = {s.x, s.y + 1, s.z}
+		pos = {s.x, s.y + len, s.z}
 	elseif dir == 3 then
-		pos = {s.x - 1, s.y, s.z}
+		pos = {s.x - len, s.y, s.z}
 	end			
 	return pos
 end	
@@ -304,13 +307,24 @@ function modDrag()
 			local dir = Self.Direction()
 			local pos = Self.Position()
 			local map = Map.GetTopMoveItem(pos.x, pos.y, pos.z)
+			local addX, addY = 0, 0
+			if dir == 0 or dir == 2 then
+				if Item.hasAttribute(map.id, ITEM_FLAG_NOT_MOVEABLE) or map.id == 99 then map = Map.GetTopMoveItem(pos.x + 1, pos.y, pos.z) addX = 1 end
+				if Item.hasAttribute(map.id, ITEM_FLAG_NOT_MOVEABLE) or map.id == 99 then map = Map.GetTopMoveItem(pos.x -1, pos.y, pos.z) addX = -1 end
+			else	
+				if Item.hasAttribute(map.id, ITEM_FLAG_NOT_MOVEABLE) or map.id == 99 then map = Map.GetTopMoveItem(pos.x, pos.y + 1, pos.z) addY = 1 end
+				if Item.hasAttribute(map.id, ITEM_FLAG_NOT_MOVEABLE) or map.id == 99 then map = Map.GetTopMoveItem(pos.x, pos.y - 1, pos.z) addY = -1 end
+			end	
 			if not Item.hasAttribute(map.id, ITEM_FLAG_NOT_MOVEABLE) and map.id ~= 99 then
-				local dest = getPushPositionFromDir()
-				if tileIsWalkable(dest[1], dest[2], dest[3], false) then 
-					Map.MoveItem(pos.x, pos.y, pos.z, dest[1], dest[2], dest[3], map.id, map.count, math.random(150, 250))
-				end
-				modDragTries = modDragTries + 1	
-				
+				local dest = getPushPositionFromDir(math.random(1, 2))
+				if dest[1] ~= -1 then
+					if tileIsWalkable(dest[1] + addX, dest[2] + addY, dest[3], false) then 
+						Map.MoveItem(pos.x + addX, pos.y + addY, pos.z, dest[1] + addX, dest[2] + addY, dest[3], map.id, map.count, math.random(150, 250))
+					end
+					modDragTries = modDragTries + 1
+				end	
+			else		
+
 			end
 			if modDragTries > modDragMaxTries then
 				modDragTime = os.clock()
