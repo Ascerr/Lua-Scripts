@@ -4,7 +4,7 @@
     Author:             Ascer - example
 ]]
 
-local MAIN_DELAY = {4, 9}          -- mintues between run antiidle function.
+local MAIN_DELAY = {4, 9}          -- mintues between run function.
 local USE_DELAY = {200, 650}       -- miliseconds between use action.
 local USE_TRIES = {4, 7}           -- amount of times to use .
 local EAT_POS = {x = 0, y = -1, stack = 2}    -- @x, y: positions of food from your character. @stack - index of item on square.
