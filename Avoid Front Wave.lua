@@ -1,6 +1,6 @@
 --[[
     Script Name:        Avoid Front Wave
-    Description:        Step to free dir to avoid front wave from monster. [Works only for Kasteria and Medivia]
+    Description:        Step to free dir to avoid front wave from monster. [Works only for servers with cavebot]
     Author:             Ascer - example
 ]]
 
