@@ -75,10 +75,9 @@ end
 -- module run function in loop 200ms
 Module.New("Avoid Front Wave", function()
 	local s = Self.Position()
-	tileIsWalkable(s.x-1, s.y, s.z)
 	if Self.isConnected() then
 		local t = getAttackedCreature()
-		if t ~= -1 then
+		if t ~= -1 and not Looter.isLooting() then
 			if table.find(MONSTERS, string.lower(t.name)) then
 				local s = Self.Position()
 				if (t.x == (s.x - 1) or t.x == (s.x + 1)) and t.y == s.y then -- west, east
