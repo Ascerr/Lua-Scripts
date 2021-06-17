@@ -202,21 +202,23 @@ function singleAttack()
 	if table.count(target) < 3 then return false end
 
 	-- when creature is alive
-	if target.hpperc > 0
+	if target.hpperc > 0 then
 
-	-- when enabled rune.
-	if SINGLE.rune.enabled then
+		-- when enabled rune.
+		if SINGLE.rune.enabled then
 
-		-- shoot rune with target (2s) delay.
-		Self.UseItemWithCreature(target, SINGLE.rune.id, 2000)
+			-- shoot rune with target (2s) delay.
+			Self.UseItemWithCreature(target, SINGLE.rune.id, 2000)
 
-	-- when enable spell	
-	elseif SINGLE.spell.enabled then	
+		-- when enable spell	
+		elseif SINGLE.spell.enabled then	
 
-		-- cast spell with target (1s) delay.
-		Self.CastSpell(SINGLE.spell.name, SINGLE.spell.mana, 1000)
+			-- cast spell with target (1s) delay.
+			Self.CastSpell(SINGLE.spell.name, SINGLE.spell.mana, 1000)
 
-	end	
+		end
+
+	end		
 
 end	
 
