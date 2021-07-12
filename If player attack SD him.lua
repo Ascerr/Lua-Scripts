@@ -24,6 +24,9 @@ function getCreatureAttacking(list, range)
 	-- load target id
 	local target = Self.TargetID()
 
+	-- load self
+	local selfid = Self.ID()
+
 	-- check if we have target.
 	if target > 0 then
 
@@ -38,6 +41,27 @@ function getCreatureAttacking(list, range)
 
 	    	-- check if id of our creature is this same as our target id.
 	    	if target == creature.id then
+
+	    		-- check if creature is on stack with other players.
+	    		for j = 1, #creatures do
+
+	    			-- load creature.
+	    			local creatureStack = creatures[j]
+
+	    			-- when creature is diff than self, monster and target
+	    			if creatureStack.id ~= selfid and Creature.isPlayer(creatureStack) and creature.id ~= creatureStack.id then
+
+	    				-- check for id
+	    				if creature.x == creatureStack.x and creature.y == creatureStack.y and creature.z == creatureStack.z then
+
+	    					-- return -1 not shoot due players on stack
+	    					return -1
+
+	    				end	
+
+	    			end		
+
+	    		end	
 
 	    		-- return info with our target.
 	    		return creature
