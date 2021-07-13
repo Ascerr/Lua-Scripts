@@ -1,6 +1,6 @@
 --[[
     Script Name:        Make SDs on fluids house near shop
-    Description:        Script will talk with npcs, buy blanks na mfs, make sds from from panel.
+    Description:        Script will talk with npcs, buy blanks and mfs, make sds from panel.
 
     Required:           1. Open main backpack e.g. yellow
                         2. Inside main backpack you need to have backpack for mana fluids example purple and cash for balnks and mfs. Open this bp as second
@@ -10,11 +10,12 @@
 ]]
 
 local SD_BACKPACK_ID = 2870     -- id of backpack with sds.
-local MF_BACKPACK_ID = 2868     -- id of backpack with mana fluids
+local MF_BACKPACK_ID = 2868     -- id of backpack with mana fluids.
 local DROP_FINISHED_BP_POS = {x = 32311, y = 31139, z = 7} -- place where we drop full bps of sds.
 local DROP_EMPTY_BP_MF_POS = {x = 32311, y = 31140, z = 7} -- place where we drop empty bp after using mana fluids.
 local SD_ID = 3155              -- id of sd rune
 local DRINK_MF_BELOW = 50       -- drink mana fluids below 50% of mpperc
+local ALLOW_INSTANT_BUY = true  -- true/false allow buy instant without saying hi -> buy backpack of balnk runes -> yes 
 
 -- DON'T EDIT BELOW THIS LINE
 local sayTime = 0
@@ -63,8 +64,22 @@ Module.New("Make SDs on fluids house near shop", function()
         -- check for amount backpack with sd.
         if Self.ItemCount(SD_BACKPACK_ID) <= 0 then
 
-            -- buy one backpack with balnk runes.
-            delayedSay("instant bp blank runes")
+            -- when instant buy
+            if ALLOW_INSTANT_BUY then
+
+                -- buy one backpack with balnk runes.
+                delayedSay("instant bp blank runes")
+
+            else
+                
+                -- default conversation to buy items
+                Self.Say("hi")
+                wait(700, 1200)
+                Self.Say("buy backpack of blank runes")
+                wait(400, 700)
+                Self.Say("yes")
+
+            end 
 
         else
             
@@ -82,8 +97,22 @@ Module.New("Make SDs on fluids house near shop", function()
                 -- check for backpacks with mana
                 if Self.ItemCount(MF_BACKPACK_ID) <= 0 then
 
-                    -- buy mana fluids.
-                    delayedSay("instant bp mana fluids")
+                    -- when instant buy
+                    if ALLOW_INSTANT_BUY then
+                 
+                        -- buy mana fluids.
+                        delayedSay("instant bp mana fluids")
+
+                    else
+                        
+                        -- default conversation to buy items
+                        Self.Say("hi")
+                        wait(700, 1200)
+                        Self.Say("buy backpack of mana fluids")
+                        wait(400, 700)
+                        Self.Say("yes")
+
+                    end 
 
                 else 
 
