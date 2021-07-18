@@ -11,6 +11,10 @@ local SPELL = {
 	mana = 100					-- min mana to cast spell
 }
 
+local BACK_ON_FEET = {
+	enabled = false,					-- true/false back on feet not using alana sio
+	pos = {x = 32346, y = 32220, z = 5} -- back position
+}
 
 -- DON'T EDIT BELOW THIS LINE
 
@@ -82,17 +86,38 @@ Module.New("Go House Make Rune and Back", function ()
 	        end 
 
 	    else
-	    
-	    	-- load distance
-			local dist = Self.DistanceFromPosition(HOUSE_POS.x, HOUSE_POS.y, HOUSE_POS.z)
+	    	
+	    	-- when back on feet is enabled
+	    	if BACK_ON_FEET.enabled then
 
-			-- when we have no more mana for cast spell and dist = 0 then back with alana sio.  
-			if dist == 0 then
+	    		-- check dist between return pos.
+	    		local dist = Self.DistanceFromPosition(BACK_ON_FEET.pos.x, BACK_ON_FEET.pos.y, BACK_ON_FEET.pos.z)
 
-				-- say alana sio every 3s
-				delayedSay("alana sio \"" .. Self.Name(), 3000)
+	    		-- when dist is diff than 0
+	    		if dist ~= 0 then
 
-			end 
+		    		-- load direction to step.
+		            local dir = Self.getDirectionFromPosition(BACK_ON_FEET.pos.x, BACK_ON_FEET.pos.y, BACK_ON_FEET.pos.z, dist)
+
+		            -- step to safe pos
+		            delayedStep(dir, 550)
+
+		        end    
+
+	    	else	
+
+		    	-- load distance
+				local dist = Self.DistanceFromPosition(HOUSE_POS.x, HOUSE_POS.y, HOUSE_POS.z)
+
+				-- when we have no more mana for cast spell and dist = 0 then back with alana sio.  
+				if dist == 0 then
+
+					-- say alana sio every 3s
+					delayedSay("alana sio \"" .. Self.Name(), 3000)
+
+				end 
+
+			end	
 
 		end	
 
