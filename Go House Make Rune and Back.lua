@@ -1,29 +1,29 @@
 --[[
     Script Name: 		Go House Make Rune and Back
-    Description: 		When current mana level go to house make rune and back with alana sio. 
+    Description: 		When current mana level go to house make rune and back with alana sio or on feet. Check for players if true hide. 
     Author: 			Ascer - example
 ]]
 
-local HOUSE_POS = {x = 32335, y = 32245, z = 7} -- Position to go
+local HOUSE_POS = {x = 32378, y = 32275, z = 5} -- Position to go
 
 local SPELL = {
-	name = "adura vita",		-- spell name
-	mana = 100					-- min mana to cast spell
+	name = "adori vita vis",		-- spell name
+	mana = 300					-- min mana to cast spell
 }
 
 local BACK_ON_FEET = {
 	enabled = false,					-- true/false back on feet not using alana sio
-	pos = {x = 32336, y = 32245, z = 7} -- back position
+	pos = {x = 32378, y = 32274, z = 4} -- back position
 }
 
 local WHEN_PLAYER_HIDE = {
 	enabled = false,					-- true/false hide to house when player appear (ignore safe list from friends.txt)
-	back = {enabled = true, delay = 6}	-- back true/false, delay time in minutes to back after.
+	back = {enabled = true, delay = 0.1}	-- back true/false, delay time in minutes to back after.
 }
 
 -- DON'T EDIT BELOW THIS LINE
 
-local spellTime, stepTime, friends, backTime, logTime, lastPlayer = 0, 0, Rifbot.FriendsList(true), 0, 0, ""
+local spellTime, stepTime, friends, backTime, logTime, lastPlayer, isPlayer = 0, 0, Rifbot.FriendsList(true), 0, 0, "", false
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -118,7 +118,7 @@ Module.New("Go House Make Rune and Back", function ()
 		end
 
 		-- when player detected
-		if player then
+		if player or isPlayer then
 
 			-- load distance
 			local dist = Self.DistanceFromPosition(HOUSE_POS.x, HOUSE_POS.y, HOUSE_POS.z)
@@ -132,16 +132,29 @@ Module.New("Go House Make Rune and Back", function ()
 		        -- step to safe pos
 		        delayedStep(dir, 550)
 
+		        printf("step to house")
+
+		        -- set param for player
+		        isPlayer = true
+
 		    else
 		    
 		    	-- update time we spent in house
 		    	backTime = os.clock()
 
-		    	-- update logs
-		    	delayedLog("Go to safe place due player: " .. player.name, 2000) 
+		    	-- when player 
+		    	if player then
+			    	
+			    	-- update logs
+			    	delayedLog("Go to safe place due player: " .. player.name, 2000) 
 
-		    	-- store last name
-		    	lastPlayer = player.name  
+			    	-- store last name
+			    	lastPlayer = player.name
+
+			    end	
+
+		    	-- disable player
+		    	isPlayer = false  
 
 		    end 
 
@@ -157,7 +170,7 @@ Module.New("Go House Make Rune and Back", function ()
 				local dist = Self.DistanceFromPosition(HOUSE_POS.x, HOUSE_POS.y, HOUSE_POS.z)
 
 				-- check if we are in house.
-				if dist <= 0 then
+				if dist == 0 then
 
 					-- say spell every 2.5s
 					delayedSay(SPELL.name, 2500)
