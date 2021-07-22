@@ -7,7 +7,7 @@
 local config = {
 	amount = 3,					-- how many monsters to start attack
 	range = 7,					-- search monsters in range (7 deafult full screen)
-	list = {"Rat", "Spider", }	-- list monsters to search.
+	list = {"Rat", "Spider"}	-- list monsters to search.
 }
 
 
