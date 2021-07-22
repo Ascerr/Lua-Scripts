@@ -2,7 +2,7 @@
     Script Name:        Imitate Player While Caveboting
     Description:        Players can easy mark you as bot when you walking on follow and don't do anything else. Lets try to be more human.
     Required:			Rifbot 1.83+
-    Last Update:		2021-04-03 
+    Last Update:		2021-07-22 
     Author:             Ascer - example
 ]]
 
@@ -18,7 +18,7 @@ local STEP_DELAY = 500					-- step every x ms to avoid overdash.
 local ALLOW_WALK_IDS = {123}			-- enter here id such as parcels, boxes etc we check for it.
 
 -- DON'T EDIT BELOW THIS LINE
-local stepTime, modStepTime, modStepRand, modTurnTime, modTurnRand, modDanceTime, modDanceRand, modDancePosTime, modDancePos, modPushTime, modPushRand, modDragTime, modDragRand, modDragTries, modDragMaxTries = 0, 0, 0, 0, 0, 0, 0, 0, {0, 0, 0}, 0, 0, 0, 0, 0, 13
+local targetTime, markTargetTime, lastTargetID, stepTime, modStepTime, modStepRand, modTurnTime, modTurnRand, modDanceTime, modDanceRand, modDancePosTime, modDancePos, modPushTime, modPushRand, modDragTime, modDragRand, modDragTries, modDragMaxTries = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, {0, 0, 0}, 0, 0, 0, 0, 0, 13
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 --> Function:		tileIsWalkable(x, y, z, player)
@@ -61,6 +61,11 @@ function getAttackedCreature()
 	if t <= 0 then return -1 end
 	local c = Creature.getCreatures(t)
 	if table.count(c) < 2 then return -1 end
+	targetTime = os.clock()
+	if lastTargetID ~= c.id then
+		markTargetTime = os.clock()
+		lastTargetID = c.id
+	end	
 	return c
 end	
 
@@ -284,12 +289,12 @@ end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 function modPush(c)
 	if MOD_PUSH[3] then
-		if Creature.DistanceFromSelf(c) == 1 and os.clock() - modPushTime > (modPushRand / 1000) and not Looter.isLooting() and not Self.isDancing() and os.clock() - modDancePosTime > 1.5 then
+		if Creature.DistanceFromSelf(c) == 1 and os.clock() - modPushTime > (modPushRand / 1000) and not Looter.isLooting() and not Self.isDancing() and os.clock() - modDancePosTime > 1.5 and os.clock() - markTargetTime > 1 then
 			if not Self.isWalking() then
 				Self.ItemFunPlay()
 				modPushTime = os.clock()
 				modPushRand = math.random(MOD_DANCE[1], MOD_DANCE[2])	
-			end	
+			end		
 		end
 	end		
 end
@@ -303,7 +308,7 @@ end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 function modDrag()
 	if MOD_DRAG[3] then
-		if os.clock() - modDragTime > (modDragRand / 1000) and Self.isWalking() and not Looter.isLooting() and not Self.isDancing() then
+		if os.clock() - modDragTime > (modDragRand / 1000) and Self.isWalking() and not Looter.isLooting() and not Self.isDancing() and os.clock() - targetTime > 1 then
 			local dir = Self.Direction()
 			local pos = Self.Position()
 			local map = Map.GetTopMoveItem(pos.x, pos.y, pos.z)
