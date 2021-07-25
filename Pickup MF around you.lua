@@ -1,10 +1,10 @@
 --[[
     Script Name:        Pickup MF around you
-    Description:        Pickup mana fluid around your character to container.index 0 slot 0
+    Description:        Pickup mana fluid around your character to empty backpack.
     Author:             Ascer - example
 ]]
 
-local MF_ID = 2874     -- set 2006 for old tibia
+local MF_ID =  2874    --  set 2006 for old tibia
 
 -- DON'T EDIT BELOW
 
@@ -12,20 +12,35 @@ Module.New("Pickup MF around you", function (mod)
 
 	if Self.isConnected() then
 		
-		local map = Map.getArea(1) -- load map with 1 sqm range
-		for i, square in pairs(map) do
-			local sqareItems = square.items
-			for j, item in pairs(sqareItems) do
+		-- load self pos
+		local pos = Self.Position()
+
+		-- for loop
+		for x = -1, 1 do
+			
+			for y = -1, 1 do
+
+				-- load item
+				local item = Map.GetTopMoveItem(pos.x+x, pos.y+y, pos.z)
+
+				-- when mf id
 				if item.id == MF_ID then
 					
 					-- Pickup item
-					Self.PickupItem(square.x, square.y, square.z, item.id, 1, 0, 0, 300)
+					Self.PickupItem(pos.x+x, pos.y+y, pos.z, item.id, 1, Container.GetWithEmptySlots(), 0, 300)
 
+					-- destroy loop
 					break
-	
-				end
-			end			
-		end
-	end
-	mod:Delay(1000)	
+
+				end	
+
+			end
+			
+		end	
+
+	end		
+
+	-- set module delay
+	mod:Delay(300)
+
 end) 
