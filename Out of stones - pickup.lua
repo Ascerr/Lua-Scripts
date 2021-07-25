@@ -25,23 +25,22 @@ Module.New("Out of stones - pickup", function (mod)
 		-- only if hand slot is empty 
 		if selfGetEquipmentSlot(hand).id == 0 then
 
-			-- load map with 1 sqm range
-			local map = Map.getArea(1)
+			-- load position
+			local pos = Self.Position()
 			
-			-- for each square on map 
-			for i, square in pairs(map) do
-				
-				-- load items on square
-				local sqareItems = square.items
-				
-				-- for items on square
-				for j, item in pairs(sqareItems) do
-					
+			-- search stones on 1 sqm range
+			for x = -1, 1 do
+
+				for y = -1, 1 do
+
+					-- load map item
+					local item = Map.GetTopMoveItem(pos.x+x, pos.y+y, pos.z)
+
 					-- if id is equal to id small stone
 					if item.id == SMALL_STONE then
 						
 						-- Pickup item
-						Self.EquipItemFromGround(hand, square.x, square.y, square.z, item.id, item.count, 1000)
+						Self.EquipItemFromGround(hand, pos.x+x, pos.y+y, pos.z, item.id, item.count, 1000)
 
 						-- end loop
 						break
@@ -49,7 +48,7 @@ Module.New("Out of stones - pickup", function (mod)
 					end
 
 				end	
-
+			
 			end
 
 		end
@@ -57,6 +56,6 @@ Module.New("Out of stones - pickup", function (mod)
 	end	
 
 	-- execution module delay in ms
-	mod:Delay(2000)	
+	mod:Delay(1000)	
 
 end) 
