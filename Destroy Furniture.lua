@@ -4,7 +4,7 @@
     Author:             Ascer - example
 ]]
 
-local FURNITURE_IDS = {2472, 2524, 2319, 2358} -- list of items to destroy
+local FURNITURE_IDS = {2982, 2472, 2524, 2319, 2358} -- list of items to destroy
 local MACHETE_ID = 3308 -- id of weapon or machete to destroy.
 
 -- DON'T EDIT BELOW
@@ -12,20 +12,17 @@ local MACHETE_ID = 3308 -- id of weapon or machete to destroy.
 Module.New("Destroy Furniture", function (mod)
 
 	if Self.isConnected() then
-		
-		local map = Map.getArea(1) -- load map with 1 sqm range
-		for i, square in pairs(map) do
-			local sqareItems = square.items
-			for j, item in pairs(sqareItems) do
+		local pos = Self.Position()
+		for x = -1, 1 do
+			for y = -1, 1 do
+				local item = Map.GetTopMoveItem(pos.x+x, pos.y+y, pos.z)
 				if table.find(FURNITURE_IDS, item.id) then
-					
 					-- destroy item
-					Self.UseItemWithGround(MACHETE_ID, square.x, square.y, square.z, math.random(1000, 1500))
+					Self.UseItemWithGround(MACHETE_ID, pos.x+x, pos.y+y, pos.z, math.random(1000, 1500))
 
 					break
-	
 				end
-			end			
+			end	
 		end
 	end		
 end) 
