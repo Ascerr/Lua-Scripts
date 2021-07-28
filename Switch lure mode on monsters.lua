@@ -7,11 +7,14 @@
 local config = {
 	amount = 3,					-- how many monsters to start attack
 	range = 7,					-- search monsters in range (7 deafult full screen)
-	list = {"Rat", "Spider"}	-- list monsters to search.
+	untildie = true,				-- lure sepecific amount, kill all then start next luring session
+	list = {"Black Knight", "Hydra"}		-- list monsters to search.
 }
 
 
 -- DON'T EDIT BELOW THIS LINE
+
+local amountReached = false
 
 config.list = table.lower(config.list)
 
@@ -57,16 +60,35 @@ Module.New("Switch lure mode on monsters", function ()
 		--load monsters amount
 		local monsters = getMonsters()
 
+		-- when no monsters
+		if monsters <= 0 then 
+			
+			-- reset amount
+			amountReached = false
+
+		end	
+
 		-- when low amount of monsters
 		if monsters < config.amount then
 
-			-- enable lure mode
-			if not Walker.isLureModeEnabled() then Walker.setLureMode(true) end
+			-- when disabled untildie destroy reached amount
+			if not config.untildie then 
+				
+				-- reset amount
+				amountReached = false 
+
+			end
+
+			-- enable lure mode and not reached amount to kill all
+			if not Walker.isLureModeEnabled() and not amountReached then Walker.setLureMode(true) end
 
 		else
 			
 			-- disable lure mode
 			if Walker.isLureModeEnabled() then Walker.setLureMode(false) end
+
+			-- set we reach current amount of monsters
+			amountReached = true
 
 		end	
 
