@@ -7,13 +7,13 @@
 local EXORI = "exori mas"					-- name of spell to cast
 local MANA = 250						-- min mana need to cast spell
 local FRIENDS = {"Friend1", "Friend2"} 	-- list of friends we can use exori Capital letters like a Character Name
-local MONSTERS_AMOUNT_TO_USE = 4		-- min monsters amount to cast spell
+local MONSTERS_AMOUNT_TO_USE = 2		-- min monsters amount to cast spell
 local DONT_CAST_WHEN_PLAYER_DIST = 4	-- don't use spell when player distance from self is equal or below this sqms.
-local SELF_MIN_HPPERC = 70              -- don't cast spell if your character health percent is below this value
+local SELF_MIN_HPPERC = 50              -- don't cast spell if your character health percent is below this value
 
 -- DON'T EDIT BELOW THIS LINE.
 
-local aoePos = {{0,0}, {0,1}, {0,-1}, {1,0}, {-1,0}, {-1,1}, {-1,-1}, {1,-1}, {1,1}, {-2,-1}, {-2,0}, {-2,1}, {2,-1}, {2,0}, {2,1}, {0,-2}, {-1,-2}, {1,-2}, {-2,-2}, {2,-2}, {0,2}, {-1,2}, {1,2}, {-2,2}, {2,2}, {0,-3}, {-1,-3}, {1,3}, {0,3}, {-1,3}, {1,3}, {-3,0}, {-3,-1}, {-3,1}, {3,0}, {3,-1}, {3,1}} 
+local aoePos = {{0,0}, {0,1}, {0,-1}, {1,0}, {-1,0}, {-1,1}, {-1,-1}, {1,-1}, {1,1}, {-2,-1}, {-2,0}, {-2,1}, {2,-1}, {2,0}, {2,1}, {0,-2}, {-1,-2}, {1,-2}, {0,2}, {-1,2}, {1,2}} 
 
 
 local useSpellTime = 0
@@ -84,6 +84,9 @@ function ableToCastExori(friends, monstersAmount, playerRange)
         		-- increase creature count
         		count = count + 1
 
+                -- add creature to looter.
+                Looter.AddCreature(c)
+
         	end	
 
         end
@@ -110,7 +113,7 @@ Module.New("Safe Exori Mas + Hur", function ()
 	if Self.Mana() >= MANA and Self.HealthPercent() >= SELF_MIN_HPPERC then
 
 		-- if time is ok.
-		if os.time() - useSpellTime >= 2 then
+		if os.time() - useSpellTime >= 1 then
 
 			-- check if we can shoot exori.
 			if ableToCastExori(FRIENDS, MONSTERS_AMOUNT_TO_USE, DONT_CAST_WHEN_PLAYER_DIST) then
@@ -127,10 +130,10 @@ Module.New("Safe Exori Mas + Hur", function ()
                 if Self.TargetID() > 0 then
 
                     -- say spell
-                    Self.CastSpell("exori hur", 40, 100)
+                    Self.CastSpell("exori hur", 40, 2000)
 
                     -- update time.
-                    useSpellTime = os.time()
+                    --useSpellTime = os.time()
 
                 end 
 
