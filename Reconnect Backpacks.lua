@@ -5,7 +5,7 @@
 ]]
 
 local config = {
-    backpacks = {2867, 3504}, -- backpacks id, bot will start opening from frist container slot
+    backpacks = {2867, 2868, 2853}, -- backpacks id, bot will start opening from frist container slot
     amount = 2                -- amount to open
 }
 
@@ -46,7 +46,7 @@ Module.New("Reconect Backpacks", function ()
             local items = Container.getItems()
             
             -- load amount od opened backpacks
-            local bps = table.count(items) 
+            local bps = Container.Amount()
             
             -- when amout of backpack is equal our target break
             if bps == config.amount then 
@@ -99,9 +99,10 @@ Module.New("Reconect Backpacks", function ()
                                             break
 
                                         else
-                                            
+                                                                                    
+
                                             if bps == lastAmount then
-                                                table.insert(slots, slot)    
+                                                table.insert(slots, slot)   
                                             end
 
                                             opening = false
