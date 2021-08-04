@@ -6,7 +6,7 @@
 
 local config = {
 	delay = {1000, 1500},	-- miliseconds use fishing rod time
-	rod = 3483,				-- fishinf rod id
+	rod = 3483,				-- fishing rod id
 	positions = {{-5, 0}, {-6, 0}, {-7, 0}, {-5, 1}, {-6, 1}, {-7, 1}, {-5, -1}, {-6, -1}, {-7, -1}, {5, 0}, {6, 0}, {7, 0}, {5, -1}, {6, -1}, {7, -1}, {5, 1}, {6, 1}, {7, 1}}	-- where to fishing. Your pos in game is {0, 0}
 }
 
