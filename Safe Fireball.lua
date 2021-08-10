@@ -15,6 +15,10 @@ local SINGLE = {
 	spell = {enabled = false, name = "exori con", mana = 30}	-- cast spell enabled true/false, spell name
 }
 
+
+local MIN_SELF_HPERC = 50										-- dont cast spell/rune when hpperc below 50%
+local RUNE_DELAY = 2000											-- cast rune every (2000ms = 2s)
+local SPELL_DELAY = 1000										-- cast spell every (1000ms = 1s)
 					
 -- DONT EDIT BELOW THIS LINE
 
@@ -22,7 +26,7 @@ local FRIENDS = Rifbot.FriendsList(true)
 AOE.monsters = table.lower(AOE.monsters)
 
 --> [Area where we can shoot rune on screen]
-local runeMap = {{x =-5, y =-2}, {x =-5, y =-1}, {x =-5, y =0}, {x =-5, y =1}, {x =-5, y =2}, {x =-4, y =-2}, {x =-4, y =-1}, {x =-4, y =0}, {x =-4, y =1}, {x =-4, y =2}, {x =-3, y =-2}, {x =-3, y =-1}, {x =-3, y =0}, {x =-3, y =1}, {x =-3, y =2}, {x =-2, y =-2}, {x =-2, y =-1}, {x =-2, y =0}, {x =-2, y =1}, {x =-2, y =2}, {x =-1, y =-2}, {x =-1, y =-1}, {x =-1, y =0}, {x =-1, y =1}, {x =-1, y =2}, {x =0, y =-2}, {x =0, y =-1}, {x =0, y =0}, {x =0, y =1}, {x =0, y =2}, {x =1, y =-2}, {x =1, y =-1}, {x =1, y =0}, {x =1, y =1}, {x =1, y =2}, {x =2, y =-2}, {x =2, y =-1}, {x =2, y =0}, {x =2, y =1}, {x =2, y =2}, {x =3, y =-2}, {x =3, y =-1}, {x =3, y =0}, {x =3, y =1}, {x =3, y =2}, {x =4, y =-2}, {x =4, y =-1}, {x =4, y =0}, {x =4, y =1}, {x =4, y =2}, {x =5, y =-2}, {x =5, y =-1}, {x =5, y =0}, {x =5, y =1}, {x =5, y =2}}
+local runeMap = {{x =-1, y =-1}, {x =-1, y =0}, {x =-1, y =1}, {x =-1, y =2}, {x =0, y =-2}, {x =0, y =-1}, {x =0, y =0}, {x =0, y =1}, {x =0, y =2}, {x =1, y =-2}, {x =1, y =-1}, {x =1, y =0}, {x =1, y =1}, {x =1, y =2}, {x =2, y =-2}, {x =2, y =-1}, {x =-5, y =-2}, {x =-5, y =-1}, {x =-5, y =0}, {x =-5, y =1}, {x =-5, y =2}, {x =-4, y =-2}, {x =-4, y =-1}, {x =-4, y =0}, {x =-4, y =1}, {x =-4, y =2}, {x =-3, y =-2}, {x =-3, y =-1}, {x =-3, y =0}, {x =-3, y =1}, {x =-3, y =2}, {x =-2, y =-2}, {x =-2, y =-1}, {x =-2, y =0}, {x =-2, y =1}, {x =-2, y =2}, {x =-1, y =-2}, {x =2, y =0}, {x =2, y =1}, {x =2, y =2}, {x =3, y =-2}, {x =3, y =-1}, {x =3, y =0}, {x =3, y =1}, {x =3, y =2}, {x =4, y =-2}, {x =4, y =-1}, {x =4, y =0}, {x =4, y =1}, {x =4, y =2}, {x =5, y =-2}, {x =5, y =-1}, {x =5, y =0}, {x =5, y =1}, {x =5, y =2}}
 
 --> [Rune attack area]
 local aoePos = {{0,0}, {0,1}, {0,-1}, {1,0}, {-1,0}, {-1,1}, {-1,-1}, {1,-1}, {1,1}, {-2,-1}, {-2,0}, {-2,1}, {2,-1}, {2,0}, {2,1}, {0,-2}, {-1,-2}, {1,-2}, {0,2}, {-1,2}, {1,2}} 
@@ -208,13 +212,13 @@ function singleAttack()
 		if SINGLE.rune.enabled then
 
 			-- shoot rune with target (2s) delay.
-			Self.UseItemWithCreature(target, SINGLE.rune.id, 2000)
+			Self.UseItemWithCreature(target, SINGLE.rune.id, RUNE_DELAY)
 
 		-- when enable spell	
 		elseif SINGLE.spell.enabled then	
 
 			-- cast spell with target (1s) delay.
-			Self.CastSpell(SINGLE.spell.name, SINGLE.spell.mana, 1000)
+			Self.CastSpell(SINGLE.spell.name, SINGLE.spell.mana, SPELL_DELAY)
 
 		end
 
@@ -224,31 +228,36 @@ end
 
 
 -- Mod running with 200ms loop.
-Module.New("Safe GFB", function()
+Module.New("Safe Fireball", function()
 
-	-- load monsters
-	local gfb, sd = safeGFB(AOE.monsters), false
+	-- when connected
+	if Self.isConnected() and Self.HealthPercent() >= MIN_SELF_HPERC then
 
-	-- when monsters fund
-	if gfb ~= false then
+		-- load monsters
+		local gfb, sd = safeGFB(AOE.monsters), false
+
+		-- when monsters fund
+		if gfb ~= false then
+			
+			-- when valid amount	
+			if gfb.amount >= AOE.amount then
+	        	
+				-- use rune with ground (2s delay)
+	        	Self.UseItemWithGround(AOE.runeid, gfb.x, gfb.y, Self.Position().z, RUNE_DELAY)
+
+	        else	
+
+	        	-- attack single
+	        	singleAttack()
+
+			end
+
+		else
 		
-		-- when valid amount	
-		if gfb.amount >= AOE.amount then
-        	
-			-- use rune with ground (2s delay)
-        	Self.UseItemWithGround(AOE.runeid, gfb.x, gfb.y, Self.Position().z, 2000)
+			-- attack single
+	        singleAttack()	
 
-        else	
-
-        	-- attack single
-        	singleAttack()
-
-		end
-
-	else
-	
-		-- attack single
-        singleAttack()	
+		end	
 
 	end	
 
