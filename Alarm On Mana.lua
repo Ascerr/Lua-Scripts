@@ -1,6 +1,6 @@
 --[[
     Script Name: 		Alarm On Mana
-    Description: 		Play sound if your health is below 50%.
+    Description: 		Play sound if your mana points are below MANA value.
     Author: 			Ascer - example
 ]]
 
