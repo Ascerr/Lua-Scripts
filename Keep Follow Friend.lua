@@ -6,9 +6,9 @@
 ]]
 
 local config = {
-    player = "Zabojca Covid",       -- player name we follow
+    player = "Player Name",       -- player name we follow
     dist = 1,                       -- distance between player and you (min 1, max 4 sqms)
-    fastwalking = true,              -- enter critical section to run faster
+    fastwalking = false,              -- enter critical section to run faster
     
     monsters = {                    -- follow player only when no monsters on screen
         enabled = false,            -- enabled true/false
