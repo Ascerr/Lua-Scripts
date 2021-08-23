@@ -6,23 +6,43 @@
 ]]
 
 local config = {
-    player = "Player Name",       -- player name we follow
+    player = "Char Name",         -- player name we follow
     dist = 1,                       -- distance between player and you (min 1, max 4 sqms)
-    fastwalking = false,              -- enter critical section to run faster
+    fastwalking = true,              -- enter critical section to run faster
     
     monsters = {                    -- follow player only when no monsters on screen
         enabled = false,            -- enabled true/false
-        range = 7                   -- range for monsters
+        range = 7,                  -- range for monsters
+        count = 1,                  -- how many monsters appear on screen to stop follow friend
+        ignore = {"Rat", "Snake"}   -- just ignore this monsters due calcuation.
     }  
 }   
 
 -- DON'T EDIT BELOW THIS LINE
+
+config.monsters.ignore = table.lower(config.monsters.ignore)
 
 -- set fast walking
 if config.fastwalking then
     Rifbot.setCriticalMode(true)
 end    
 
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Function:       getMonsters()
+--> Description:    Read creatures for monsters on screen.
+--> Class:          None
+--> Params:         None
+--> Return:         number amount monsters on screen.
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+function getMonsters()
+    local count = 0
+    for i, mob in pairs(Creature.iMonsters(config.monsters.range, false)) do
+        if not table.find(config.monsters.ignore, string.lower(mob.name)) then
+            count = count + 1
+        end    
+    end
+    return count
+end
 
 -- module 200ms
 Module.New("Keep Follow Friend", function ()
@@ -34,7 +54,7 @@ Module.New("Keep Follow Friend", function ()
     if config.monsters.enabled then
 
         -- when are monsters
-        if table.count(Creature.iMonsters(config.monsters.range, false)) > 0 then
+        if getMonsters() > 0 then
 
             -- set checking for false
             allowReach = false
