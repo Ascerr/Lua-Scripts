@@ -100,7 +100,7 @@ Module.New("Attack Skulls", function (mod)
 				else
 				
 					-- when shooting runes is enabled use rune
-					if SHOOT_RUNE.enabled then
+					if SHOOT_RUNE.enabled and Creature.isPlayer(creature) then
 
 						-- use rune
 						Self.UseItemWithCreature(creature, SHOOT_RUNE.runeid, 1000)
