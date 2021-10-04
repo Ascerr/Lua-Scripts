@@ -4,7 +4,10 @@
     Author:             Ascer - example
 ]]
 
-local BUY_UP_TO = 30        -- will buy to max this amount.
+local config = {
+    check = {label = "check", goto = "back", amount = 30},      -- when label "check" then if amount of vials <= 10 goto label "back"
+    refill = {label = "shop", amount = 30}                     -- when label shop make refill (buy up to 30 vials)
+}
 
 
 -- set params
@@ -12,8 +15,12 @@ local currentVials = 0
 
 --> read label messages
 function signal(label)
-    if label == "shop" then
-        buyFluidsUpTo(BUY_UP_TO)
+    if label == config.refill.label then
+        buyFluidsUpTo(config.refill.amount)
+    elseif label == config.check.label then
+        if currentVials < config.check.amount then
+            Walker.Goto(config.check.goto)
+        end    
     end
 end
 Walker.onLabel("signal")
@@ -43,7 +50,6 @@ function buyFluidsUpTo(amount)
     while true do
         wait(200) -- wait time to prevents program hang.
         if currentVials >= amount then return true end
-        print(amount - currentVials)
         Self.Say("instant buy " .. amount - currentVials + 1 .. " mana fluids")
         wait(1500, 2000)
         Self.UseItemWithMe(MANA_FLUID.id, 0)
