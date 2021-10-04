@@ -6,7 +6,7 @@
 
 local config = {
     check = {label = "check", goto = "back", amount = 30},      -- when label "check" then if amount of vials <= 10 goto label "back"
-    refill = {label = "shop", amount = 30}                     -- when label shop make refill (buy up to 30 vials)
+    refill = {label = "shop", amount = 100}                     -- when label shop make refill (buy up to 30 vials)
 }
 
 
