@@ -15,13 +15,13 @@ local changedLabel, changeTime = false, 0
 
 
 -- module to run function
-Module.New("If player attack SD him", function ()
+Module.New("Player attack go to label", function ()
 
 	-- when label is set.
 	if changedLabel then
 
 		-- when time diff is good
-		if os.clock() - changeTime > (canReadCheckAgainForMins * 60) then
+		if os.clock() - changeTime > (config.canReadCheckAgainForMins * 60) then
 
 			-- reset param.
 			changedLabel = false
@@ -46,7 +46,7 @@ Module.New("If player attack SD him", function ()
 	    		if not changedLabel then
 
 	    			-- go to label
-	    			Walker.Goto(LABEL_NAME)
+	    			Walker.Goto(config.label)
 
 	    			-- set.
 	    			changedLabel = true
