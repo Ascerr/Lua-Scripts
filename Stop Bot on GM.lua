@@ -12,6 +12,7 @@ Module.New("Stop Bot on GM", function ()
     for i = 1, #players do
         local player = players[i]
         if string.instr(player.name, "GM ") or string.instr(player.name, "CM ") or string.instr(player.name, "Admin ") or string.instr(player.name, "ADM ") then
+            Rifbot.PlaySound("Default.mp3") -- play sound
             return Rifbot.setEnabled(false)
         end
     end
