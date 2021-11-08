@@ -4,9 +4,26 @@
     Author:             Ascer - example
 ]]
 
-local BACKPACK = {index = 0, contid = 4387, runeid = 2273}          -- [index] container nr where we looking for runes, [contid] = id of backpack next to open, [runeid] = rune we search for
 
 -- DONT EDIT BELOW THIS LINE
+
+local BACKPACK = {index = 0, runeid = 2273}          -- [index] container nr where we looking for runes, [runeid] = rune we search for
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Function:       openNextContainerFromIndex
+--> Description:    Open any container from index (nr)
+--> Params:         
+-->                 @nr - number container index
+--> Return:         boolean true or false
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+function openNextContainerFromIndex(nr)
+    local items = Container.getItems(nr)
+    for i, item in ipairs(items) do
+        if Item.hasAttribute(item.id, ITEM_FLAG_CONTAINER) then
+            return Container.UseItem(nr, i - 1, item.id, false, math.random(500, 700))
+        end 
+    end 
+end
 
 -- loop module
 Module.New("Open Next Bp for Runes", function (mod)
@@ -20,16 +37,8 @@ Module.New("Open Next Bp for Runes", function (mod)
         -- if not found
         if not item then
 
-            -- search for next backpack
-            item = Container.FindItem(BACKPACK.contid, BACKPACK.index)
-
-            -- if found
-            if item ~= false then
-
-                -- open backpack
-                Container.UseItem(item.index, item.slot, item.id, false, 1000)
-
-            end    
+            -- open any empty container of index.
+            openNextContainerFromIndex(BACKPACK.index)
 
         end 
 
