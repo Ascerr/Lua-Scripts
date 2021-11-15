@@ -6,6 +6,7 @@
 
 local TARGET_LIST = {"Snake", "Rat"} -- list of all possible monsters to switch attack with Capital letter.
 local RANGE = 1					     -- max distance to search creatures.
+local HP_TYPE = 1					 -- type of identify creatures 0 - the highest percent, 1 - the lowest percent
 
 -- DON'T EDIT BELOW THIS LINE
 
@@ -13,19 +14,40 @@ local RANGE = 1					     -- max distance to search creatures.
 TARGET_LIST = table.lower(TARGET_LIST)
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
---> Function:		getCreatureWithMostHp(list, range)
---> Description: 	Get table with creature of most hpperc to attack .
+--> Function:		getCreatureWithHighestHp(list, range)
+--> Description: 	Get table with creature of most hpperc to attack.
 --> Params:			
 -->					@list table with creature names
 -->					@range number max distance between you and creature
 --> Return: 		table with monster info or -1 if not found.
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
-function getCreatureWithMostHp(list, range)
+function getCreatureWithHighestHp(list, range)
 	local creatures = Creature.iMonsters(range, false) 
 	local lastHpperc, c = -1, -1
 	for i = 1, #creatures do
 		local creature = creatures[i]
 		if creature.hpperc > lastHpperc and table.find(list, string.lower(creature.name)) then
+			c = creature
+			lastHpperc = creature.hpperc
+		end	
+	end
+	return c
+end
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Function:		getCreatureWithLowestHp(list, range)
+--> Description: 	Get table with creature of lowest hpperc to attack.
+--> Params:			
+-->					@list table with creature names
+-->					@range number max distance between you and creature
+--> Return: 		table with monster info or -1 if not found.
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+function getCreatureWithLowestHp(list, range)
+	local creatures = Creature.iMonsters(range, false) 
+	local lastHpperc, c = 101, -1
+	for i = 1, #creatures do
+		local creature = creatures[i]
+		if creature.hpperc < lastHpperc and table.find(list, string.lower(creature.name)) then
 			c = creature
 			lastHpperc = creature.hpperc
 		end	
@@ -39,17 +61,30 @@ Module.New("Attack Monster with most HP", function (mod)
 	-- when we are connected
 	if Self.isConnected() then
         
-		-- load current creature.
-		local creature = getCreatureWithMostHp(TARGET_LIST, RANGE)
+		-- set param 
+		local mob
 
-		-- when creature is different than -1
-		if creature ~= -1 then
+		-- depent on HP_TYPE read creature with lowest or highest hpperc
+		if HP_TYPE == 0 then
+
+			-- load current creature.
+			mob = getCreatureWithHighestHp(TARGET_LIST, RANGE)
+
+		else
+
+			-- load current creature.
+			mob = getCreatureWithLowestHp(TARGET_LIST, RANGE)
+
+		end	
+
+		-- when mob is different than -1
+		if table.count(mob) > 1 then
 
 			-- when current target is different then creature.
-			if Self.TargetID() ~= creature.id then
+			if Self.TargetID() ~= mob.id then
 
 				-- attack creature.
-				Creature.Attack(creature.id)
+				Creature.Attack(mob.id)
 
 				-- wait some time.
 				wait(200, 500)
