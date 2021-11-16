@@ -84,8 +84,6 @@ Module.New("Attack Monster with most HP", function (mod)
 
 		end	
 
-		print(amount)
-
 		-- when mob is different than -1
 		if table.count(mob) > 1 and amount >= COUNT then
 
