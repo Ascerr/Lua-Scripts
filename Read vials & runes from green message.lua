@@ -10,9 +10,9 @@
 ]]
 
 local config = {
-	vials = {enabled = true, amount = 50},     -- read vials: true/false, when amount will below go to label  
-    runes = {enabled = true, amount = 20},     -- read runes: true/false, when amount will below go to label   
-	label = "back"		                       -- label where to go if vials below
+	vials = {enabled = true, amount = 50, alert = true},     -- read vials: true/false, when amount will below go to label, alert: play sound true/false
+    runes = {enabled = true, amount = 20, alert = true},     -- read runes: true/false, when amount will below go to label, alert: play sound true/false
+	label = "back"		                                     -- label where to go if vials below
 }
 
 -- DONT EDIT BELOW THIS LINE
@@ -34,7 +34,10 @@ function proxyText(messages)
     	                received = true
     	                print("We have " .. vials .. " vials go to label: " .. config.label)
     	                break
-    	            end    
+    	            end
+                    if config.vials.alert then
+                        Rifbot.PlaySound("Low Mana.mp3")
+                    end    
                 end
             end    
         end
@@ -50,7 +53,10 @@ function proxyText(messages)
                         received = true
                         print("We have " .. runes .. " runes go to label: " .. config.label)
                         break
-                    end    
+                    end
+                    if config.runes.alert then
+                        Rifbot.PlaySound("Low Health.mp3")
+                    end     
                 end
             end    
         end
