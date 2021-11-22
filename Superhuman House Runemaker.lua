@@ -1,0 +1,556 @@
+--[[
+    Script Name: 		Superhuman House Runemaker
+    
+    Description: 		Advanced script to house runemaking (otclient compatible only)
+
+    					1. If current mana level go house make rune and back on feet or alana sio.
+    					2. Check for players on screen or multifloor and hide. Back for 5 min example.
+    					3. When gets dmg hide to house too. Both 2 & 3 has use friends.txt safe list.
+    					4. When appear fire on screen expand back time for WHEN_PLAYER_HIDE.back.delay.
+    					5. Pickup full bp of balnk runes and throw out full bp of created runes (Main backpack opener).
+    					6. Go to house for eating food at time to time.
+
+    Required:			Rifbot 2.00 or higher. 
+    					
+    Author: 			Ascer - example 
+]]
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+--> CONFIG SECTION: start
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+local HOUSE_POS = {x = 32388, y = 32238, z = 6} 	-- Position inside house
+local BACK_POS = {x = 32389, y = 32238, z = 6}		-- Position outside house
+
+local SPELL = {
+	name = "adura vita",							-- spell name
+	mana = 100										-- min mana to cast spell
+}
+
+local BACK_ON_FEET = {
+	enabled = false,								-- true/false back on feet not using alana sio
+}
+
+local WHEN_PLAYER_HIDE = {
+	enabled = false,								-- true/false hide to house when player appear (ignore safe list from friends.txt)
+	multifloor = false,								-- true/false check player for above and below floors.
+	back = {enabled = false, delay = 5}				-- back true/false, delay time in minutes to back after.
+}
+
+local WHEN_DMG_TAKEN_HIDE = {
+	enabled = false,								-- true/false hide to house if character get dmg (ignore safe list from friends.txt)
+	keywords = {"You lose"},						-- keywords to catch from proxy message
+	back = false									-- back true/false go out of house after attacked by player (delay of back set in WHEN_PLAYER_HIDE.back.delay)
+}
+
+local WHEN_FIRE_NEAR_DOOR_WAIT = {
+	enabled = false,								-- true/false don't go out if near door where stay your character are fields (checking for pos BACK_POS)
+	fields = {2118, 2119, 2120, 2121, 2122, 2123}	-- fields id to check (ofc if someone trash field there is no way to check it)
+}
+
+local PICKUP_BLANK_DROP_BP_RUNES = {
+	enabled = false,								-- enabled true/false
+	blank_backpack_id = 2870, 						-- id of backpack with blank runes
+	blank_rune_id = 3147, 							-- blank rune id
+	blank_pos = {x = 32386, y = 32237, z = 6},		-- position of backpacks with blank runes (should be 1sqm from you)
+	finish_pos = {x = 32386, y = 32239, z = 6}		-- position to drop finished backpack.
+}
+
+local EAT_FOOD_FROM_GROUND = {
+	enabled = false,								-- enabled true/false eat food from house ground
+	food = {3578, 3725},							-- food ids
+	delay = {7, 12},								-- delay time to eat food in minutes math.random(a, b)
+	pos = {x = 32386, y = 32239, z = 6}				-- position where lay food on ground.
+}
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+--> CONFIG SECTION: end
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+-- DON'T EDIT BELOW THIS LINE
+
+local spellTime, stepTime, friends, backTime, logTime, lastPlayer, isPlayer, pickupBlanks, foodTime, foodDelay, eatFood = 0, 0, Rifbot.FriendsList(true), 0, 0, "", false, false, 0, 0, false
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Function:		delayedSay(text, delay)
+--> Description: 	Say text with delay.	
+--> Params:			
+-->					@text string message to say on default channel.
+-->					@delay number miliseconds between say.
+--> Return: 		none
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+function delayedSay(text, delay)
+	if os.clock() - spellTime > (delay / 1000) then
+		Self.Say(text)
+		spellTime = os.clock()
+	end	
+end
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Function:		delayedLog(text, delay)
+--> Description: 	Add log to bot panel.	
+--> Params:			
+-->					@text string message to store in log.
+-->					@delay number miliseconds between logs.
+--> Return: 		none
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+function delayedLog(text, delay)
+	if os.clock() - logTime > (delay / 1000) then
+		printf(text)
+		logTime = os.clock()
+	end
+end	
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Function:		getPlayer()
+--> Description: 	Get player on screen.
+-->					
+--> Return: 		table with creature or false when failed.
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+function getPlayer()
+
+	-- inside loop for all found creatures on multiple floors do:
+	for i, player in pairs(Creature.iPlayers(7, WHEN_PLAYER_HIDE.multifloor)) do
+
+		-- when we can not find a friends and creature is player:
+		if not table.find(friends, string.lower(player.name)) then
+
+			-- return table with creature
+			return player
+
+	    end
+
+	end
+
+	-- return false noone player found.
+	return false
+
+end	
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Function:		eatFoodFromGround()
+--> Description: 	Eat food from house ground position
+-->					
+--> Return: 		nil - nothing
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+function eatFoodFromGround()
+
+	-- when disabled return
+	if not EAT_FOOD_FROM_GROUND.enabled then return end
+
+	-- when time is wrong return
+	if os.clock() - foodTime < foodDelay * 60 then return end
+
+	-- set param eatFood = true
+	eatFood = true
+
+	-- when current position is far than 1 sqm from eating pos.
+	if Self.DistanceFromPosition(EAT_FOOD_FROM_GROUND.pos.x, EAT_FOOD_FROM_GROUND.pos.y, EAT_FOOD_FROM_GROUND.pos.z) > 1 then
+
+		-- go there
+		Self.WalkTo(EAT_FOOD_FROM_GROUND.pos.x, EAT_FOOD_FROM_GROUND.pos.y, EAT_FOOD_FROM_GROUND.pos.z)
+
+	else	
+
+		-- set amount to use.
+		local tries = math.random(7, 10)
+
+		-- inside loop use food.
+		for i = 1, tries do
+
+			-- load map with food
+			local map = Map.GetTopMoveItem(EAT_FOOD_FROM_GROUND.pos.x, EAT_FOOD_FROM_GROUND.pos.y, EAT_FOOD_FROM_GROUND.pos.z)
+
+			-- if food id is different than our
+			if not table.find(EAT_FOOD_FROM_GROUND.food, map.id) then
+
+				-- load self pos
+				selfpos = Self.Position()
+
+				-- maybe trashed? move items to our feet
+				Map.MoveItem(EAT_FOOD_FROM_GROUND.pos.x, EAT_FOOD_FROM_GROUND.pos.y, EAT_FOOD_FROM_GROUND.pos.z, selfpos.x, selfpos.y, selfpos.z, map.id, map.count, 0)
+
+				-- wait some time
+				wait(400, 700)
+
+			else	
+
+				-- use ground id (food eat)
+				Map.UseItem(EAT_FOOD_FROM_GROUND.pos.x, EAT_FOOD_FROM_GROUND.pos.y, EAT_FOOD_FROM_GROUND.pos.z, map.id, 1, 0)
+
+				-- wait some time
+				wait(800, 1200)
+
+			end	
+
+		end	
+
+		-- update food time
+		foodTime = os.clock()
+
+		-- set new random food delay.
+		foodDelay = math.random(EAT_FOOD_FROM_GROUND.delay[1], EAT_FOOD_FROM_GROUND.delay[2])
+
+		-- disable eat food
+		eatFood = false
+
+	end	
+
+end	
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Function:		pickupBlanksDropRunes()
+--> Description: 	Drop finished backpacks to house and grab bps blanks.
+-->					
+--> Return: 		nil - nothing
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+function pickupBlanksDropRunes()
+	
+	-- if no enabled return
+	if not PICKUP_BLANK_DROP_BP_RUNES.enabled then return end
+
+	-- when no main backpack open
+	if table.count(Container.getInfo(0)) < 2 then
+
+		-- when some other containers are opened
+		if Container.Amount() > 0 then
+
+			-- close all containers
+			Container.CloseAll()
+
+			-- wait some time
+			wait(700, 1000)
+
+		else
+
+			-- open main backpack
+			Self.OpenMainBackpack()
+
+			-- wait some time
+			wait(700, 1000)
+
+		end
+
+	else		
+
+		-- when no second backpack opened
+		if table.count(Container.getInfo(1)) < 2 then
+
+			-- when amount of container is above 1
+			if Container.Amount() > 1 then
+
+				-- close all containers
+				Container.CloseAll()
+
+				-- wait some time
+				wait(700, 1000)
+
+			else	
+
+				-- if we have blank backpack inside main
+				if table.count(Container.FindItem(PICKUP_BLANK_DROP_BP_RUNES.blank_backpack_id, 0)) > 2 then
+
+					-- disable pickup blanks
+					pickupBlanks = false
+
+					-- open backpack.
+					Container.Open(0, PICKUP_BLANK_DROP_BP_RUNES.blank_backpack_id, true, math.random(500, 700))
+
+				else
+
+					-- enable pickup blanks
+					pickupBlanks = true
+
+					-- when distance from take blanks pos is far than 1sqm walk to.
+					if Self.DistanceFromPosition(PICKUP_BLANK_DROP_BP_RUNES.blank_pos.x, PICKUP_BLANK_DROP_BP_RUNES.blank_pos.y, PICKUP_BLANK_DROP_BP_RUNES.blank_pos.z) > 1 then
+
+						-- go there
+						Self.WalkTo(PICKUP_BLANK_DROP_BP_RUNES.blank_pos.x, PICKUP_BLANK_DROP_BP_RUNES.blank_pos.y, PICKUP_BLANK_DROP_BP_RUNES.blank_pos.z)
+
+					else	
+
+						-- pickup one backpack from ground.
+						Self.PickupItem(PICKUP_BLANK_DROP_BP_RUNES.blank_pos.x, PICKUP_BLANK_DROP_BP_RUNES.blank_pos.y, PICKUP_BLANK_DROP_BP_RUNES.blank_pos.z, PICKUP_BLANK_DROP_BP_RUNES.blank_backpack_id, 1)
+
+						-- wait some time
+						wait(700, 1000)
+
+					end	
+
+				end	
+
+			end
+
+		else		
+
+			-- load count of blank runes inside backpacks 
+			local count = Self.ItemCount(PICKUP_BLANK_DROP_BP_RUNES.blank_rune_id, 1)
+
+			-- load count self weapon slot.
+			local weapon = Self.Weapon()
+
+			-- when weapon is this same as blank id.
+			if weapon.id == PICKUP_BLANK_DROP_BP_RUNES.blank_rune_id then
+
+				-- add count
+				count = count + 1
+
+			end	
+
+			-- when count jest below or equal 0
+			if count <= 0 then
+
+				-- drop backpack to position.
+				Self.DropItem(PICKUP_BLANK_DROP_BP_RUNES.finish_pos.x, PICKUP_BLANK_DROP_BP_RUNES.finish_pos.y, PICKUP_BLANK_DROP_BP_RUNES.finish_pos.z, PICKUP_BLANK_DROP_BP_RUNES.blank_backpack_id, 1, math.random(700, 1000))
+
+			end	
+
+		end	
+
+	end	
+
+end	
+
+-- proxy function to catch dmg taken signals
+function proxy(messages) 
+	
+	-- when hide if dmg is disabled return
+	if not WHEN_DMG_TAKEN_HIDE.enabled then return false end
+
+	-- inside loop for all messages
+	for i, msg in ipairs(messages) do 
+		
+		-- when message mode is 16 (error message)
+		if msg.mode == 16 then
+
+			-- in loop for key words
+		    for i = 1, #WHEN_DMG_TAKEN_HIDE.keywords do
+
+		        -- load single key
+		        local key = WHEN_DMG_TAKEN_HIDE.keywords[i]
+
+		        -- check if string is inside proxy
+		        if string.instr(msg.message, key) then
+
+		            -- in loop check if string not contains our friends.
+		            for j = 1, #friends do
+
+		                -- load single friend.
+		                local friend = friends[j]
+
+		                -- check if attacking our friend destroy loop.
+		                if string.instr(msg.message, "attack by " .. friend) then break end   
+
+		            end
+
+		            -- set param that is player and attacked as.
+		            isPlayer = true
+
+		            -- set param for info logs
+					lastPlayer = "dmg taken"
+
+		            -- show log.
+		            delayedLog(msg.message, 0)
+
+		        end
+		        
+		    end
+
+		end	
+
+	end
+
+end 
+
+-- register proxy function
+Proxy.TextNew("proxy")	
+
+
+-- module to run function inside loop
+Module.New("Go House Make Rune and Back", function ()
+	
+	-- when connected
+	if Self.isConnected() then
+
+		-- set param player to false
+		local player = false	
+
+		-- control backpacks
+		pickupBlanksDropRunes()
+
+		-- eat food
+		eatFoodFromGround()
+
+		-- when player on screen
+		if WHEN_PLAYER_HIDE.enabled then
+
+			-- load player checking.
+			player = getPlayer()
+
+		end
+
+		-- when player detected
+		if player or isPlayer then
+
+			-- load distance
+			local dist = Self.DistanceFromPosition(HOUSE_POS.x, HOUSE_POS.y, HOUSE_POS.z)
+
+			-- check if we are in house.
+			if dist > 0 and not pickupBlanks and not eatFood then
+				
+		        -- go to house.
+		        Self.WalkTo(HOUSE_POS.x, HOUSE_POS.y, HOUSE_POS.z)
+
+		        -- show info in information box
+		        printf("walking to house..")
+
+		        -- set param for player
+		        isPlayer = true
+
+		    else
+		    
+		    	-- update time we spent in house
+		    	backTime = os.clock()
+
+		    	-- when player 
+		    	if player then
+			    	
+			    	-- update logs
+			    	delayedLog("Go to safe place due player: " .. player.name, 2000) 
+
+			    	-- store last name
+			    	lastPlayer = player.name
+
+			    end	
+
+		    	-- disable player
+		    	isPlayer = false  
+
+		    end 
+
+		else	
+
+			-- load mana
+			local mp = Self.Mana()
+
+			-- when mana is above.
+			if mp >= SPELL.mana and not pickupBlanks and not eatFood then
+
+				-- load distance
+				local dist = Self.DistanceFromPosition(HOUSE_POS.x, HOUSE_POS.y, HOUSE_POS.z)
+
+				-- check if we are in house.
+				if dist == 0 then
+
+					-- say spell every 2.5s
+					delayedSay(SPELL.name, 2500)
+
+				else
+		
+		            -- step to safe pos
+		            Self.WalkTo(HOUSE_POS.x, HOUSE_POS.y, HOUSE_POS.z)
+
+		        end 
+
+		    else
+		    	
+		    	-- set able to back
+		    	local ableBack = true
+
+		    	-- when return is enabeld after time
+		    	if (WHEN_PLAYER_HIDE.enabled and WHEN_PLAYER_HIDE.back.enabled) or (WHEN_DMG_TAKEN_HIDE.enabled and WHEN_DMG_TAKEN_HIDE.back) then
+
+		    		-- load difference time
+		    		local diff = (os.clock() - backTime)
+
+		    		-- when diff is not enough
+		    		if diff < (WHEN_PLAYER_HIDE.back.delay * 60) then
+
+		    			-- set able back on false
+		    			ableBack = false
+
+		    			-- show info about back
+		    			delayedLog("Step due: " .. lastPlayer .. ", back for " .. math.floor((WHEN_PLAYER_HIDE.back.delay * 60) - diff) .. "s..", 1000)
+
+		    		end	
+
+		    	end
+
+		    	-- when checking for fields near house
+		    	if WHEN_FIRE_NEAR_DOOR_WAIT.enabled then
+		    		
+		    		-- load map with items
+		    		local map = Map.GetItems(BACK_POS.x, BACK_POS.y, BACK_POS.z)
+
+		    		-- inside loop check for items
+		    		for i, item in ipairs(map) do
+
+		    			-- when item.id is in table disable back
+		    			if table.find(WHEN_FIRE_NEAR_DOOR_WAIT.fields, item.id) then
+
+		    				-- disable back
+		    				ableBack = false
+
+		    				-- reset time
+		    				backTime = os.clock()
+
+		    				-- set param to field	
+							lastPlayer = "field"
+
+		    				-- show log.
+		    				delayedLog("deteced field near house: " .. item.id, 1000)
+
+		    				-- break loop
+		    				break
+
+		    			end	
+
+		    		end	
+
+		    	end	
+
+		    	-- when able to back and don't pickup blanks and don't eat food
+		    	if ableBack and not pickupBlanks and not eatFood then
+
+			    	-- when back on feet is enabled
+			    	if BACK_ON_FEET.enabled then
+
+			    		-- check dist between return pos.
+			    		local dist = Self.DistanceFromPosition(BACK_POS.x, BACK_POS.y, BACK_POS.z)
+
+			    		-- when dist is diff than 0
+			    		if dist ~= 0 then
+
+				            -- step to safe pos
+				            Self.WalkTo(BACK_POS.x, BACK_POS.y, BACK_POS.z)
+
+				        end    
+
+			    	else	
+
+				    	-- load distance
+						local dist = Self.DistanceFromPosition(HOUSE_POS.x, HOUSE_POS.y, HOUSE_POS.z)
+
+						-- when we have no more mana for cast spell and dist = 0 then back with alana sio.  
+						if dist == 0 then
+
+							-- say alana sio every 3s
+							delayedSay("alana sio \"" .. Self.Name(), 3000)
+
+						end 
+
+					end	
+
+				end	
+
+			end
+
+		end		
+
+	end	
+
+end)
