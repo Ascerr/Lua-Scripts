@@ -1,6 +1,6 @@
 --[[
-    Script Name: 		Creature Attack
-    Description: 		Play sound if any monster or player attack you. 
+    Script Name: 		Player On Screen Alarm
+    Description: 		Play sound player is on screen. (configurable safe list and time required to player stay on screen) 
     Author: 			Ascer - example
 ]]
 
@@ -12,7 +12,7 @@ local MINIMAL_TIME_STAY_ON_SCREEN = 0     -- minimal amount of miliseconds (1000
 local enterTime = 0
 
 -- loop function
-Module.New("Player Alarm", function ()
+Module.New("Player On Screen Alarm", function ()
     local isPlayer = false
     for i, player in pairs(Creature.iPlayers(7)) do
         if not table.find(SAFE_LIST, player.name) then
