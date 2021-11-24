@@ -44,12 +44,12 @@ local WHEN_DMG_TAKEN_HIDE = {
 }
 
 local WHEN_FIRE_NEAR_DOOR_WAIT = {
-	enabled = true, 								-- true/false don't go out if near door where stay your character are fields (checking for pos BACK_POS)
+	enabled = false, 								-- true/false don't go out if near door where stay your character are fields (checking for pos BACK_POS)
 	fields = {2118, 2119, 2120, 2121, 2122, 2123} 	-- fields id to check (ofc if someone trash field there is no way to check it)
 }
 
 local PICKUP_BLANK_DROP_BP_RUNES = {
-	enabled = true, 								-- enabled true/false
+	enabled = false, 								-- enabled true/false
 	blank_backpack_id = 2854, 						-- id of backpack with blank runes
 	blank_rune_id = 3147, 							-- blank rune id
 	blank_pos = {x = 33315, y = 31969, z = 6}, 		-- position of backpacks with blank runes (should be 1sqm from you)
@@ -57,14 +57,14 @@ local PICKUP_BLANK_DROP_BP_RUNES = {
 }
 
 local EAT_FOOD_FROM_GROUND = {
-	enabled = true, 								-- enabled true/false eat food from house ground
+	enabled = false, 								-- enabled true/false eat food from house ground
 	food = {3578, 3725}, 							-- food ids
 	delay = {7, 12}, 								-- delay time to eat food in minutes math.random(a, b)
 	pos = {x = 33314, y = 31970, z = 6} 			-- position where lay food on ground.
 }
 
 local ANTI_PUSH = {                                 
-    enabled = true,                                 -- enabled true/false if your character will stay on any position from pos table will go to safe pos.
+    enabled = false,                                 -- enabled true/false if your character will stay on any position from pos table will go to safe pos.
     pos = {                                         -- positions table just add this around your house door (outside).
         {x = 33314, y = 31966, z = 6},
         {x = 33314, y = 31965, z = 6},
