@@ -19,48 +19,59 @@
 --> CONFIG SECTION: start
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-local HOUSE_POS = {x = 32388, y = 32238, z = 6} 	-- Position inside house
-local BACK_POS = {x = 32389, y = 32238, z = 6}		-- Position outside house
+local HOUSE_POS = {x = 33315, y = 31968, z = 6} 	-- Position inside house
+local BACK_POS = {x = 33315, y = 31966, z = 6} 		-- Position outside house
 
 local SPELL = {
-	name = "adura vita",							-- spell name
-	mana = 100										-- min mana to cast spell
+	name = "adori vita vis", 						-- spell name
+	mana = 300										-- min mana to cast spell
 }
 
 local BACK_ON_FEET = {
-	enabled = false,								-- true/false back on feet not using alana sio
+	enabled = false, 								-- true/false back on feet not using alana sio
 }
 
 local WHEN_PLAYER_HIDE = {
-	enabled = false,								-- true/false hide to house when player appear (ignore safe list from friends.txt)
-	multifloor = false,								-- true/false check player for above and below floors.
-	back = {enabled = false, delay = 5}				-- back true/false, delay time in minutes to back after.
+	enabled = true, 								-- true/false hide to house when player appear (ignore safe list from friends.txt)
+	multifloor = false, 							-- true/false check player for above and below floors.
+	back = {enabled = true, delay = 2} 				-- back true/false, delay time in minutes to back after.
 }
 
 local WHEN_DMG_TAKEN_HIDE = {
-	enabled = false,								-- true/false hide to house if character get dmg (ignore safe list from friends.txt)
-	keywords = {"You lose"},						-- keywords to catch from proxy message
-	back = false									-- back true/false go out of house after attacked by player (delay of back set in WHEN_PLAYER_HIDE.back.delay)
+	enabled = true, 								-- true/false hide to house if character get dmg (ignore safe list from friends.txt)
+	keywords = {"You lose"}, 						-- keywords to catch from proxy message
+	back = true										-- back true/false go out of house after attacked by player (delay of back set in WHEN_PLAYER_HIDE.back.delay)
 }
 
 local WHEN_FIRE_NEAR_DOOR_WAIT = {
-	enabled = false,								-- true/false don't go out if near door where stay your character are fields (checking for pos BACK_POS)
-	fields = {2118, 2119, 2120, 2121, 2122, 2123}	-- fields id to check (ofc if someone trash field there is no way to check it)
+	enabled = true, 								-- true/false don't go out if near door where stay your character are fields (checking for pos BACK_POS)
+	fields = {2118, 2119, 2120, 2121, 2122, 2123} 	-- fields id to check (ofc if someone trash field there is no way to check it)
 }
 
 local PICKUP_BLANK_DROP_BP_RUNES = {
-	enabled = false,								-- enabled true/false
-	blank_backpack_id = 2870, 						-- id of backpack with blank runes
+	enabled = true, 								-- enabled true/false
+	blank_backpack_id = 2854, 						-- id of backpack with blank runes
 	blank_rune_id = 3147, 							-- blank rune id
-	blank_pos = {x = 32386, y = 32237, z = 6},		-- position of backpacks with blank runes (should be 1sqm from you)
-	finish_pos = {x = 32386, y = 32239, z = 6}		-- position to drop finished backpack.
+	blank_pos = {x = 33315, y = 31969, z = 6}, 		-- position of backpacks with blank runes (should be 1sqm from you)
+	finish_pos = {x = 33314, y = 31969, z = 6} 		-- position to drop finished backpack.
 }
 
 local EAT_FOOD_FROM_GROUND = {
-	enabled = false,								-- enabled true/false eat food from house ground
-	food = {3578, 3725},							-- food ids
-	delay = {7, 12},								-- delay time to eat food in minutes math.random(a, b)
-	pos = {x = 32386, y = 32239, z = 6}				-- position where lay food on ground.
+	enabled = true, 								-- enabled true/false eat food from house ground
+	food = {3578, 3725}, 							-- food ids
+	delay = {7, 12}, 								-- delay time to eat food in minutes math.random(a, b)
+	pos = {x = 33314, y = 31970, z = 6} 			-- position where lay food on ground.
+}
+
+local ANTI_PUSH = {                                 
+    enabled = true,                                 -- enabled true/false if your character will stay on any position from pos table will go to safe pos.
+    pos = {                                         -- positions table just add this around your house door (outside).
+        {x = 33314, y = 31966, z = 6},
+        {x = 33314, y = 31965, z = 6},
+        {x = 33315, y = 31965, z = 6},
+        {x = 33316, y = 31965, z = 6},
+        {x = 33316, y = 31966, z = 6}
+    }
 }
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -315,6 +326,42 @@ function pickupBlanksDropRunes()
 
 end	
 
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Function:		antipush()
+--> Description: 	When character reach any od ANTI_PUSH.pos then will go to safe place.
+-->					
+--> Return: 		nil - nothing
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+function antipush()
+
+	-- when no enabled then return
+	if not ANTI_PUSH.enabled then return end
+
+	-- load self position
+	local selfpos = Self.Position()
+
+	-- inside table check if we are on danger position
+	for i, danger in ipairs(ANTI_PUSH.pos) do
+
+		-- check for pos.
+		if selfpos.x == danger.x and selfpos.y == danger.y and selfpos.z == danger.z then
+
+			-- set param that is player and attacked as.
+            isPlayer = true
+
+            -- set param for info logs
+			lastPlayer = "character was pushed"
+
+			-- break loop
+			break
+
+		end	
+
+	end	
+
+end	
+
+
 -- proxy function to catch dmg taken signals
 function proxy(messages) 
 	
@@ -378,6 +425,9 @@ Module.New("Go House Make Rune and Back", function ()
 
 		-- set param player to false
 		local player = false	
+
+		-- check for move position.
+		antipush()
 
 		-- control backpacks
 		pickupBlanksDropRunes()
@@ -476,6 +526,23 @@ Module.New("Go House Make Rune and Back", function ()
 		    			-- show info about back
 		    			delayedLog("Step due: " .. lastPlayer .. ", back for " .. math.floor((WHEN_PLAYER_HIDE.back.delay * 60) - diff) .. "s..", 1000)
 
+						-- load distance
+						local dist = Self.DistanceFromPosition(BACK_POS.x, BACK_POS.y, BACK_POS.z)
+
+		    			-- when we back manually to pos reset time.
+		    			if dist == 0 then
+
+		    				-- reset time
+		    				backTime = 0
+
+		    				-- enable back
+		    				ableBack = true
+
+		    				-- set message
+		    				delayedLog("You back manually on BACK_POS reset time.", 0)
+
+		    			end	
+
 		    		end	
 
 		    	end
@@ -516,11 +583,11 @@ Module.New("Go House Make Rune and Back", function ()
 		    	-- when able to back and don't pickup blanks and don't eat food
 		    	if ableBack and not pickupBlanks and not eatFood then
 
+		    		-- check dist between return pos.
+			    	local dist = Self.DistanceFromPosition(BACK_POS.x, BACK_POS.y, BACK_POS.z)
+
 			    	-- when back on feet is enabled
 			    	if BACK_ON_FEET.enabled then
-
-			    		-- check dist between return pos.
-			    		local dist = Self.DistanceFromPosition(BACK_POS.x, BACK_POS.y, BACK_POS.z)
 
 			    		-- when dist is diff than 0
 			    		if dist ~= 0 then
@@ -532,14 +599,11 @@ Module.New("Go House Make Rune and Back", function ()
 
 			    	else	
 
-				    	-- load distance
-						local dist = Self.DistanceFromPosition(HOUSE_POS.x, HOUSE_POS.y, HOUSE_POS.z)
-
 						-- when we have no more mana for cast spell and dist = 0 then back with alana sio.  
-						if dist == 0 then
+						if dist ~= 0 then
 
 							-- say alana sio every 3s
-							delayedSay("alana sio \"" .. Self.Name(), 3000)
+							delayedSay("alana sio \"" .. Self.Name(), 1000)
 
 						end 
 
