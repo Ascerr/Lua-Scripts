@@ -15,7 +15,7 @@ local ammo = Self.Ammo()
 if ammo.id == 0 then
     Self.EquipItem(SLOT_AMMO, config.arrow, 1, 200)
 elseif ammo.id == config.arrow then
-    Self.EquipItem(SLOT_AMMO, config.hunting_arrow, count, 200)
+    Self.EquipItem(SLOT_AMMO, config.hunting_arrow, 100, 200)
 else
-    Self.EquipItem(SLOT_AMMO, config.arrow, count, 200)
+    Self.EquipItem(SLOT_AMMO, config.arrow, 100, 200)
 end 
