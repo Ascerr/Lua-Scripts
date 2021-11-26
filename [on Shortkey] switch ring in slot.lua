@@ -13,9 +13,9 @@ local config = {
 local ring = Self.Ring()
 
 if ring.id == 0 then
-    Self.EquipItem(SLOT_AMMO, config.first.off, 1, 200)
+    Self.EquipItem(SLOT_RING, config.first.off, 1, 200)
 elseif ring.id == config.first.on then
-    Self.EquipItem(SLOT_AMMO, config.second.off, 1, 200)
+    Self.EquipItem(SLOT_RING, config.second.off, 1, 200)
 else
-    Self.EquipItem(SLOT_AMMO, config.first.off, 1, 200)
+    Self.EquipItem(SLOT_RING, config.first.off, 1, 200)
 end 
