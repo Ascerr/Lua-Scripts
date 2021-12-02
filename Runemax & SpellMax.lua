@@ -5,10 +5,10 @@
 ]]
 
 local CONFIG = {
-    rune = {id = 3155, range = 7, enabled = true},              -- shoot rune with target, [id] of rune (3155 is SD), [range] - sqms to target, [enabled] - true/false
-    spell = {name = "exori con", range = 7, enabled = false},   -- cast spell with target, [name] of spell (exori con), ..
+    rune = {enabled = true, id = 3174, range = 7, hpperc = {min = 0, max = 100}},              -- shoot rune with target, [id] of rune (3155 is SD), [range] - sqms to target, [enabled] - true/false
+    spell = {enabled = true, name = "exori con", range = 7, hpperc = {min = 0, max = 100}},   -- cast spell with target, [name] of spell (exori con), [range] - cast if monster in distance to you , [hpperc] - cast shoot only when monster hpperc will between walue [min] and [max]
     health = 60,                                                -- dont shoot/cast if self character hpperc below this value
-    monsters = {"Rat", "Snake"}                                 -- monsters names to cast spell or shoot rune.    
+    monsters = {"Rat", "Rotworm"}                                 -- monsters names to cast spell or shoot rune.    
 }
 
 -- DON'T EDIT BELOW THIS LINE
@@ -40,26 +40,16 @@ Module.New("Runemax & SpellMax", function()
                 if c.hpperc > 0 and table.find(CONFIG.monsters, string.lower(c.name)) then
 
                     -- check for rune config.
-                    if CONFIG.rune.enabled then
+                    if CONFIG.rune.enabled and Creature.DistanceFromSelf(c) <= CONFIG.rune.range and (c.hpperc >= CONFIG.rune.hpperc.min and c.hpperc <= CONFIG.rune.hpperc.max) then
 
-                        -- when range is ok.
-                        if Creature.DistanceFromSelf(c) <= CONFIG.rune.range then
-
-                            -- shoot rune.
-                            Self.UseItemWithCreature(c, CONFIG.rune.id, math.random(2000, 2300))
-
-                        end    
-
+                        -- shoot rune.
+                        Self.UseItemWithCreature(c, CONFIG.rune.id, math.random(2000, 2300))
+   
                     -- check for spell config    
-                    elseif CONFIG.spell.enabled then
+                    elseif CONFIG.spell.enabled and Creature.DistanceFromSelf(c) <= CONFIG.spell.range and (c.hpperc >= CONFIG.spell.hpperc.min and c.hpperc <= CONFIG.spell.hpperc.max) then
 
-                         -- when range is ok.
-                        if Creature.DistanceFromSelf(c) <= CONFIG.spell.range then
-
-                            -- cast spell.
-                            Self.CastSpell(CONFIG.spell.name, 20, math.random(700, 1500))
-
-                        end    
+                         -- cast spell.
+                        Self.CastSpell(CONFIG.spell.name, 20, math.random(700, 1500))
 
                     end    
 
