@@ -7,13 +7,14 @@
 local MAIN_DELAY = {1000, 1500}  -- miliseconds use fishing rod time
 local FISHING_ROD = 3483		 -- fishing rod id
 local WATER_TILES =  {617, 618, 619, 620, 621} --  {4597,4598,4599,4600, 4601, 4602, 4609}  -- ids of water fields
+local MIN_CAP = -1		-- minimal capity to fishing.
 
 -- DONT'T EDIT BELOW THIS LINE 
 
 local selfloc, fishingPos = Self.Position(), {}
 
 Module.New("Fishing", function (mod)
-	if Self.isConnected() then
+	if Self.isConnected() and Self.Capity() > MIN_CAP then
 		local pos = Self.Position()
 		local load = false
 		
