@@ -25,6 +25,7 @@ local BACK_POS = {x = 33315, y = 31966, z = 6} 		-- Position outside house
 local SPELL = {
 	name = "adori vita vis", 						-- spell name
 	mana = 300										-- min mana to cast spell
+	go_house = false								-- true/false step to house before making rune to avoid pz lock.
 }
 
 local BACK_ON_FEET = {
@@ -44,12 +45,12 @@ local WHEN_DMG_TAKEN_HIDE = {
 }
 
 local WHEN_FIRE_NEAR_DOOR_WAIT = {
-	enabled = false, 								-- true/false don't go out if near door where stay your character are fields (checking for pos BACK_POS)
+	enabled = true, 								-- true/false don't go out if near door where stay your character are fields (checking for pos BACK_POS)
 	fields = {2118, 2119, 2120, 2121, 2122, 2123} 	-- fields id to check (ofc if someone trash field there is no way to check it)
 }
 
 local PICKUP_BLANK_DROP_BP_RUNES = {
-	enabled = false, 								-- enabled true/false
+	enabled = true, 								-- enabled true/false
 	blank_backpack_id = 2854, 						-- id of backpack with blank runes
 	blank_rune_id = 3147, 							-- blank rune id
 	blank_pos = {x = 33315, y = 31969, z = 6}, 		-- position of backpacks with blank runes (should be 1sqm from you)
@@ -57,14 +58,14 @@ local PICKUP_BLANK_DROP_BP_RUNES = {
 }
 
 local EAT_FOOD_FROM_GROUND = {
-	enabled = false, 								-- enabled true/false eat food from house ground
+	enabled = true, 								-- enabled true/false eat food from house ground
 	food = {3578, 3725}, 							-- food ids
 	delay = {7, 12}, 								-- delay time to eat food in minutes math.random(a, b)
 	pos = {x = 33314, y = 31970, z = 6} 			-- position where lay food on ground.
 }
 
 local ANTI_PUSH = {                                 
-    enabled = false,                                 -- enabled true/false if your character will stay on any position from pos table will go to safe pos.
+    enabled = true,                                 -- enabled true/false if your character will stay on any position from pos table will go to safe pos.
     pos = {                                         -- positions table just add this around your house door (outside).
         {x = 33314, y = 31966, z = 6},
         {x = 33314, y = 31965, z = 6},
@@ -490,21 +491,31 @@ Module.New("Go House Make Rune and Back", function ()
 			-- when mana is above.
 			if mp >= SPELL.mana and not pickupBlanks and not eatFood then
 
-				-- load distance
-				local dist = Self.DistanceFromPosition(HOUSE_POS.x, HOUSE_POS.y, HOUSE_POS.z)
-
-				-- check if we are in house.
-				if dist == 0 then
+				-- when don't step into house
+				if not SPELL.go_house then
 
 					-- say spell every 2.5s
 					delayedSay(SPELL.name, 2500)
 
 				else
-		
-		            -- step to safe pos
-		            Self.WalkTo(HOUSE_POS.x, HOUSE_POS.y, HOUSE_POS.z)
+					
+					-- load distance
+					local dist = Self.DistanceFromPosition(HOUSE_POS.x, HOUSE_POS.y, HOUSE_POS.z)
 
-		        end 
+					-- check if we are in house.
+					if dist == 0 then
+
+						-- say spell every 2.5s
+						delayedSay(SPELL.name, 2500)
+
+					else
+			
+			            -- step to safe pos
+			            Self.WalkTo(HOUSE_POS.x, HOUSE_POS.y, HOUSE_POS.z)
+
+			        end 
+
+			    end    
 
 		    else
 		    	
