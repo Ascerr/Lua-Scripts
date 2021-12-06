@@ -110,7 +110,7 @@ function buyGfbUpTo(amount)
                 firstTime = true
             end    
         else
-            if currentgfb >= amount then return true end
+            if currentgfb >= amount or Self.Capity() < config.cap then return true end
             if #Creature.iPlayers(5, false) <= 0 then
                 Self.Say("instant buy " .. amount - currentgfb  + 1 .. " gfb")
                 wait(1500, 2000)
