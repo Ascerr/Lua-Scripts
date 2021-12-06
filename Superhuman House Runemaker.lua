@@ -24,7 +24,7 @@ local BACK_POS = {x = 33315, y = 31966, z = 6} 		-- Position outside house
 
 local SPELL = {
 	name = "adori vita vis", 						-- spell name
-	mana = 300										-- min mana to cast spell
+	mana = 300,										-- min mana to cast spell
 	go_house = false								-- true/false step to house before making rune to avoid pz lock.
 }
 
