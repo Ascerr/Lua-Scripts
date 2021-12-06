@@ -8,12 +8,15 @@ local config = {
     check = {label = "check", goto = "back", mf = 5, uh = 50},       -- when label "check" then if amount of vials <= 5 or amount of uh <= 5 goto label "back" (minimal amount is 2 to verify message)
     refill = {label = "shop", mf = 30, uh = 30},                    -- when label shop make refill (buy up to 30 vials and 20 uhs)
     dropEmptyVialsFromMainBp = true,                                -- throw empty vials from main backpack under ground
-    uh = 3160                                                       -- id of uh rune
+    uh = 3160,                                                       -- id of uh rune
+    cap = 10                                                        -- don't buy if capity below this amount
 }
+
+-- DONT EDIT BELOW THIS LINE
 
 
 -- set params for start count
-local currentVials, currentUhs = 200, 200
+local currentVials, currentUhs, currentgfb = 200, 200, 200
 
 --> read label messages
 function signal(label)
@@ -60,7 +63,7 @@ function buyFluidsUpTo(amount)
     wait(500)
     while true do
         wait(200) -- wait time to prevents program hang.
-        if currentVials >= amount then return true end
+        if currentVials >= amount or Self.Capity() < config.cap then return true end
         Self.Say("instant buy " .. amount - currentVials + 1 .. " mana fluids")
         wait(1500, 2000)
         Self.UseItemWithMe(MANA_FLUID.id, 0)
@@ -80,13 +83,44 @@ function buyUhsUpTo(amount)
     wait(500)
     while true do
         wait(200) -- wait time to prevents program hang.
-        if currentUhs >= amount then return true end
+        if currentUhs >= amount or Self.Capity() < config.cap then return true end
         Self.Say("instant buy " .. amount - currentUhs + 1 .. " ultimate healing rune")
         wait(1500, 2000)
         Self.UseItemWithMe(config.uh, 0)
         wait(500)
     end    
 end
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Function:       buyGfbUpTo(amount)
+--> Description:    Buy up to current x great fireball runes using green message and command instant. Don't testing gfbs while players around.
+--> Params:         
+-->                 @amount number how uhs you want to have after visiting shop.
+--> Return:         boolean true or nil
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+function buyGfbUpTo(amount)
+    local firstTime = false
+    while true do
+        wait(200) -- wait time to prevents program hang.
+        if not firstTime then
+            if #Creature.iPlayers(5, false) > 0 then
+                wait(500)
+            else
+                Self.UseItemWithMe(3191, 0)
+                firstTime = true
+            end    
+        else
+            if currentgfb >= amount then return true end
+            if #Creature.iPlayers(5, false) <= 0 then
+                Self.Say("instant buy " .. amount - currentgfb  + 1 .. " gfb")
+                wait(1500, 2000)
+                Self.UseItemWithMe(3191, 0)
+                wait(500)
+            end    
+        end    
+    end    
+end
+
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 --> Function:       dropEmptyVials()
