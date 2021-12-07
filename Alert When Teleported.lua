@@ -13,7 +13,7 @@ local teleported, old = false, {x=0, y=0, z=0}
 
 -- MODULE
 Module.New("Alert When Teleported", function()
-    if Self.isConnected then
+    if Self.isConnected() then
         if teleported then
             Rifbot.PlaySound("Default.mp3")
             if STOP_BOT then
