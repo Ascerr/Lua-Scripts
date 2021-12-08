@@ -5,24 +5,28 @@
 ]]
 
 local config = {
-    check = {label = "check", goto = "back", mf = 5, uh = 50},       -- when label "check" then if amount of vials <= 5 or amount of uh <= 5 goto label "back" (minimal amount is 2 to verify message)
-    refill = {label = "shop", mf = 30, uh = 30},                    -- when label shop make refill (buy up to 30 vials and 20 uhs)
-    dropEmptyVialsFromMainBp = true,                                -- throw empty vials from main backpack under ground
-    uh = 3160,                                                       -- id of uh rune
-    cap = 10                                                        -- don't buy if capity below this amount
+    check = {label = "check", goto = "back", mf = 5, uh = 50},          -- when label "check" then if amount of vials <= 5 or amount of uh <= 5 goto label "back" (minimal amount is 2 to verify message)
+    refill = {label = "shop", mf = 30, uh = 30},                        -- when label shop make refill (buy up to 30 vials and 20 uhs)
+    dropEmptyVialsFromMainBp = true,                                    -- throw empty vials from main backpack under ground
+    uh = 3160,                                                          -- id of uh rune
+    cap = 10,                                                           -- don't buy if capity below this amount
+    holdPos = true                                                      -- true/false hold position while buying items
 }
 
 -- DONT EDIT BELOW THIS LINE
 
 
 -- set params for start count
-local currentVials, currentUhs, currentgfb = 200, 200, 200
+local currentVials, currentUhs, currentgfb, lastPos, holdPosition = 200, 200, 200, {x = 0, y = 0, z = 0}, false
 
 --> read label messages
 function signal(label)
     if label == config.refill.label then
+        lastPos = Self.Position()
+        holdPosition = true
         buyFluidsUpTo(config.refill.mf)
         buyUhsUpTo(config.refill.uh)
+        holdPosition = false
     elseif label == config.check.label then
         if currentVials <= config.check.mf or currentUhs <= config.check.uh then
             Walker.Goto(config.check.goto)
@@ -151,4 +155,13 @@ Module.New("Drop empty vials from main backpack", function(mod)
         dropEmptyVials()
     end    
     mod:Delay(300, 700)    
+end)
+
+--> Module will hold you position inside shop while buying pots.
+Module.New("Hold Pos", function()
+    if not config.holdPos then return false end
+    if not holdPosition then return false end
+    if Self.DistanceFromPosition(lastPos.x, lastPos.y, lastPos.z) ~= 0 then
+        Self.WalkTo(lastPos.x, lastPos.y, lastPos.z)
+    end    
 end)
