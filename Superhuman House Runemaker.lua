@@ -19,21 +19,22 @@
 --> CONFIG SECTION: start
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-local HOUSE_POS = {x = 33315, y = 31968, z = 6} 	-- Position inside house
-local BACK_POS = {x = 33315, y = 31966, z = 6} 		-- Position outside house
+local HOUSE_POS = {x = 32341, y = 32222, z = 7} 	-- Position inside house
+local BACK_POS = {x = 32340, y = 32222, z = 7} 		-- Position outside house
 
 local SPELL = {
 	name = "adori vita vis", 						-- spell name
 	mana = 300,										-- min mana to cast spell
-	go_house = false								-- true/false step to house before making rune to avoid pz lock.
+	go_house = false,								-- true/false step to house before making rune to avoid pz lock.
+	change_dir = {enabled = false, dir = 2}			-- enabled - true/false, dir - direction 0-3. Change character look direction after back to pos near door.
 }
 
 local BACK_ON_FEET = {
-	enabled = false, 								-- true/false back on feet not using alana sio
+	enabled = true, 								-- true/false back on feet not using alana sio
 }
 
 local WHEN_PLAYER_HIDE = {
-	enabled = true, 								-- true/false hide to house when player appear (ignore safe list from friends.txt)
+	enabled = false, 								-- true/false hide to house when player appear (ignore safe list from friends.txt)
 	multifloor = false, 							-- true/false check player for above and below floors.
 	back = {enabled = true, delay = 2} 				-- back true/false, delay time in minutes to back after.
 }
@@ -50,7 +51,7 @@ local WHEN_FIRE_NEAR_DOOR_WAIT = {
 }
 
 local PICKUP_BLANK_DROP_BP_RUNES = {
-	enabled = true, 								-- enabled true/false
+	enabled = false, 								-- enabled true/false
 	blank_backpack_id = 2854, 						-- id of backpack with blank runes
 	blank_rune_id = 3147, 							-- blank rune id
 	blank_pos = {x = 33315, y = 31969, z = 6}, 		-- position of backpacks with blank runes (should be 1sqm from you)
@@ -58,14 +59,14 @@ local PICKUP_BLANK_DROP_BP_RUNES = {
 }
 
 local EAT_FOOD_FROM_GROUND = {
-	enabled = true, 								-- enabled true/false eat food from house ground
+	enabled = false, 								-- enabled true/false eat food from house ground
 	food = {3578, 3725}, 							-- food ids
 	delay = {7, 12}, 								-- delay time to eat food in minutes math.random(a, b)
 	pos = {x = 33314, y = 31970, z = 6} 			-- position where lay food on ground.
 }
 
 local ANTI_PUSH = {                                 
-    enabled = true,                                 -- enabled true/false if your character will stay on any position from pos table will go to safe pos.
+    enabled = false,                                 -- enabled true/false if your character will stay on any position from pos table will go to safe pos.
     pos = {                                         -- positions table just add this around your house door (outside).
         {x = 33314, y = 31966, z = 6},
         {x = 33314, y = 31965, z = 6},
@@ -362,6 +363,29 @@ function antipush()
 
 end	
 
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Function:		changeDir()
+--> Description: 	When character stay near house door then will keep direction you set.
+-->					
+--> Return: 		nil - nothing
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+function changeDir()
+
+	-- when no enabled then return
+	if not SPELL.change_dir.enabled then return end
+
+	-- when distance from back pos is diff return
+	if Self.DistanceFromPosition(BACK_POS.x, BACK_POS.y, BACK_POS.z) ~= 0 then return end
+
+	-- check for dir
+	if Self.Direction() ~= SPELL.change_dir.dir then
+
+		-- change dir.
+		Self.Turn(SPELL.change_dir.dir)
+
+	end	
+
+end	
 
 -- proxy function to catch dmg taken signals
 function proxy(messages) 
@@ -435,6 +459,9 @@ Module.New("Go House Make Rune and Back", function ()
 
 		-- eat food
 		eatFoodFromGround()
+
+		-- check for dir change
+		changeDir()
 
 		-- when player on screen
 		if WHEN_PLAYER_HIDE.enabled then
