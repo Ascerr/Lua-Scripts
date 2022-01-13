@@ -7,8 +7,12 @@
 ]]
 
 
-local SPEAR_ID = 3277  	-- id of spear to pickup
-local SPEED_TIME = 300	-- speed time do action in miliseconds
+local SPEAR_ID = 3277  							-- id of spear to pickup
+local SPEED_TIME = 300							-- speed time do action in miliseconds
+local RANGE = 1									-- max distance to spear	
+local DISABLE_WALKER_WHILE_PICKING = true		-- true/false if param = true then will disable Walker when character walking for spears.
+
+
 
 -- DON'T EDIT BELOW THIS LINE
 
@@ -25,9 +29,9 @@ function getSpearGround()
 	local pos = Self.Position()
 
 	-- in loop read map for 1 range
-	for x = -1, 1 do
+	for x = -RANGE, RANGE do
 		
-		for y = -1, 1 do
+		for y = -RANGE, RANGE do
 
 			-- load map items.
 			local map = Map.GetItems(pos.x + x, pos.y + y, pos.z)
@@ -68,6 +72,14 @@ Module.New("Spear Pickup", function()
 		-- when spear is diff than -1
 		if spear ~= -1 then
 
+			-- when we disable walker
+			if DISABLE_WALKER_WHILE_PICKING then
+
+				-- if walker is enabeld
+				if Walker.isEnabled() then Walker.Enabled(false) end
+
+			end 
+
 			-- load top item on map.
 			local top = Map.GetTopMoveItem(spear.x, spear.y, spear.z)
 
@@ -97,6 +109,16 @@ Module.New("Spear Pickup", function()
 				Map.MoveItem(spear.x, spear.y, spear.z, pos.x, pos.y, pos.z, top.id, top.count, SPEED_TIME)
 
 			end	
+
+		else	
+			
+			-- when we disable walker
+			if DISABLE_WALKER_WHILE_PICKING then
+
+				-- if walker is enabeld
+				if not Walker.isEnabled() then Walker.Enabled(true) end
+
+			end 
 
 		end	
 
