@@ -10,6 +10,7 @@
 local SPEAR_ID = 3277  							-- id of spear to pickup
 local SPEED_TIME = 300							-- speed time do action in miliseconds
 local RANGE = 1									-- max distance to spear	
+local MIN_CAP = 30								-- minimal amount of cap to pickup 
 local DISABLE_WALKER_WHILE_PICKING = true		-- true/false if param = true then will disable Walker when character walking for spears.
 
 
@@ -64,7 +65,7 @@ end
 Module.New("Spear Pickup", function()
 
 	-- when connected and don't looting.
-	if Self.isConnected() and not Looter.isLooting() then
+	if Self.isConnected() and not Looter.isLooting() and Self.Capity() >= MIN_CAP then
 
 		-- load ground spear pos.
 		local spear = getSpearGround()
