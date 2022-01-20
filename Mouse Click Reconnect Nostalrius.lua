@@ -1,6 +1,6 @@
 --[[
     Script Name: 		Mouse Click Reconnect Nostalrius
-    Description: 		Logout when character detected on multiple floors or VIP detected in list.. (extra add avoid relogin if player detected short after login)
+    Description: 		Click on screen to enable logout panel.
     Author: 			Ascer - example
 ]]
 
