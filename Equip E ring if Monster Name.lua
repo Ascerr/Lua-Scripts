@@ -27,16 +27,16 @@ Module.New("Equip E ring if Monster Name", function ()
     for i, mob in pairs(Creature.iMonsters(7)) do
         if table.find(config.monsters.names, string.lower(mob.name)) then
             count = count + 1
-            if count >= PLAYERS then
+            if count >= config.monsters.amount then
                 if Self.Ring().id ~= config.ring.on then
-                    Self.EquipItem(config.ring.off, RING, 1)
+                    Self.EquipItem(SLOT_RING, config.ring.off, 1)
                 end    
             end    
         end
     end
     
     -- check for dequip
-    if count < PLAYERS then
+    if count < config.monsters.amount then
         if Self.Ring().id == config.ring.on then
             Self.DequipItem(SLOT_RING)
         end    
