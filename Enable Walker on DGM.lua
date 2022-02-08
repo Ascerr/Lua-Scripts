@@ -10,81 +10,62 @@ local FRIENDS = {"Friend1", "Friend2"}      -- friend list to avoid, name with c
 
 -- DON'T EDIT BELOW THIS LINE
 
-
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
---> Function:       getProxy(keywords, friends)
---> Description:    Search in error message proxy specific keyword.
---> Class:          None
---> Params:         
--->                 @keywords table of strings we search.
--->                 @friends table if our friends to avoid if we skill example.
---> Return:         string last proxy message if keyword found or empty string ""
+--> Function:       getAttackedByNoFriend(msg)
+--> Description:    Check string message for KEY_WORDS and FRIENDS to valid if attack us enemy.
+--> Params:         msg - string message from proxy.
+
+--> Return:         boolean true or false   
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
-function getProxy(keywords, friends)
-
-    -- load last proxy msg
-    local proxy = Proxy.ErrorGetLastMessage()
-
+function getAttackedByNoFriend(msg)
+    
     -- in loop for key words
-    for i = 1, #keywords do
+    for i = 1, #KEY_WORDS do
 
         -- load single key
-        local key = keywords[i]
+        local key = KEY_WORDS[i]
 
         -- check if string is inside proxy
-        if string.instr(proxy, key) then
+        if string.instr(msg, key) then
 
-            -- in loop check if string not contains our friends.
-            for j = 1, #friends do
+            -- in loop check if string not contains our FRIENDS.
+            for j = 1, #FRIENDS do
 
                 -- load single friend.
-                local friend = friends[j]
+                local friend = FRIENDS[j]
 
                 -- check if attacking our friend.
-                if string.instr(proxy, "attack by " .. friend) then
+                if string.instr(msg, "attack by " .. friend) then
 
                     -- return empty string
-                    return ""
+                    return false
 
                 end    
 
             end
 
             -- return proxy.
-            return proxy
+            return true
 
         end
         
     end
-    
-    -- return empty string ""
-    return ""        
+
+    return false
 
 end
 
+-- proxy module to read messages.
+function proxy(messages) 
+    for i, msg in ipairs(messages) do 
+        if getAttackedByNoFriend(msg.message) then
+            print(msg.message)
+            if not Walker.isEnabled() then 
+                Walker.Enabled(true)
 
--- module to run function in loop 200ms
-Module.New("Enable Walker on DGM", function ()
+            end 
+        end    
+    end
+end 
 
-	-- load if we found proxy key
-    local proxy = getProxy(KEY_WORDS, FRIENDS)
-
-    -- when proxy is diff than ""
-    if proxy ~= "" then
-
-    	-- when walker is disabled enable walker.
-    	if not Walker.isEnabled() then 
-
-    		-- enable walker
-    		Walker.Enabled(true)
-
-    	else	
-
-    		-- reset proxy message.
-    		Proxy.ErrorClearMessage()
-
-    	end	
-
-    end	
-
-end)
+Proxy.TextNew("proxy")
