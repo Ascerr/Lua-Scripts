@@ -5,9 +5,13 @@
 ]]
 
 
--- DONT EDIT BELOW THIS LINE
+local BACKPACKS = {
+    {index = 0, runeid = 3160},  -- [index] container nr where we looking for runes, [runeid] = rune we search for
+    {index = 1, runeid = 3180},  -- second backpack we search
+    -- add your next here
+}       
 
-local BACKPACK = {index = 0, runeid = 2273}          -- [index] container nr where we looking for runes, [runeid] = rune we search for
+-- DONT EDIT BELOW THIS LINE
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 --> Function:       openNextContainerFromIndex
@@ -22,7 +26,8 @@ function openNextContainerFromIndex(nr)
         if Item.hasAttribute(item.id, ITEM_FLAG_CONTAINER) then
             return Container.UseItem(nr, i - 1, item.id, false, math.random(500, 700))
         end 
-    end 
+    end
+    return false 
 end
 
 -- loop module
@@ -31,16 +36,24 @@ Module.New("Open Next Bp for Runes", function (mod)
     -- when connected.
     if Self.isConnected() then
 
-        -- search for runes.
-        local item = Container.FindItem(BACKPACK.runeid, BACKPACK.index)
+        -- inside loop for containers.
+        for i, bp in ipairs(BACKPACKS) do
 
-        -- if not found
-        if not item then
+            -- search for runes.
+            local item = Container.FindItem(bp.runeid, bp.index)
 
-            -- open any empty container of index.
-            openNextContainerFromIndex(BACKPACK.index)
+            -- if not found
+            if not item then
 
-        end 
+                -- open any empty container of index.
+                if openNextContainerFromIndex(bp.index) then break end
+
+                -- wait
+                wait(1000)
+
+            end 
+
+        end    
 
     end    
 
