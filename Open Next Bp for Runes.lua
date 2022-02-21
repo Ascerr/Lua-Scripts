@@ -49,7 +49,7 @@ Module.New("Open Next Bp for Runes", function (mod)
                 if openNextContainerFromIndex(bp.index) then break end
 
                 -- wait
-                wait(1000)
+                wait(500)
 
             end 
 
