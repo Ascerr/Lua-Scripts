@@ -4,8 +4,8 @@
     Author:             Ascer - example
 ]]
 
-local ITEM = 5908                       -- item we using on creature like obsidian life, wooden stake
-local CROPSES = {4272, 4057, 4011}      -- cropses of monsters on ground. !Remember on 8.0 servers cropse due time change their id and you should set second id this after ~5s.
+local ITEM = 5942                        -- item we using on creature like obsidian life, wooden stake 5908 = obsidian knife 5942 = wooden stake
+local CROPSES = {4272, 4057, 4011, 4137}      -- cropses of monsters on ground. !Remember on 8.0 servers cropse due time change their id and you should set second id this after ~5s.
 local MAX_ATTEMPTS = 8                  -- max attempts to skin creature. 
 local RANGE = {x = 5, y = 4}            -- range for skinning on map.
 local CLEAR_IGNORE_LIST_EVERY = 5       -- every this time in minutes will be cleared ignore list with cropses.
@@ -124,7 +124,10 @@ Module.New("Skinning Creatures", function (a)
                     -- when id is this same as at start
                     if map.id == cropse.id then
 
-                        -- when position is this same as my position
+                        -- load self pos
+                        local pos = Self.Position()
+
+                        -- when pososition is this same as my position
                         if cropse.x == pos.x and cropse.y == pos.y and cropse.z == pos.z then
 
                             -- enable walker for a few seconds
@@ -134,6 +137,7 @@ Module.New("Skinning Creatures", function (a)
                             wait(2000)
 
                         end    
+                        
 
                         -- use item with ground
                         local ret = Self.UseItemWithGround(ITEM, cropse.x, cropse.y, cropse.z)
