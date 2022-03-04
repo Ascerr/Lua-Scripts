@@ -188,6 +188,14 @@ Module.New("Skinning Creatures", function (a)
 
             else    
 
+                -- when not enabled.
+                if ENABLE_DISABLE_WALKER and not Walker.isEnabled() then
+
+                    -- enable walker
+                    Walker.Enabled(true)
+
+                end    
+                
             end    
 
         end
