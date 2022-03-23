@@ -4,9 +4,10 @@
     Author:             Ascer - example
 ]]
 
-local MAIN_DELAY = {4, 9}          -- mintues between run antiidle function.
-local USE_DELAY = {200, 650}       -- miliseconds between use action.
-local USE_TRIES = {4, 7}           -- amount of times to use .
+local MAIN_DELAY = {4, 9}                   -- mintues between run antiidle function.
+local USE_DELAY = {200, 650}                -- miliseconds between use action.
+local USE_TRIES = {4, 7}                    -- amount of times to use.
+local EAT_ONLY_IF_NO_MANA_REGEN = false     -- eat food only if no mana regen
 
 local FOOD = {                     -- add your id if need.
     836, 841, 901, 904, 3577, 3578, 3579, 3580, 3581, 3582, 3583, 3584, 3585, 3586, 3587, 3588, 3589, 
@@ -19,7 +20,7 @@ local FOOD = {                     -- add your id if need.
 
 -- DONT'T EDIT BELOW THIS LINE
 
-local mainTime, useTime, mainDelay, useDelay, tries, useTries = 0, 0, 0, 0, 0, 0
+local mainTime, useTime, mainDelay, useDelay, tries, useTries, lastMana, regenTime, onRegenEat = 0, 0, 0, 0, 0, 0, -1, 0, false
 
 
 ----------------------------------------------------------------------------------------------
@@ -64,7 +65,22 @@ end
 
 -- mod to run functions
 Module.New("Eat Food", function (mod)
-    if (os.clock() - mainTime) >= mainDelay then -- check for main func time
+    
+    -- check for mana regen
+    if EAT_ONLY_IF_NO_MANA_REGEN then
+        local mana = Self.Mana()
+        if mana >= 0 then
+            if mana ~= lastMana or mana >= Self.ManaMax() then
+                regenTime = os.clock()
+                lastMana = mana
+            end
+        end
+        if os.clock() - regenTime > 10 then
+            onRegenEat = true
+        end    
+    end    
+
+    if (os.clock() - mainTime) >= mainDelay or (EAT_ONLY_IF_NO_MANA_REGEN and onRegenEat)  then -- check for main func time
         if useTries <= 0 then
             useTries = math.random(USE_TRIES[1], USE_TRIES[2]) -- set random tries
         else
@@ -81,6 +97,7 @@ Module.New("Eat Food", function (mod)
                     useTries = 0
                     mainTime = os.clock()
                     mainDelay = math.random(MAIN_DELAY[1] * 60, MAIN_DELAY[2] * 60)
+                    onRegenEat = false
                 end
             end
         end
