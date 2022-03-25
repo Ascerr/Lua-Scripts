@@ -45,7 +45,14 @@ local CHECK_FOR_HEALTH_DMG = {
 local CHECK_FOR_SPECIAL_MONSTER = {
     enabled = false,                                    -- true/false check if on screen appear special monster that normal don't appear in this place
     names = {"Demon", "Black Sheep"},                   -- monster names
-    pauseBot = true
+    pauseBot = true                                     -- true/false pause bot or not (default alarm will play)
+}
+
+local CHECK_FOR_RARE_ITEM = {
+    enabled = false,                                    -- true/false check for rare item droped on ground. 
+    ids = {3079, 3319},                                 -- ids of items to check
+    range = 7,                                          -- distance from our character we checking
+    pauseBot = true                                     -- true/false pause bot or not (default alarm will play)
 }
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -61,7 +68,8 @@ local detectTime = 0
 local teleported, old = false, {x=0, y=0, z=0}
 local lastMana = Self.Mana()
 local lastHealth = Self.Health()
-local responders, respond = {}, false
+local responders, respond, respondTime = {}, false, 0
+local checkItemTime = 0
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -194,6 +202,40 @@ function checkForSpecialMonsters(creatures)
 end    
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Function:       checkForRareItems(range)
+--> Description:    Check rare items on ground in range and play sound/pause bot.
+--> Params:         None
+-->                 
+--> Return:         nil - nothing
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+function checkForRareItems()
+    if not CHECK_FOR_RARE_ITEM.enabled then return end
+    if os.clock() - checkItemTime < 1 then return end
+    local pos = Self.Position()
+    checkItemTime = os.clock()
+    local range = CHECK_FOR_RARE_ITEM.range
+    local rangex, rangey = range, range
+    if range > 7 then rangex = 7 end
+    if range > 5 then rangey = 5 end
+
+    for x = -rangex, rangex do
+        for y = -rangey , rangey do
+            local map = Map.GetTopMoveItem(pos.x + x, pos.y + y, pos.z)
+            if table.find(CHECK_FOR_RARE_ITEM.ids, map.id) then
+                Rifbot.PlaySound("Default.mp3")
+                print("Found rare item on screen: " .. map.id)
+                if CHECK_FOR_RARE_ITEM.pauseBot then
+                    if Rifbot.isEnabled() then
+                        Rifbot.setEnabled(false)
+                    end 
+                end
+                break
+            end    
+        end    
+    end         
+end
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
 --> Function:       respondForMessage()
 --> Description:    Execute message respond.
 -->                 
@@ -255,6 +297,7 @@ Module.New("Anti GM", function ()
         checkForHealthDmg()
         respondForMessage()
         checkForSpecialMonsters(creatures)
+        checkForRareItems()
 
     end 
 
