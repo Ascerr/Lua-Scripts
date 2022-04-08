@@ -9,7 +9,7 @@ local FRIENDS = {"Friend1", "Friend2"} 	-- list of friends we can use explo Capi
 local MONSTERS_AMOUNT_TO_USE = 2		-- min monsters amount to cast spell
 local DONT_CAST_WHEN_PLAYER_DIST = 2	-- don't use spell when player distance from self is equal or below this sqms.
 local MANA = 20                         -- min mana need to shoot rune
-local SELF_MIN_HPPERC = 70              -- don't ahoot rune if your character health percent is below this value
+local SELF_MIN_HPPERC = 70              -- don't shoot rune if your character health percent is below this value
 
 -- DON'T EDIT BELOW THIS LINE.
 
