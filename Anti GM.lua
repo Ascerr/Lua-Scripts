@@ -55,6 +55,11 @@ local CHECK_FOR_RARE_ITEM = {
     pauseBot = true                                     -- true/false pause bot or not (default alarm will play)
 }
 
+local RESUME = {
+    enabled = false,                                    -- true/false resume bot after some time paused
+    time = 180                                          -- time in seconds to unpause bot
+}
+
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 --> CONFIG SECTION: end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -70,6 +75,7 @@ local lastMana = Self.Mana()
 local lastHealth = Self.Health()
 local responders, respond, respondTime = {}, false, 0
 local checkItemTime = 0
+local resumeTime = 0
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -236,6 +242,32 @@ function checkForRareItems()
 end
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Function:       resume()
+--> Description:    Resume bot after beeing paused for x time.
+--> Params:         None
+-->                 
+--> Return:         nil - nothing
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+function resume()
+    if not RESUME.enabled then return end
+    if not Rifbot.isEnabled() then
+        if resumeTime <= 0 then
+            resumeTime = os.clock()
+        else    
+            if os.clock() - resumeTime > RESUME.time then
+                Rifbot.setEnabled(true)
+                teleported = false
+                old = Self.Position()
+                lastMana = Self.Mana()
+                lastHealth = Self.Health()
+            end         
+        end
+    else
+        resumeTime = 0     
+    end        
+end 
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
 --> Function:       respondForMessage()
 --> Description:    Execute message respond.
 -->                 
@@ -298,6 +330,7 @@ Module.New("Anti GM", function ()
         respondForMessage()
         checkForSpecialMonsters(creatures)
         checkForRareItems()
+        resume()
 
     end 
 
