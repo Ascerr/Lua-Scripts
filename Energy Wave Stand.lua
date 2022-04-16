@@ -6,6 +6,7 @@
 
 local BLOCKER = "Player nick"	 -- nick of blocker.
 local ALLOW_WALK_IDS = {123, 2118, 2119, 2123, 2125, 2124}	-- enter here id such as parcels, boxes, fields etc we check for it.
+local DISTANCE = 3				-- distance between you and bloker
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 --> Function:		tileIsWalkable(x, y, z)
@@ -63,7 +64,7 @@ function reachBlocker()
 		local selfpos = Self.Position()
 
 		-- load positions available positions
-		local positions = {{x=t.x-4, y=t.y, z=t.z, walkable=false, dir=1}, {x=t.x+4, y=t.y, z=t.z, walkable=false, dir=3}, {x=t.x, y=t.y+4, z=t.z, walkable=false, dir=0}, {x=t.x, y=t.y-4, z=t.z, walkable=false, dir=2}}
+		local positions = {{x=t.x-DISTANCE, y=t.y, z=t.z, walkable=false, dir=1}, {x=t.x+DISTANCE, y=t.y, z=t.z, walkable=false, dir=3}, {x=t.x, y=t.y+DISTANCE, z=t.z, walkable=false, dir=0}, {x=t.x, y=t.y-DISTANCE, z=t.z, walkable=false, dir=2}}
 
 		-- check if we are on pos.
 		for i, pos in ipairs(positions) do
