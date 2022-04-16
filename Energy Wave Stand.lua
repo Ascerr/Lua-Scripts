@@ -6,7 +6,7 @@
 
 local BLOCKER = "Player nick"	 -- nick of blocker.
 local ALLOW_WALK_IDS = {123, 2118, 2119, 2123, 2125, 2124}	-- enter here id such as parcels, boxes, fields etc we check for it.
-local DISTANCE = 3				-- distance between you and bloker
+local DISTANCE = 4				-- distance between you and bloker
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 --> Function:		tileIsWalkable(x, y, z)
