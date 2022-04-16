@@ -55,6 +55,10 @@ local CHECK_FOR_RARE_ITEM = {
     pauseBot = true                                     -- true/false pause bot or not (default alarm will play)
 }
 
+local PAUSE_CAVEBOT_ONLY = {
+    enabled = false                                     -- while GM detected pause only Cavebot (targeting, walker, looter)
+}
+
 local RESUME = {
     enabled = false,                                    -- true/false resume bot after some time paused
     time = 180                                          -- time in seconds to unpause bot
@@ -79,6 +83,22 @@ local resumeTime = 0
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Function:       customPause()
+--> Description:    Pause whole bot (*without lua scripts) or pause cavebot only (targeting, walker, looter)
+-->                 
+--> Return:         nil - nothing
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+function customPause()
+    if PAUSE_CAVEBOT_ONLY then
+        if Targeting.isEnabled() then Targeting.Enabled(false) end
+        if Walker.isEnabled() then Walker.Enabled(false) end
+        if Looter.isEnabled() then Looter.Enabled(false) end
+    else
+        if Rifbot.isEnabled() then Rifbot.setEnabled(false) end
+    end    
+end    
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
 --> Function:       checkIfTeleported()
 --> Description:    Check for character current position and play sound and stops bot when pos quick change.
 -->                 
@@ -89,9 +109,7 @@ function checkIfTeleported()
     if teleported then
         Rifbot.PlaySound("Default.mp3")
         if CHECK_IF_TELEPORTED.pauseBot then
-            if Rifbot.isEnabled() then
-                Rifbot.setEnabled(false)
-            end 
+            customPause()
         end 
     end    
     local dist = Self.DistanceFromPosition(old.x, old.y, old.z)
@@ -119,9 +137,7 @@ function checkForVisibleGM(creatures)
                 if string.instr(player.name, CHECK_IF_GM_ON_SCREEN.keywords[j]) then
                     Rifbot.PlaySound("Default.mp3")
                     if CHECK_IF_GM_ON_SCREEN.pauseBot then
-                        if Rifbot.isEnabled() then
-                            Rifbot.setEnabled(false)
-                        end 
+                        customPause()
                     end
                     print("Detected player " .. player.name .. " on screen.")
                     break    
@@ -145,9 +161,7 @@ function checkForManaIncreased()
         if gain >= CHECK_FOR_MANA_INCREASED.points then
             Rifbot.PlaySound("Default.mp3")
             if CHECK_FOR_MANA_INCREASED.pauseBot then
-                if Rifbot.isEnabled() then
-                    Rifbot.setEnabled(false)
-                end 
+                customPause()
             end
             print("Mana increased by " .. gain .. " points")
         end    
@@ -170,9 +184,7 @@ function checkForHealthDmg()
         if dmg >= CHECK_FOR_HEALTH_DMG.percent then
             Rifbot.PlaySound("Default.mp3")
             if CHECK_FOR_HEALTH_DMG.pauseBot then
-                if Rifbot.isEnabled() then
-                    Rifbot.setEnabled(false)
-                end 
+                customPause()
             end
             print("Health dmg over " .. dmg .. "%")
         end    
@@ -196,9 +208,7 @@ function checkForSpecialMonsters(creatures)
             if table.find(CHECK_FOR_SPECIAL_MONSTER.names, string.lower(mob.name)) then
                 Rifbot.PlaySound("Default.mp3")
                 if CHECK_FOR_SPECIAL_MONSTER.pauseBot then
-                    if Rifbot.isEnabled() then
-                        Rifbot.setEnabled(false)
-                    end 
+                    customPause()
                 end
                 print("Detected monster " .. mob.name .. " on screen.")
                 break    
@@ -231,9 +241,7 @@ function checkForRareItems()
                 Rifbot.PlaySound("Default.mp3")
                 print("Found rare item on screen: " .. map.id)
                 if CHECK_FOR_RARE_ITEM.pauseBot then
-                    if Rifbot.isEnabled() then
-                        Rifbot.setEnabled(false)
-                    end 
+                    customPause()
                 end
                 break
             end    
@@ -250,11 +258,16 @@ end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 function resume()
     if not RESUME.enabled then return end
-    if not Rifbot.isEnabled() then
+    if not Rifbot.isEnabled() or (PAUSE_CAVEBOT_ONLY and not Walker.isEnabled()) then
         if resumeTime <= 0 then
             resumeTime = os.clock()
         else    
             if os.clock() - resumeTime > RESUME.time then
+                if PAUSE_CAVEBOT_ONLY then
+                    if not Targeting.isEnabled() then Targeting.Enabled(true) end
+                    if not Walker.isEnabled() then Walker.Enabled(true) end
+                    if not Looter.isEnabled() then Looter.Enabled(true) end
+                end    
                 Rifbot.setEnabled(true)
                 teleported = false
                 old = Self.Position()
