@@ -328,7 +328,7 @@ function proxy(messages)
 end 
 Proxy.New("proxy")
 
--- module 200ms
+-- module 200ms or faster if teleported enabled
 Module.New("Anti GM", function ()
     
     -- when connected.
