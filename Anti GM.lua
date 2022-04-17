@@ -11,13 +11,13 @@
 
 local CHECK_IF_TELEPORTED = {
     enabled = true,                                     -- true/false check if you character was teleported
-    sqms = 3,                                           -- minimal amount of sqms to check.
+    sqms = 2,                                           -- minimal amount of sqms to check.
     pauseBot = true                                     -- true/false pause bot or not (default alarm will play)
 }
 
 local CHECK_IF_GM_ON_SCREEN = {
     enabled = true,                                     -- true/false check for gm on screen
-    keywords = {"GM ", "CM ", "Admin ", "ADM "},        -- table of keywords in gm nick
+    keywords = {"GM ", "CM ", "Admin ", "ADM ", "Gamemaster"}, -- table of keywords in gm nick
     pauseBot = true                                     -- true/false pause bot or not (default alarm will play)    
 }
 
@@ -89,7 +89,7 @@ local resumeTime = 0
 --> Return:         nil - nothing
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 function customPause()
-    if PAUSE_CAVEBOT_ONLY then
+    if PAUSE_CAVEBOT_ONLY.enabled then
         if Targeting.isEnabled() then Targeting.Enabled(false) end
         if Walker.isEnabled() then Walker.Enabled(false) end
         if Looter.isEnabled() then Looter.Enabled(false) end
@@ -106,6 +106,7 @@ end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 function checkIfTeleported()
     if not CHECK_IF_TELEPORTED.enabled then return end
+    if CHECK_IF_TELEPORTED.sqms <= 2 then Rifbot.setCriticalMode(true) end
     if teleported then
         Rifbot.PlaySound("Default.mp3")
         if CHECK_IF_TELEPORTED.pauseBot then
@@ -113,7 +114,7 @@ function checkIfTeleported()
         end 
     end    
     local dist = Self.DistanceFromPosition(old.x, old.y, old.z)
-    if dist >= CHECK_IF_TELEPORTED.sqms and old.x ~= 0 then
+    if dist >= CHECK_IF_TELEPORTED.sqms and (dist > 2 or old.z == Self.Position().z) and old.x ~= 0 then
         teleported = true
         print("Your character has been teleported " .. dist .. " sqms.")
     end
