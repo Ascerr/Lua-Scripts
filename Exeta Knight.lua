@@ -1,6 +1,6 @@
 --[[
     Script Name:        Exeta Knight
-    Description:       	Use exeta con when monsters and hp > x%
+    Description:       	Use exeta res when monsters and hp > x%
     Author:             Ascer - example
 ]]
 
