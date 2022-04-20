@@ -2,7 +2,8 @@
     Script Name:        Anti GM
     
     Description:        Advanced script to stops bot when GM detected or intereacting with as.                
-    Author:             Ascer - example 
+    Required:           Rifbot version 2.16 2022-04-20 release or later.
+    Author:             Ascer - example
 ]]
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
