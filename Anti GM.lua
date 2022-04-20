@@ -81,6 +81,8 @@ local responders, respond, respondTime = {}, false, 0
 local checkItemTime = 0
 local resumeTime = 0
 
+-- reset teleported pos
+Self.GetTeleported()
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 --> Function:       customPause()
@@ -114,12 +116,13 @@ function checkIfTeleported()
         end 
     end    
     local dist = Self.DistanceFromPosition(old.x, old.y, old.z)
-    if dist >= CHECK_IF_TELEPORTED.sqms and (dist > 2 or old.z == Self.Position().z) and old.x ~= 0 then
+    local getTeleported = Self.GetTeleported()
+    if old.x ~= 0 and (dist >= CHECK_IF_TELEPORTED.sqms and (dist > 2 or old.z == Self.Position().z)) or (table.count(getTeleported) > 1 and getTeleported.z == old.z) then
         teleported = true
         print("Your character has been teleported " .. dist .. " sqms.")
     end
     old = Self.Position()
-end 
+end
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 --> Function:       checkForVisibleGM(creatures)
