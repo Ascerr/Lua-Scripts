@@ -2,8 +2,7 @@
     Script Name:        Anti GM
     
     Description:        Advanced script to stops bot when GM detected or intereacting with as.                
-    Required:           Rifbot version 2.16 2022-04-20 release or later.
-    Author:             Ascer - example
+    Author:             Ascer - example 
 ]]
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -11,8 +10,8 @@
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 local CHECK_IF_TELEPORTED = {
-    enabled = true,                                     -- true/false check if you character was teleported
-    sqms = 2,                                           -- minimal amount of sqms to check.
+    enabled = false,                                     -- true/false check if you character was teleported
+    sqms = 3,                                           -- minimal amount of sqms to check.
     pauseBot = true                                     -- true/false pause bot or not (default alarm will play)
 }
 
@@ -32,13 +31,13 @@ local CHECK_FOR_PM_DEFAULT_MESSAGE = {
 }
 
 local CHECK_FOR_MANA_INCREASED = {
-    enabled = true,                                     -- true/false check if mana gained fast in one tick.
+    enabled = false,                                     -- true/false check if mana gained fast in one tick.
     points = 100,                                       -- minimal mana points gained to module works
     pauseBot = true                                     -- true/false pause bot or not (default alarm will play)
 }
 
 local CHECK_FOR_HEALTH_DMG = {
-    enabled = true,                                     -- true/false check for hp decarese by percent
+    enabled = false,                                     -- true/false check for hp decarese by percent
     percent = 60,                                       -- minimal hpperc decreased by GM.                  
     pauseBot = true                                     -- true/false pause bot or not (default alarm will play)
 }
@@ -54,6 +53,13 @@ local CHECK_FOR_RARE_ITEM = {
     ids = {3079, 3319},                                 -- ids of items to check
     range = 7,                                          -- distance from our character we checking
     pauseBot = true                                     -- true/false pause bot or not (default alarm will play)
+}
+
+local CHECK_FOR_MONSTERS_CREATION_AND_DISAPPEAR = {
+    enabled = false,                                    -- true/false check if GM creating monster and destroy it in short time.
+    names = {"Hero", "Dragon"},                         -- name of monsters
+    isAliveLessThan = 1,                                 -- mark monsters that are alive less than 1s. (it won't works for monsters with low HP died on headshoot)
+    pauseBot = true                                     -- true/false pause bot or not (default alarm will play) 
 }
 
 local PAUSE_CAVEBOT_ONLY = {
@@ -73,6 +79,7 @@ local RESUME = {
 -- DONT'T EDIT BELOW THIS LINE 
 
 CHECK_FOR_SPECIAL_MONSTER.names = table.lower(CHECK_FOR_SPECIAL_MONSTER.names)
+CHECK_FOR_MONSTERS_CREATION_AND_DISAPPEAR.names = table.lower(CHECK_FOR_MONSTERS_CREATION_AND_DISAPPEAR.names)
 
 local detectTime = 0
 local teleported, old = false, {x=0, y=0, z=0}
@@ -81,9 +88,33 @@ local lastHealth = Self.Health()
 local responders, respond, respondTime = {}, false, 0
 local checkItemTime = 0
 local resumeTime = 0
+local pausedTriger = false
+local mobDisappear, mobDisappearTime = -1, 0
 
 -- reset teleported pos
 Self.GetTeleported()
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Function:       init()
+--> Description:    Params initialization.
+-->                 
+--> Return:         nil - nothing
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+function init()
+    if Rifbot.isEnabled() then 
+        if pausedTriger then
+            pausedTriger = false
+            disappear = false
+            mobDisappear = -1
+            teleported = false
+            old = Self.Position()
+            lastMana = Self.Mana()
+            lastHealth = Self.Health()
+        end    
+    else
+        pausedTriger = true
+    end
+end
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 --> Function:       customPause()
@@ -123,7 +154,7 @@ function checkIfTeleported()
         print("Your character has been teleported " .. dist .. " sqms.")
     end
     old = Self.Position()
-end
+end 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 --> Function:       checkForVisibleGM(creatures)
@@ -223,6 +254,45 @@ function checkForSpecialMonsters(creatures)
 end    
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Function:       checkForMonstersCreationAndDisappear(creatures)
+--> Description:    Check if example monster you attacked appear on screen and fast disapper then play sound.
+--> Params:         
+-->                 @creatures table with creatures.
+-->                 
+--> Return:         nil - nothing
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+function checkForMonstersCreationAndDisappear(creatures)
+    if not CHECK_FOR_MONSTERS_CREATION_AND_DISAPPEAR.enabled then return end
+    local target = Self.TargetID()
+    for i = 1, #creatures do
+        local mob = creatures[i]
+        if Creature.isMonster(mob) then
+            if table.find(CHECK_FOR_MONSTERS_CREATION_AND_DISAPPEAR.names, string.lower(mob.name)) then
+                if mob.id == target then
+                    if mobDisappear == -1 or mobDisappear.id ~= target then
+                        mobDisappear = mob
+                        mobDisappearTime = os.clock()
+                    end
+                    return    
+                end
+                if table.count(mobDisappear) > 1 and mob.id == mobDisappear.id then return end 
+            end        
+        end    
+    end
+    if table.count(mobDisappear) > 1 and ((Creature.isOnScreen(mobDisappear) and mobDisappear.hpperc > 20 and os.clock() - mobDisappearTime < CHECK_FOR_MONSTERS_CREATION_AND_DISAPPEAR.isAliveLessThan) or disappear) then
+        disappear = true
+        Rifbot.PlaySound("Default.mp3")
+        if CHECK_FOR_MONSTERS_CREATION_AND_DISAPPEAR.pauseBot then
+            customPause()
+        end
+        print("Detected monster creation and disappear " .. mobDisappear.name .. " on screen.")
+    else
+        mobDisappear = -1    
+    end        
+end    
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
 --> Function:       checkForRareItems(range)
 --> Description:    Check rare items on ground in range and play sound/pause bot.
 --> Params:         None
@@ -278,6 +348,8 @@ function resume()
                 old = Self.Position()
                 lastMana = Self.Mana()
                 lastHealth = Self.Health()
+                disappear = false
+                mobDisappear = -1
             end         
         end
     else
@@ -341,6 +413,7 @@ Module.New("Anti GM", function ()
         -- load creatures.
         local creatures = Creature.getCreatures()
 
+        init()
         checkIfTeleported()
         checkForVisibleGM(creatures)
         checkForManaIncreased()
@@ -348,6 +421,7 @@ Module.New("Anti GM", function ()
         respondForMessage()
         checkForSpecialMonsters(creatures)
         checkForRareItems()
+        checkForMonstersCreationAndDisappear(creatures)
         resume()
 
     end 
