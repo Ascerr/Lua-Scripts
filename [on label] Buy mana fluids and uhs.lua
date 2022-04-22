@@ -17,7 +17,7 @@ local config = {
 
 
 -- set params for start count
-local currentVials, currentUhs, currentgfb, lastPos, holdPosition = 200, 200, 200, {x = 0, y = 0, z = 0}, false
+local currentVials, currentUhs, currentgfb, lastPos, holdPosition = 20000, 20000, 20000, {x = 0, y = 0, z = 0}, false
 
 --> read label messages
 function signal(label)
