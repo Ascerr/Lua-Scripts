@@ -10,9 +10,10 @@
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 local CHECK_IF_TELEPORTED = {
-    enabled = false,                                     -- true/false check if you character was teleported
+    enabled = true,                                     -- true/false check if you character was teleported
     sqms = 3,                                           -- minimal amount of sqms to check.
-    pauseBot = true                                     -- true/false pause bot or not (default alarm will play)
+    pauseBot = true,                                     -- true/false pause bot or not (default alarm will play)
+    respond = true                                      -- respond short after character will teleported. Messages used here are this same as CHECK_FOR_PM_DEFAULT_MESSAGE. respond
 }
 
 local CHECK_IF_GM_ON_SCREEN = {
@@ -150,7 +151,14 @@ function checkIfTeleported()
     local dist = Self.DistanceFromPosition(old.x, old.y, old.z)
     local getTeleported = Self.GetTeleported()
     if old.x ~= 0 and (dist >= CHECK_IF_TELEPORTED.sqms and (dist > 2 or old.z == Self.Position().z)) or (table.count(getTeleported) > 1 and getTeleported.z == old.z) then
-        teleported = true
+        if CHECK_IF_TELEPORTED.respond and not teleported then
+            respond = true
+        end
+        teleported = true    
+        Rifbot.PlaySound("Default.mp3")
+        if CHECK_IF_TELEPORTED.pauseBot then
+            customPause()
+        end 
         print("Your character has been teleported " .. dist .. " sqms.")
     end
     old = Self.Position()
@@ -366,6 +374,7 @@ end
 function respondForMessage()
     if respond then
         local msg = CHECK_FOR_PM_DEFAULT_MESSAGE.respond.randomMsg[math.random(1, #CHECK_FOR_PM_DEFAULT_MESSAGE.respond.randomMsg)]
+        wait(500 + 90 * #msg)
         Self.Say(msg)
         respond = false
         respondTime = os.clock()
