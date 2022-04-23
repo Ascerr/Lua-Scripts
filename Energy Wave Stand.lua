@@ -4,9 +4,13 @@
     Author:             Ascer - example
 ]]
 
-local BLOCKER = "Player nick"	 -- nick of blocker.
+local FOCUS_ON = {
+	target = true,										-- keep pos for target default true
+	blocker = {enabled = false, name = "Player nick"}	-- keep pos for blocker nick name, !!! You can't use both
+}
+
+local DISTANCE = 3										-- distance between you and bloker
 local ALLOW_WALK_IDS = {123, 2118, 2119, 2123, 2125, 2124}	-- enter here id such as parcels, boxes, fields etc we check for it.
-local DISTANCE = 4				-- distance between you and bloker
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 --> Function:		tileIsWalkable(x, y, z)
@@ -44,7 +48,9 @@ end
 --> Return: 		-1 if no creature else table with creature
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 function getAttackedCreature()
-	local c = Creature.getCreatures(BLOCKER)
+	local t = Self.TargetID()
+	if FOCUS_ON.blocker.enabled then t = FOCUS_ON.blocker.name end
+	local c = Creature.getCreatures(t)
 	if table.count(c) < 2 then return -1 end
 	return c
 end	
