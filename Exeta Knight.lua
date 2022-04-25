@@ -1,11 +1,11 @@
 --[[
     Script Name:        Exeta Knight
-    Description:       	Use exeta res when monsters and hp > x%
+    Description:       	Use exeta con when monsters and hp > x%
     Author:             Ascer - example
 ]]
 
-local MONSTERS_AMOUNT = 1		-- use only if monsters around (1sqm) will >= this value
-local MIN_SELF_HPPERC = 70		-- use inly if hpperc your character >= this value
+local MONSTERS = {amount = 1, hpperc = 100}		-- use only if monsters around (1sqm). amount = min monsters, hpperc = monster hp % if below then use
+local MIN_SELF_HPPERC = 70		-- use only if hpperc your character >= this value
 local SPELL = {name = "exeta res", mana = 30, delay = 5000} -- spell name, spell min mana, spell delay (time in miliseconds between usage).
 
 
@@ -24,7 +24,10 @@ function getMonstersAround(range)
 	local mobs = Creature.iMonsters(range, false)
     local count = 0
     for i = 1, #mobs do
-        count = count + 1
+        local mob = mobs[i]
+        if mob.hpperc <= MONSTERS.hpperc then
+        	count = count + 1
+        end	
     end
     return count
 end
@@ -45,7 +48,7 @@ Module.New("Exeta Knight", function (mod)
 			local monsters = getMonstersAround(1)
 
 			-- when monsters amount will ok
-			if monsters >= MONSTERS_AMOUNT then
+			if monsters >= MONSTERS.amount then
 
 				-- cast spell
 				Self.Say(SPELL.name)
