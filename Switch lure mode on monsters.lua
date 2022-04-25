@@ -1,5 +1,6 @@
 --[[
     Script Name: 		Switch lure mode on monsters
+    Description: 		When low amount of monsters enable lure mode, else disable and attack.
     Important:			Walking time for luring you can change in walker -> settings -> lure step time.
     Author: 			Ascer - example
 ]]
