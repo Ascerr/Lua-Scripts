@@ -1,7 +1,7 @@
 --[[
     Script Name:        Withdraw bolts from ground bag
     Description:        Will withdraw bolts up to capity from bag container on ground.
-    Required:			I cavebot do like this: 
+    Required:			In cavebot do like this: 
     						stand 33423, 32423, 7
     						bolts
     						lua: if Rifbot.ScriptIsRunning("Withdraw bolts from ground bag") then Walker.Goto("bolts") else Rifbot.ExecuteScript("Withdraw bolts from ground bag", true) end
