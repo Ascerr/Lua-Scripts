@@ -1,6 +1,6 @@
 --[[
     Script Name:        Switch Crossbow to Snowball if player
-    Description:        Switch weapon in slot, its shortkey usage script type: EXECUTE name
+    Description:        Switch weapon in slot, crossbow when 2+ monsters, snowball when player or low monsters. Friends list = list from bot panel 
     Author:             Ascer - example
 ]]
 
