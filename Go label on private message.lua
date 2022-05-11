@@ -5,9 +5,13 @@
 ]]
  
 local config = {
-    signal = "refill",                          -- signal to make action 
-    senders = {"nick1", "nick2"},               -- characters names we accept signal
-    label = "back"                              -- where to go label name.
+    signals = {                             
+        {signal = "refill", label = "back"},        -- signal table = {signal -> this you sent from main char, label -> receiver go to this label if signal.}
+        -- your next here
+        {signal = "stop", label = "wait for me"},
+    },
+    senders = {"nick1", "nick2"},                   -- characters names we accept signal
+
 }
 
 -- DONT EDIT BELOW THIS LINE 
@@ -17,9 +21,11 @@ config.senders = table.lower(config.senders)
 function proxy(messages) 
     for i, msg in ipairs(messages) do 
         if table.find(config.senders, string.lower(msg.speaker)) then 
-            if string.lower(msg.message) == string.lower(config.signal) then
-                Walker.Goto(config.label)     
-            end
+            for j, sig in ipairs(config.signals) do
+                if string.lower(msg.message) == string.lower(sig.signal) then
+                    Walker.Goto(sig.label)     
+                end
+            end    
         end        
     end 
 end 
