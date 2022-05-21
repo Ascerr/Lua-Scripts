@@ -44,8 +44,9 @@ local CHECK_FOR_HEALTH_DMG = {
 }
 
 local CHECK_FOR_SPECIAL_MONSTER = {
-    enabled = false,                                    -- true/false check if on screen appear special monster that normal don't appear in this place
+    enabled = true,                                    -- true/false check if on screen appear special monster that normal don't appear in this place
     names = {"Demon", "Black Sheep"},                   -- monster names
+    useAboveListAsSafe = true,                         -- true/false if true then above list will contains safe monsters and any other will be mark as danger. If false then monsters from list will mark as danger
     pauseBot = true                                     -- true/false pause bot or not (default alarm will play)
 }
 
@@ -174,11 +175,12 @@ end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 function checkForVisibleGM(creatures)
     if not CHECK_IF_GM_ON_SCREEN.enabled then return end
+    local mypos = Self.Position()
     for i = 1, #creatures do
         local player = creatures[i]
         if Creature.isPlayer(player) then
             for j = 1, #CHECK_IF_GM_ON_SCREEN.keywords do
-                if string.instr(player.name, CHECK_IF_GM_ON_SCREEN.keywords[j]) then
+                if string.instr(player.name, CHECK_IF_GM_ON_SCREEN.keywords[j]) and mypos.z == player.z then
                     Rifbot.PlaySound("Default.mp3")
                     if CHECK_IF_GM_ON_SCREEN.pauseBot then
                         customPause()
@@ -246,10 +248,15 @@ end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 function checkForSpecialMonsters(creatures)
     if not CHECK_FOR_SPECIAL_MONSTER.enabled then return end
+    local mypos = Self.Position()
     for i = 1, #creatures do
         local mob = creatures[i]
-        if Creature.isMonster(mob) then
-            if table.find(CHECK_FOR_SPECIAL_MONSTER.names, string.lower(mob.name)) then
+        if Creature.isMonster(mob) and mob.z == mypos.z then
+            local var = table.find(CHECK_FOR_SPECIAL_MONSTER.names, string.lower(mob.name))
+            if CHECK_FOR_SPECIAL_MONSTER.useAboveListAsSafe then
+                var = not table.find(CHECK_FOR_SPECIAL_MONSTER.names, string.lower(mob.name))
+            end    
+            if var then
                 Rifbot.PlaySound("Default.mp3")
                 if CHECK_FOR_SPECIAL_MONSTER.pauseBot then
                     customPause()
