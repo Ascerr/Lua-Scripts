@@ -44,9 +44,9 @@ local CHECK_FOR_HEALTH_DMG = {
 }
 
 local CHECK_FOR_SPECIAL_MONSTER = {
-    enabled = true,                                    -- true/false check if on screen appear special monster that normal don't appear in this place
+    enabled = false,                                    -- true/false check if on screen appear special monster that normal don't appear in this place
     names = {"Demon", "Black Sheep"},                   -- monster names
-    useAboveListAsSafe = true,                         -- true/false if true then above list will contains safe monsters and any other will be mark as danger. If false then monsters from list will mark as danger
+    useAboveListAsSafe = false,                         -- true/false if true then above list will contains safe monsters and any other will be mark as danger. If false then monsters from list will mark as danger
     pauseBot = true                                     -- true/false pause bot or not (default alarm will play)
 }
 
