@@ -1,7 +1,8 @@
 --[[
     Script Name:        Anti GM
     
-    Description:        Advanced script to stops bot when GM detected or intereacting with as.                
+    Description:        Advanced script to stops bot when GM detected or intereacting with as.
+    Required:           Rifbot version 2.18
     Author:             Ascer - example 
 ]]
 
