@@ -1,5 +1,5 @@
 --[[ 
-    Script Name: 		Fast Auto SSA
+    Script Name: 		Fast Auto SSA & Might Ring
     Description: 		Spam equipming Stone Skin Amulet (delay 200ms).
     Author: 			Ascer - example
 ]]
