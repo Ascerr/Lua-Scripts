@@ -65,7 +65,7 @@ local CHECK_FOR_MONSTERS_CREATION_AND_DISAPPEAR = {
 }
 
 local CHECK_FOR_MONSTERS_CREATION = {
-    enabled = true,                                    -- [!IMPORTANT: works only on servers that don't spawn monsters when player on screen] true/false check if monsters spawn on screen. 
+    enabled = false,                                    -- [!IMPORTANT: works only on servers that don't spawn monsters when player on screen] true/false check if monsters spawn on screen. 
     pauseBot = true                                     -- true/false pause bot or not (default alarm will play)
 }
 
