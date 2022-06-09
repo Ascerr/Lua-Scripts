@@ -1,8 +1,7 @@
 --[[
     Script Name:        Anti GM
     
-    Description:        Advanced script to stops bot when GM detected or intereacting with as.
-    Required:           Rifbot version 2.18
+    Description:        Advanced script to stops bot when GM detected or intereacting with as.                
     Author:             Ascer - example 
 ]]
 
@@ -65,6 +64,12 @@ local CHECK_FOR_MONSTERS_CREATION_AND_DISAPPEAR = {
     pauseBot = true                                     -- true/false pause bot or not (default alarm will play) 
 }
 
+local CHECK_FOR_MONSTERS_CREATION = {
+    enabled = true,                                    -- [!IMPORTANT: works only on servers that don't spawn monsters when player on screen] true/false check if monsters spawn on screen. 
+    pauseBot = true                                     -- true/false pause bot or not (default alarm will play)
+}
+
+
 local PAUSE_CAVEBOT_ONLY = {
     enabled = false                                     -- while GM detected pause only Cavebot (targeting, walker, looter)
 }
@@ -92,7 +97,8 @@ local responders, respond, respondTime = {}, false, 0
 local checkItemTime = 0
 local resumeTime = 0
 local pausedTriger = false
-local mobDisappear, mobDisappearTime = -1, 0
+local mobDisappear, mobDisappearTime, disappear = -1, 0, false
+local allowCheckMobCreation, mobsCreationLevel, appearMob, appear = false, {x=0,y=0,z=0}, -1, false
 
 -- reset teleported pos
 Self.GetTeleported()
@@ -109,7 +115,10 @@ function init()
             pausedTriger = false
             disappear = false
             mobDisappear = -1
+            appear = false
+            allowCheckMobCreation = false
             teleported = false
+            mobsCreationLevel = {x=0,y=0,z=0}
             old = Self.Position()
             lastMana = Self.Mana()
             lastHealth = Self.Health()
@@ -307,6 +316,48 @@ function checkForMonstersCreationAndDisappear(creatures)
     end        
 end    
 
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Function:       checkForMonstersCreation(creatures)
+--> Description:    Check if monster was spawned on screen. Works only for servers that don't spawn it when player is on screen
+--> Params:         
+-->                 @creatures table with creatures.
+-->                 
+--> Return:         nil - nothing
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+function checkForMonstersCreation(creatures)
+    if not CHECK_FOR_MONSTERS_CREATION.enabled then return end
+    local pos = Self.Position()
+    if mobsCreationLevel.z ~= pos.z or math.abs(mobsCreationLevel.x - pos.x) > 7 or math.abs(mobsCreationLevel.y - pos.y) > 5 then 
+        allowCheckMobCreation = false
+    end   
+    mobsCreationLevel = pos
+    local count = 0
+    for i = 1, #creatures do
+        local mob = creatures[i]
+        if Creature.isMonster(mob) and mob.z == pos.z and math.abs(mob.x - pos.x) <= 7 and math.abs(mob.y - pos.y) <= 5 then
+            count = count + 1
+            if allowCheckMobCreation then
+                if Creature.DistanceFromSelf(mob) < 4 then
+                    appear = true
+                    appearMob = mob
+                    break
+                end    
+            end    
+        end    
+    end
+    if count > 0 then
+        allowCheckMobCreation = false
+    else
+        allowCheckMobCreation = true
+    end    
+    if appear then
+        Rifbot.PlaySound("Default.mp3")
+        if CHECK_FOR_MONSTERS_CREATION.pauseBot then
+            customPause()
+        end
+        print("Detected monster creation " .. appearMob.name .. " on screen.")
+    end     
+end
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 --> Function:       checkForRareItems(range)
@@ -439,6 +490,7 @@ Module.New("Anti GM", function ()
         checkForSpecialMonsters(creatures)
         checkForRareItems()
         checkForMonstersCreationAndDisappear(creatures)
+        checkForMonstersCreation(creatures)
         resume()
 
     end 
