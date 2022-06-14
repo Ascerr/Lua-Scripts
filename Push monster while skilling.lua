@@ -52,16 +52,16 @@ Module.New("Push monster while skilling", function(mod)
     	else		
 
     		-- check if monster on east
-    		local eastMonster = isMonstersOnPos(pos.x - 1, pos.y, pos.z)
+    		local eastMonster = isMonstersOnPos(pos.x + 1, pos.y, pos.z)
 
     		-- when is monster.
     		if table.count(eastMonster) > 1 then
 
     			-- load top item on east monster sqm.
-    			local map = Map.GetTopMoveItem(pos.x - 1, pos.y, pos.z)
+    			local map = Map.GetTopMoveItem(pos.x + 1, pos.y, pos.z)
 
     			-- move item from east to north with delay 1000 ms (1s) to be able push monster
-    			Map.MoveItem(pos.x - 1, pos.y, pos.z, pos.x, pos.y-1, pos.z, map.id, map.count, 1000)
+    			Map.MoveItem(pos.x + 1, pos.y, pos.z, pos.x, pos.y-1, pos.z, map.id, map.count, 1000)
 
     		end	
 
