@@ -18,7 +18,7 @@ RESPOND_TO = table.lower(RESPOND_TO)
 
 function proxy(messages) 
 	for i, msg in ipairs(messages) do 
-		if msg.channel < 2 or msg.mode < 2 then
+		if msg.channel < 2 and msg.mode < 8 then
 			if table.find(RESPOND_TO, string.lower(msg.speaker)) or RESPOND_TO_EVERYONE then
 				if not table.find(responded, msg.speaker) then
 					table.insert(responded, msg.speaker)
