@@ -6,7 +6,7 @@
 
 local LOOT = {
 
-	{index = 0, items = {3031,3035}}, -- index of container to loot 0 = first open backpack, items = table with items id
+	{index = 0, items = {3031, 3492, 7138,  3577}}, -- index of container to loot 0 = first open backpack, items = table with items id
 	{index = 1, items = {3446}}
 	-- add your next index here
 
@@ -58,7 +58,7 @@ function sortItems()
 						end
 
 						-- move item to destination container.
-						return Container.MoveItemToContainer(cont.index, (j-1), lootCont.index, (toSlot -1), item.id, item.count, math.random(DELAY[1], DELAY[2]))
+						return Container.MoveItemToContainer(cont.index, (j-1), lootCont.index, (toSlot -1), item.id, item.count, 0)
 
 					end
 				
@@ -73,10 +73,12 @@ function sortItems()
 end	
 
 
-
 Module.New("Auto Looting", function (mod)
 	
 	-- call the function
 	sortItems()
+
+	-- mod delay
+	mod:Delay(DELAY[1], DELAY[2])
 
 end)
