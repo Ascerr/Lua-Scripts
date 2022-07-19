@@ -6,27 +6,40 @@
 
 local SPPED_REACTION_FOR_MESSAGE = 500			-- miliseconds wait before start typing message
 local SPEED_PER_LETTER = 90						-- miliseconds we spent for write one single letter
-local RESPOND_TO = {"Player", "GM"}				-- respond for messages from this players (nick names)
-local RESPOND_TO_EVERYONE = false				-- true/false respond for every possible nick.
 local STOP_CAVEBOT_WHEN_RESPONDING = false		-- while responding just stop cavebot for while.
-local RANDOM_RESPOND_WORDS = {"siema byku", "yo", "ello", "hiho", "yoyo"}		-- use the random words to respond
+local RESPOND_ONLY_TO_THIS = { 
+	enabled = false,							-- enable true/false 
+	nicks = {"Player", "GM"}					-- respond for messages from this players (nick names)
+}
+
+local RESPOND_KEYWORDS = {
+	{key = {"bot", "afk"}, respond = {"no", "?", "what's up?", "lol"}},				-- key is string found in message, respond is random message to say.
+	{key = {"hi", "hello", "yo"}, respond = {"hiho", "siema", "hola amigo"}},
+	{key = {"where"}, respond = {"no idea", "use game wiki"}},
+	{key = {"long", "exp"}, respond = {"need to gain huge level", "for next hour"}},
+	--{key = {"*"}, respond = {"hello", "?"}}, -- * (star) mean any possible message 
+}
 
 -- DONT EDIT BELOW THIS LINE
 
 local orders, responded = {}, {Self.Name()}
-RESPOND_TO = table.lower(RESPOND_TO)
+RESPOND_ONLY_TO_THIS.nicks = table.lower(RESPOND_ONLY_TO_THIS.nicks)
 
 function proxy(messages) 
 	for i, msg in ipairs(messages) do 
 		if msg.channel < 2 and msg.mode < 8 then
-			if table.find(RESPOND_TO, string.lower(msg.speaker)) or RESPOND_TO_EVERYONE then
+			msg.message = string.lower(msg.message)
+			if (RESPOND_ONLY_TO_THIS.enabled and table.find(RESPOND_ONLY_TO_THIS.nicks, string.lower(msg.speaker))) or not RESPOND_ONLY_TO_THIS.enabled then
 				if not table.find(responded, msg.speaker) then
 					table.insert(responded, msg.speaker)
-					createOrder(RANDOM_RESPOND_WORDS[math.random(1, #RANDOM_RESPOND_WORDS)])
-					Rifbot.PlaySound()
+					local respond = keywordFound(msg.message)
+					if respond ~= nil then
+						createOrder(respond)
+					end
 					if STOP_CAVEBOT_WHEN_RESPONDING then
 						Cavebot.Enabled(false)
-					end	
+					end		
+					Rifbot.PlaySound()
 				end	
 				print(msg.speaker, msg.message, msg.channel, msg.mode, msg.level) 
 			end
@@ -53,6 +66,17 @@ function createOrder(msg)
 	table.insert(orders, order)
 end	
 
+function keywordFound(message)
+	for i, element in ipairs(RESPOND_KEYWORDS) do
+		for j, word in ipairs(element.key) do
+			if string.find(message, "%f[%a]" .. word .. "%f[%A]") or word == "*" then
+				return element.respond[math.random(1, #element.respond)]
+			end	
+		end
+	end
+	return nil	
+end	
+
 -- module to run in loop
 Module.New("Message responder", function()
 	executeOrder()
@@ -66,3 +90,6 @@ end)
 
 -- register new proxy
 Proxy.New("proxy")
+
+
+
