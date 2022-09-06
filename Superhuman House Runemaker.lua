@@ -9,6 +9,8 @@
     					4. When appear fire on screen expand back time for WHEN_PLAYER_HIDE.back.delay.
     					5. Pickup full bp of balnk runes and throw out full bp of created runes (Main backpack opener).
     					6. Go to house for eating food at time to time.
+	
+	Update: 2022-09-06	Added option: SPELL.only_outside to allow make runes outside house when some servers don't allow cast spells in protection zone.
 
     Required:			Rifbot 2.00 or higher. 
     					
@@ -16,27 +18,28 @@
 ]]
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
---> CONFIG SECTION: start
+--> CONFIG SECTION: start - read it carefully becaue it's important!
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-local HOUSE_POS = {x = 32341, y = 32222, z = 7} 	-- Position inside house
-local BACK_POS = {x = 32340, y = 32222, z = 7} 		-- Position outside house
+local HOUSE_POS = {x = 32368, y = 31765, z = 6} 	-- Position inside house
+local BACK_POS = {x = 32368, y = 31767, z = 6} 		-- Position outside house
 
 local SPELL = {
-	name = "adori vita vis", 						-- spell name
-	mana = 300,										-- min mana to cast spell
+	name = "adori gran flam", 						-- spell name
+	mana = 125,										-- min mana to cast spell
 	go_house = false,								-- true/false step to house before making rune to avoid pz lock.
+	only_outside = true,							-- true/false make rune only outside house (on some server you can't make it inside pz zone)
 	change_dir = {enabled = false, dir = 2}			-- enabled - true/false, dir - direction 0-3. Change character look direction after back to pos near door.
 }
 
 local BACK_ON_FEET = {
-	enabled = true, 								-- true/false back on feet not using alana sio
+	enabled = false, 								-- true/false back on feet not using alana sio
 }
 
 local WHEN_PLAYER_HIDE = {
-	enabled = false, 								-- true/false hide to house when player appear (ignore safe list from friends.txt)
+	enabled = true, 								-- true/false hide to house when player appear (ignore safe list from friends.txt)
 	multifloor = false, 							-- true/false check player for above and below floors.
-	back = {enabled = true, delay = 2} 				-- back true/false, delay time in minutes to back after.
+	back = {enabled = true, delay = 7} 				-- back true/false, delay time in minutes to back after.
 }
 
 local WHEN_DMG_TAKEN_HIDE = {
@@ -52,27 +55,27 @@ local WHEN_FIRE_NEAR_DOOR_WAIT = {
 
 local PICKUP_BLANK_DROP_BP_RUNES = {
 	enabled = false, 								-- enabled true/false
-	blank_backpack_id = 2854, 						-- id of backpack with blank runes
+	blank_backpack_id = 2868, 						-- id of backpack with blank runes
 	blank_rune_id = 3147, 							-- blank rune id
-	blank_pos = {x = 33315, y = 31969, z = 6}, 		-- position of backpacks with blank runes (should be 1sqm from you)
-	finish_pos = {x = 33314, y = 31969, z = 6} 		-- position to drop finished backpack.
+	blank_pos = {x = 32368, y = 31765, z = 6}, 		-- position of backpacks with blank runes (should be 1sqm from you)
+	finish_pos = {x = 32368, y = 31764, z = 6} 		-- position to drop finished backpack.
 }
 
 local EAT_FOOD_FROM_GROUND = {
 	enabled = false, 								-- enabled true/false eat food from house ground
 	food = {3578, 3725}, 							-- food ids
 	delay = {7, 12}, 								-- delay time to eat food in minutes math.random(a, b)
-	pos = {x = 33314, y = 31970, z = 6} 			-- position where lay food on ground.
+	pos = {x = 32367, y = 31765, z = 6} 			-- position where lay food on ground.
 }
 
 local ANTI_PUSH = {                                 
     enabled = false,                                 -- enabled true/false if your character will stay on any position from pos table will go to safe pos.
     pos = {                                         -- positions table just add this around your house door (outside).
-        {x = 33314, y = 31966, z = 6},
-        {x = 33314, y = 31965, z = 6},
-        {x = 33315, y = 31965, z = 6},
-        {x = 33316, y = 31965, z = 6},
-        {x = 33316, y = 31966, z = 6}
+        {x = 32367, y = 31767, z = 6},
+        {x = 32367, y = 31768, z = 6},
+        {x = 32368, y = 31768, z = 6},
+        {x = 32369, y = 31768, z = 6},
+        {x = 32369, y = 31767, z = 6}
     }
 }
 
@@ -516,7 +519,7 @@ Module.New("Go House Make Rune and Back", function ()
 			local mp = Self.Mana()
 
 			-- when mana is above.
-			if mp >= SPELL.mana and not pickupBlanks and not eatFood then
+			if not SPELL.only_outside and mp >= SPELL.mana and not pickupBlanks and not eatFood then
 
 				-- when don't step into house
 				if not SPELL.go_house then
@@ -542,10 +545,10 @@ Module.New("Go House Make Rune and Back", function ()
 
 			        end 
 
-			    end    
+			    end
 
-		    else
-		    	
+			else       
+			
 		    	-- set able to back
 		    	local ableBack = true
 
@@ -650,6 +653,13 @@ Module.New("Go House Make Rune and Back", function ()
 				end	
 
 			end
+
+			if SPELL.only_outside and mp >= SPELL.mana and not pickupBlanks and not eatFood then
+
+				-- say spell every 2.5s
+				delayedSay(SPELL.name, 2500)
+
+			end	
 
 		end		
 
