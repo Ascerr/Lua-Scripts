@@ -10,7 +10,7 @@
     					5. Pickup full bp of balnk runes and throw out full bp of created runes (Main backpack opener).
     					6. Go to house for eating food at time to time.
 	
-	Update: 2022-09-06	Added option: SPELL.only_outside to allow make runes outside house when some servers don't allow cast spells in protection zone.
+    Update: 2022-09-06	Added option: SPELL.only_outside to allow make runes outside house when some servers don't allow cast spells in protection zone.
 
     Required:			Rifbot 2.00 or higher. 
     					
