@@ -1,5 +1,5 @@
 --[[
-    Script Name:        [on label] Minimize backpacks mose click
+    Script Name:        [on label] Minimize bps mouse click
     Description:        Minimize backpacks using mouse click, when walker reach label "minimize"
     
     Required:           Valid positions of first container minimize button and offset (posy) to next button.
