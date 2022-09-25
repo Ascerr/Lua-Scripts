@@ -7,6 +7,7 @@
 local SPPED_REACTION_FOR_MESSAGE = 500			-- miliseconds wait before start typing message
 local SPEED_PER_LETTER = 90						-- miliseconds we spent for write one single letter
 local STOP_CAVEBOT_WHEN_RESPONDING = false		-- while responding just stop cavebot for while.
+local RESOPND_PRIVATE_MESSAGE_ONLY = false		-- respond only for private message sendig pms too.
 local RESPOND_ONLY_TO_THIS = { 
 	enabled = false,							-- enable true/false 
 	nicks = {"Player", "GM"}					-- respond for messages from this players (nick names)
@@ -27,14 +28,14 @@ RESPOND_ONLY_TO_THIS.nicks = table.lower(RESPOND_ONLY_TO_THIS.nicks)
 
 function proxy(messages) 
 	for i, msg in ipairs(messages) do 
-		if msg.channel < 2 and msg.mode < 8 then
+		if ((not RESOPND_PRIVATE_MESSAGE_ONLY and msg.channel < 2 and msg.mode < 8) or (RESOPND_PRIVATE_MESSAGE_ONLY and msg.channel == 0 and msg.mode == 4)) then 
 			msg.message = string.lower(msg.message)
 			if (RESPOND_ONLY_TO_THIS.enabled and table.find(RESPOND_ONLY_TO_THIS.nicks, string.lower(msg.speaker))) or not RESPOND_ONLY_TO_THIS.enabled then
 				if not table.find(responded, msg.speaker) then
 					table.insert(responded, msg.speaker)
 					local respond = keywordFound(msg.message)
 					if respond ~= nil then
-						createOrder(respond)
+						createOrder(respond, msg.speaker)
 					end
 					if STOP_CAVEBOT_WHEN_RESPONDING then
 						Cavebot.Enabled(false)
@@ -50,7 +51,11 @@ end
 function executeOrder()
 	for i, order in ipairs(orders) do
 		if os.clock() - order.time > (order.delay / 1000) then
-			Self.Say(order.text)
+			if RESOPND_PRIVATE_MESSAGE_ONLY then
+				Self.PrivateMessage(order.player, order.text, 0)
+			else	
+				Self.Say(order.text)
+			end	
 			table.remove(orders, i)
 			wait(500, 900)
 			if STOP_CAVEBOT_WHEN_RESPONDING then
@@ -61,8 +66,8 @@ function executeOrder()
 	end	
 end	
 
-function createOrder(msg)
-	local order = {text = msg, time = os.clock(), delay = SPPED_REACTION_FOR_MESSAGE + (string.len(msg) * SPEED_PER_LETTER)}
+function createOrder(msg, player)
+	local order = {text = msg, time = os.clock(), delay = SPPED_REACTION_FOR_MESSAGE + (string.len(msg) * SPEED_PER_LETTER), player = player}
 	table.insert(orders, order)
 end	
 
