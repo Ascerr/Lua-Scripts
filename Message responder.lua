@@ -32,11 +32,11 @@ function proxy(messages)
 			msg.message = string.lower(msg.message)
 			if (RESPOND_ONLY_TO_THIS.enabled and table.find(RESPOND_ONLY_TO_THIS.nicks, string.lower(msg.speaker))) or not RESPOND_ONLY_TO_THIS.enabled then
 				if not table.find(responded, msg.speaker) then
-					if not RESOPND_PRIVATE_MESSAGE_ONLY then 
-						table.insert(responded, msg.speaker)
-					end	
 					local respond = keywordFound(msg.message)
 					if respond ~= nil then
+						if not RESOPND_PRIVATE_MESSAGE_ONLY then 
+							table.insert(responded, msg.speaker)
+						end	
 						createOrder(respond, msg.speaker)
 					end
 					if STOP_CAVEBOT_WHEN_RESPONDING then
