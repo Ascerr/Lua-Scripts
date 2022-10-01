@@ -1,6 +1,6 @@
 --[[
     Script Name:        UH + IH healing + mana rune
-    Description:       	Use exeta con when monsters and hp > x%
+    Description:       	Heal yourself with uhs, ihs and manarunes
     Author:             Ascer - example
 ]]
 
