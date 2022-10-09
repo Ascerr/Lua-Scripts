@@ -7,8 +7,8 @@
 local config = {
     label_name = "drop",                    -- do this action on this current label in walker.
     pos = {x = 32033, y = 32237, z = 8},    -- position where lay loot on ground.
-    container_index = 0,                    -- pickup to container index (default = 0 first opened backpack)
-    items = {3031, 2920},                   -- items to pickup.
+    container_index = 0,                    -- drop from container index (default = 0 first opened backpack)
+    items = {3031, 2920},                   -- items to drop.
     open_next_bp = true                     -- true/false open nexe bp when no more items found to drop in current   
 }
 
@@ -23,7 +23,7 @@ function signal(label)
             -- wait to prevent program hangs.
             wait()
 
-            -- load deposit container.
+            -- load drop container.
             local cont = Container.getInfo(config.container_index)
 
             -- when backpack is not opened return.
