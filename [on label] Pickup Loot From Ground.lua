@@ -24,7 +24,7 @@ function signal(label)
             wait()
 
             -- when reached min capity return.
-            if Self.Capity() <= 50 then return end
+            if Self.Capity() <= config.min_cap then return end
             
             -- load current map id.
             local map = Map.GetTopMoveItem(config.pos.x, config.pos.y, config.pos.z)
