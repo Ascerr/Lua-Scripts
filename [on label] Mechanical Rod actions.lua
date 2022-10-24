@@ -5,7 +5,7 @@
                         2. Purchase rod at shop
                         3. Throw out not valuable items.
 
-                        Example waypoits at the end of script.
+                        Example waypoints at the end of script.
     Author:             Ascer - example
 ]]
 
