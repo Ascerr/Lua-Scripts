@@ -10,6 +10,7 @@ local MAX_ATTEMPTS = 8                  -- max attempts to skin creature.
 local RANGE = {x = 5, y = 4}            -- range for skinning on map.
 local CLEAR_IGNORE_LIST_EVERY = 5       -- every this time in minutes will be cleared ignore list with cropses.
 local ENABLE_DISABLE_WALKER = true      -- true/false control walker when attemping for skinnig.
+local USE_TOOL_DELAY = 800              -- use tool every this time in miliseconds..
 
 -- DONT EDIT BELOW THIS LINE
 
@@ -140,7 +141,7 @@ Module.New("Skinning Creatures", function (a)
                         
 
                         -- use item with ground
-                        local ret = Self.UseItemWithGround(ITEM, cropse.x, cropse.y, cropse.z)
+                        local ret = Self.UseItemWithGround(ITEM, cropse.x, cropse.y, cropse.z, USE_TOOL_DELAY)
 
                         -- when ret is true add tries.
                         if ret then
@@ -184,7 +185,7 @@ Module.New("Skinning Creatures", function (a)
                     -- show info
                     print("Ignore skinning cropse " .. cropse.id .. " due max tries.")
 
-                end    
+                end       
                 
             end    
 
