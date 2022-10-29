@@ -9,7 +9,7 @@ local DONT_THROW_THIS_ITEMS = {3031, 3492}   -- list of items id to don't throw
 local DELAY = {500, 800}                     -- random delay between actions       
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
---> Function:       LootSeller()
+--> Function:       throwItems()
 --> Description:    Read inside all opened containers for items and throw it execpt DONT_THROW_THIS_ITEMS list.
         
 --> Return:         nil - nothing.   
