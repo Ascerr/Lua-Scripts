@@ -4,13 +4,19 @@
     Author:             Ascer - example
 ]]
 
-local GOLD_ID = 3031
-local PLATINUM_ID = 3035
+local GOLD_ID = 3031											-- id of gold coin
+local PLATINUM_ID = 3035										-- id of platinum coin
 local USE_GOLD_CONVERTER_ITEM = {enabled = false, item = 5391}	-- on some servers there is an item called Gold Converter and its required to use it on stack.
+local ONLY_IF_NO_MONSTER_ON_SCREEN = false						-- true/false when any monsters on screen don't convert gold to avoid exhausting.
 
 -- DON'T EDIT BELOW
 
 Module.New("Gold Changer", function()
+	if ONLY_IF_NO_MONSTER_ON_SCREEN then
+	 	if table.count(Creature.iMonsters(7, false)) > 0 then
+	 		return false
+	 	end
+	end 		
 	local items = Container.getItems(special)
 	for i = 1, #items do
 		local cont = items[i]
