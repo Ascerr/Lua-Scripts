@@ -17,7 +17,7 @@ local useTime = 0
 Module.New("Heal with eating food", function()
 	if Self.isConnected() then
 		if Self.HealthPercent() <= config.hpperc then
-			if os.clock() - useTime >= config.delay/2000 then
+			if os.clock() - useTime >= config.delay/1000 then
 				local item = Container.FindItem(config.food)
 				if table.count(item) > 0 then
 					Container.UseItem(item.index, item.slot, item.id, false, 0)
