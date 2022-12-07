@@ -5,13 +5,14 @@
 ]]
 
 local config = {
-	range = 7						-- search monsters in range (7 deafult full screen)
-}
+	range = 7,										-- search monsters in range (7 deafult full screen)
+	disableCavebot = {enabled = false, delay = 5}	-- disable walker and targeting while looting, enabled - true/false, delay - amount seconds to restore
+}		
 
 
 -- DON'T EDIT BELOW THIS LINE
 
-local amountReached = false
+local disableTime, disableCavebot = 0, false
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 --> Function:		getMonsters()
@@ -41,34 +42,35 @@ function getMonsters()
 
 end	
 
-
 -- mod to run function in loop 200ms
 Module.New("Looter after kill monsters", function ()
-	
-	-- when connected.
 	if Self.isConnected() then
-
-		--load monsters amount
-		local monsters = getMonsters()
-		
-		-- when no monsters
-		if monsters <= 0 then
-
-			-- enable looter
-			if not Looter.isEnabled() then Looter.Enabled(true) end
-
-		else	
-
-			-- when finished looting
-			if not Looter.isLooting() then
-
-				-- disable looter
-				if Looter.isEnabled() then Looter.Enabled(false) end
-
+		if disableCavebot and os.clock() - disableTime > config.disableCavebot.delay then
+			local w, t = Walker.isEnabled(), Targeting.isEnabled()
+			if not w or not t then
+				if not w then Walker.Enabled(true) end
+				if not t then Targeting.Enabled(true) end
+			else	
+				disableCavebot = false
 			end	
-
 		end	
-			
+		local monsters = getMonsters()
+		if monsters <= 0 then
+			if not Looter.isEnabled() then 
+				Looter.Enabled(true) 
+				if config.disableCavebot.enabled then
+					Walker.Enabled(false)
+					Targeting.Enabled(false)
+					disableTime = os.clock()
+					disableCavebot = true
+				end	
+			end
+		else	
+			if not Looter.isLooting() then
+				if Looter.isEnabled() then 
+					Looter.Enabled(false)
+				end
+			end	
+		end		
 	end	
-
 end)
