@@ -1,12 +1,13 @@
 --[[
     Script Name:        Stop Walker + Logout if No Runes
     Description:        Stop walker, but targeting is still ON to kill monsters and logout if no more runes.
-    Authors:            Ascer, Markus Etschmayer
+    Authors:            Ascer
 ]]
 
 local ITEM = {id = 3155, count = 20}  -- item.id and item.count if below logout.
 
 -- DON'T EDIT BELOW THIS LINE.
+local logged = false
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 --> Function:       getItemCount(itemid)
@@ -32,7 +33,14 @@ Module.New("Stop Walker + Logout if No Runes", function ()
     if Self.isConnected() then
         if getItemCount(ITEM.id) < ITEM.count then
             if Walker.isEnabled() then Walker.Enabled(false) end
-            Self.Logout()       
+            if not Self.isInFight() then 
+                Self.Logout()
+                logged = true
+            end           
         end
+    else
+        if logged then
+            Rifbot.setEnabled(false, true)
+        end    
     end        
 end)
