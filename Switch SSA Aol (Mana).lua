@@ -7,12 +7,12 @@
 local SSA = 3081                -- ID of stone skin amulet
 local AOL = 3057                -- ID amulet of loss
 local MPPERC = 30		        -- when mpperc below or equal wear aol, else wear ssa
-local MPPERC_TO_WEAR_SSA = 90   -- wear ssa only if mpperc < 90%
+local MPPERC_TO_WEAR_SSA = 95   -- wear ssa only if mpperc < 90%
 
 Module.New("Switch SSA Aol (Mana)", function ()
     local mp = Self.ManaPercent()
     local amulet = Self.Amulet()
-    if mp <= MPPERC then
+    if mp <= MPPERC or mp > MPPERC_TO_WEAR_SSA then
         if amulet.id ~= AOL then
             Self.EquipItem(SLOT_AMULET, AOL, 1, 0) -- delay 0
         end
