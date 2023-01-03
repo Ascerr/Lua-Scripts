@@ -1,12 +1,13 @@
 --[[
     Script Name:        Turn To Target
-    Description:        Step and turn face to target for exori vis shooting example. [Works for servers with implemented cavebot]
+    Description:        Step and turn face to target for exori vis shooting example.
     Author:             Ascer - example
 ]]
 
-local STEP_DELAY = 700					-- step every x ms to avoid overdash.
+local STEP_DELAY = 500					-- step every x ms to avoid overdash.
 local ALLOW_WALK_IDS = {123}			-- enter here id such as parcels, boxes etc we check for it.
-local MONSTERS = {"rat", "cave rat", "cyclops", "rotworm", "troll"}	-- monsters to active
+local SAFE_DISTANCE_FROM_PLAYER = 2		-- when player (no friend) is x sqms from you don't shoot.
+local MONSTERS = {"Wild warrior", "valkyrie", "war wolf", "skeleton"}	-- monsters to active
 local SPELL = {
 	name = "exori vis", 				-- spell to cast
 	mana = 20, 							-- min mana to cast spell
@@ -15,6 +16,7 @@ local SPELL = {
 
 -- DON'T EDIT BELOW THIS LINE
 local stepTime = 0
+local flist = Rifbot.FriendsList(true)
 
 -- lower case table with monsters names
 MONSTERS = table.lower(MONSTERS)
@@ -94,12 +96,19 @@ function delayedStep(dir)
 	end	
 end	
 
+function isPlayer(dist, friends)
+	for _, c in ipairs(Creature.iPlayers(dist, false)) do
+		if not table.find(friends, string.lower(c.na)) then return true end
+	end
+	return false	
+end --> check if is player near you. Return true/false 	
+
 -- module run function in loop 200ms
 Module.New("Turn To Target", function()
 	local s = Self.Position()
 	if Self.isConnected() then
 		local t = getAttackedCreature()
-		if t ~= -1 then
+		if t ~= -1 and not isPlayer(SAFE_DISTANCE_FROM_PLAYER, flist) then
 			if table.find(MONSTERS, string.lower(t.name)) then
 				local s = Self.Position()
 				if t.x == (s.x - 1) and t.y == (s.y - 1) then -- north west
