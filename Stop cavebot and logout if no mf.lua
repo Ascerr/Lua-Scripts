@@ -1,5 +1,5 @@
 --[[
-    Script Name:        Stop cavebot and logout is no mf
+    Script Name:        Stop cavebot and logout if no mf
     Description:        This script will check for green message about using vials. If low amount then will stop cavebot and wait for lost pz to logout. 
     Required:			Gameclient need to send green message about vials.
     Author:             Ascer - example
@@ -24,7 +24,7 @@ function proxyText(messages)
 end 
 Proxy.TextNew("proxyText") 
 
-Module.New("Stop cavebot and logout is no mf", function()
+Module.New("Stop cavebot and logout if no mf", function()
 	if Self.isConnected() then
 		if logout then
 			if Walker.isEnabled() then Walker.Enabled(false) end
