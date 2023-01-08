@@ -1,18 +1,14 @@
 --[[
     Script Name:        Read vials & runes from green message
     Description:        Using proxy messages for get current amount of vials and "ultimate healing runes" this message may be different depend on server.
-    
-    Code practice:      When you receive message then walker go to label "back" and set @param received = true
-                        Best way will add this function to script with Walker.onLabel function and there in depot when you refill supplies
-                        just on label set @param received = false to enable reading messages about vials/runes.
-
     Author:             Ascer - example
 ]]
 
 local config = {
 	vials = {enabled = true, amount = 50, alert = true},     -- read vials: true/false, when amount will below go to label, alert: play sound true/false
     runes = {enabled = true, amount = 20, alert = true},     -- read runes: true/false, when amount will below go to label, alert: play sound true/false
-	label = "back"		                                     -- label where to go if vials below
+	label = "back",		                                     -- label where to go if vials below
+    resetLabel = "reset"                                     -- label where you reset current amount of vials (example after refill)
 }
 
 -- DONT EDIT BELOW THIS LINE
@@ -66,3 +62,13 @@ end
 
 -- register function
 Proxy.TextNew("proxyText")
+
+
+function label(name) 
+    if name == config.resetLabel then
+        received = false
+    end 
+end 
+
+-- walker label function
+Walker.onLabel("label")
