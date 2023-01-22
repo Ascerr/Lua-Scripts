@@ -10,7 +10,7 @@
     					5. Pickup full bp of balnk runes and throw out full bp of created runes (Main backpack opener).
     					6. Go to house for eating food at time to time.
 	
-    Update: 2022-09-06	Added option: SPELL.only_outside to allow make runes outside house when some servers don't allow cast spells in protection zone.
+	Update: 2022-09-06	Added option: SPELL.only_outside to allow make runes outside house when some servers don't allow cast spells in protection zone.
 
     Required:			Rifbot 2.00 or higher. 
     					
@@ -21,8 +21,8 @@
 --> CONFIG SECTION: start - read it carefully becaue it's important!
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-local HOUSE_POS = {x = 32368, y = 31765, z = 6} 	-- Position inside house
-local BACK_POS = {x = 32368, y = 31767, z = 6} 		-- Position outside house
+local HOUSE_POS = {x = 32334, y = 32234, z = 7} 	-- Position inside house
+local BACK_POS = {x = 32335, y = 32234, z = 7} 		-- Position outside house
 
 local SPELL = {
 	name = "adori gran flam", 						-- spell name
@@ -39,13 +39,13 @@ local BACK_ON_FEET = {
 local WHEN_PLAYER_HIDE = {
 	enabled = true, 								-- true/false hide to house when player appear (ignore safe list from friends.txt)
 	multifloor = false, 							-- true/false check player for above and below floors.
-	back = {enabled = true, delay = 7} 				-- back true/false, delay time in minutes to back after.
+	back = {enabled = true, delay = 5} 				-- back true/false, delay time in minutes to back after.
 }
 
 local WHEN_DMG_TAKEN_HIDE = {
 	enabled = true, 								-- true/false hide to house if character get dmg (ignore safe list from friends.txt)
 	keywords = {"You lose"}, 						-- keywords to catch from proxy message
-	back = true										-- back true/false go out of house after attacked by player (delay of back set in WHEN_PLAYER_HIDE.back.delay)
+	back = {enabled = false, delay = 10}				-- back true/false go out of house after attacked by player, separated delay for go out.
 }
 
 local WHEN_FIRE_NEAR_DOOR_WAIT = {
@@ -355,7 +355,7 @@ function antipush()
             isPlayer = true
 
             -- set param for info logs
-			lastPlayer = "character was pushed"
+			lastPlayer = "<character was pushed>"
 
 			-- break loop
 			break
@@ -426,7 +426,10 @@ function proxy(messages)
 		            isPlayer = true
 
 		            -- set param for info logs
-					lastPlayer = "dmg taken"
+					lastPlayer = "<dmg taken>"
+
+					-- update back time.
+					backTime = os.clock()
 
 		            -- show log.
 		            delayedLog(msg.message, 0)
@@ -493,20 +496,44 @@ Module.New("Go House Make Rune and Back", function ()
 		        isPlayer = true
 
 		    else
-		    
-		    	-- update time we spent in house
-		    	backTime = os.clock()
+		    	
+		    	if lastPlayer ~= "<dmg taken>" then
+		    	
+			    	-- update time we spent in house
+			    	backTime = os.clock()
 
-		    	-- when player 
-		    	if player then
-			    	
-			    	-- update logs
-			    	delayedLog("Go to safe place due player: " .. player.name, 2000) 
+			    	-- when player 
+			    	if player then
+				    	
+				    	-- update logs
+				    	delayedLog("Go to safe place due player: " .. player.name, 2000) 
 
-			    	-- store last name
-			    	lastPlayer = player.name
+				    	-- store last name
+				    	lastPlayer = player.name
 
-			    end	
+				    end
+
+				else    
+
+					if WHEN_DMG_TAKEN_HIDE.enabled and WHEN_DMG_TAKEN_HIDE.back.enabled then
+
+						-- load difference time
+			    		local diff = (os.clock() - backTime)
+
+			    		-- set delay
+			    		local delayBack = WHEN_DMG_TAKEN_HIDE.back.delay * 60
+
+			    		-- when delay is near disable timer re-new if player enter.
+			    		if delayBack - diff <= 5 then
+
+			    			lastPlayer = ""
+
+			    		end 
+
+
+					end	
+
+				end    	
 
 		    	-- disable player
 		    	isPlayer = false  
@@ -553,19 +580,29 @@ Module.New("Go House Make Rune and Back", function ()
 		    	local ableBack = true
 
 		    	-- when return is enabeld after time
-		    	if (WHEN_PLAYER_HIDE.enabled and WHEN_PLAYER_HIDE.back.enabled) or (WHEN_DMG_TAKEN_HIDE.enabled and WHEN_DMG_TAKEN_HIDE.back) then
+		    	if (WHEN_PLAYER_HIDE.enabled and WHEN_PLAYER_HIDE.back.enabled) or (WHEN_DMG_TAKEN_HIDE.enabled and WHEN_DMG_TAKEN_HIDE.back.enabled) then
 
 		    		-- load difference time
 		    		local diff = (os.clock() - backTime)
 
+		    		-- set delay
+		    		local delayBack = WHEN_PLAYER_HIDE.back.delay * 60
+
+		    		-- when dmg taken change delay.
+		    		if lastPlayer == "<dmg taken>" and WHEN_DMG_TAKEN_HIDE.enabled and WHEN_DMG_TAKEN_HIDE.back.enabled then 
+
+		    			delayBack = WHEN_DMG_TAKEN_HIDE.back.delay * 60
+
+		    		end	
+
 		    		-- when diff is not enough
-		    		if diff < (WHEN_PLAYER_HIDE.back.delay * 60) then
+		    		if diff < delayBack then
 
 		    			-- set able back on false
 		    			ableBack = false
 
 		    			-- show info about back
-		    			delayedLog("Step due: " .. lastPlayer .. ", back for " .. math.floor((WHEN_PLAYER_HIDE.back.delay * 60) - diff) .. "s..", 1000)
+		    			delayedLog("Step due: " .. lastPlayer .. ", back for " .. math.floor(delayBack - diff) .. "s..", 1000)
 
 						-- load distance
 						local dist = Self.DistanceFromPosition(BACK_POS.x, BACK_POS.y, BACK_POS.z)
@@ -578,6 +615,9 @@ Module.New("Go House Make Rune and Back", function ()
 
 		    				-- enable back
 		    				ableBack = true
+
+		    				-- reset last player
+		    				lastPlayer = ""
 
 		    				-- set message
 		    				delayedLog("You back manually on BACK_POS reset time.", 0)
@@ -607,7 +647,7 @@ Module.New("Go House Make Rune and Back", function ()
 		    				backTime = os.clock()
 
 		    				-- set param to field	
-							lastPlayer = "field"
+							lastPlayer = "<field>"
 
 		    				-- show log.
 		    				delayedLog("deteced field near house: " .. item.id, 1000)
@@ -626,6 +666,9 @@ Module.New("Go House Make Rune and Back", function ()
 
 		    		-- check dist between return pos.
 			    	local dist = Self.DistanceFromPosition(BACK_POS.x, BACK_POS.y, BACK_POS.z)
+
+			    	-- reset last palyer
+					lastPlayer = ""
 
 			    	-- when back on feet is enabled
 			    	if BACK_ON_FEET.enabled then
