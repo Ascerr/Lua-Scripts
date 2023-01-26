@@ -13,7 +13,7 @@ local config = {
 
 Module.New("Use Training Wand with Dummy after login", function ()
 	if Self.isConnected() then
-		if useWand then
+		if useWand and Container.Amount() > 0 then
 			wait(1000)
 			Self.UseItemWithGround(config.wand, config.dummy.x, config.dummy.y, config.dummy.z, 0)
 			useWand = false
