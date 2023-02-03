@@ -4,8 +4,9 @@
     Author:             Ascer - example
 ]]
 
-local FREE_ITEMS = {3031, 3447, 3160}     -- IDs of items to pickup
-local OPEN_NEXT_BP_IF_FULL = {enabled = true, id = 2854} -- open next backpack: enabled - true/false, 
+local FREE_ITEMS = {3031, 3447, 3160}                       -- IDs of items to pickup
+local OPEN_NEXT_BP_IF_FULL = {enabled = true, id = 2854}    -- open next backpack: enabled - true/false, 
+local ALLOW_PICKUP_COVERED_ITEMS = false                    -- when item is covered by some trash up move it under yourself to pickup. 
 
 -- DON'T EDIT BELOW
 
@@ -51,6 +52,36 @@ Module.New("Pickup Free items", function ()
 
                     -- break loop
                     break
+
+                else
+                
+                    -- when we can picking covered items
+                    if ALLOW_PICKUP_COVERED_ITEMS then
+
+                        -- load items ground.
+                        local items = Map.GetItems(pos.x + x, pos.y + y, pos.z)
+
+                        -- inside loop check if there is searched item
+                        for i, item in ipairs(items) do
+
+                            -- if there is item
+                            if table.find(FREE_ITEMS, item.id) then
+
+                                -- when position is different than my current
+                                if x ~= 0 or y ~= 0 then
+
+                                    -- move item under your character
+                                    Map.MoveItem(pos.x + x, pos.y + y, pos.z, pos.x, pos.y, pos.z, map.id, map.count, 0)
+
+                                    break
+
+                                end    
+
+                            end
+
+                        end    
+
+                    end    
 
                 end 
 
