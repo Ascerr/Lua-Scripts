@@ -45,7 +45,7 @@ function getCropse()
             local map = Map.GetTopMoveItem(pos.x + x, pos.y + y, pos.z)
 
             -- when we find cropse
-            if table.find(CROPSES, map.id) then
+            if table.find(CROPSES, map.id) and (x ~= 0 or y ~= 0) then
 
                 -- set continue on true
                 local continue = true
@@ -124,21 +124,6 @@ Module.New("Skinning Creatures", function (a)
 
                     -- when id is this same as at start
                     if map.id == cropse.id then
-
-                        -- load self pos
-                        local pos = Self.Position()
-
-                        -- when pososition is this same as my position
-                        if cropse.x == pos.x and cropse.y == pos.y and cropse.z == pos.z then
-
-                            -- enable walker for a few seconds
-                            Walker.Enabled(true)
-
-                            -- wait some time.
-                            wait(2000)
-
-                        end    
-                        
 
                         -- use item with ground
                         local ret = Self.UseItemWithGround(ITEM, cropse.x, cropse.y, cropse.z, USE_TOOL_DELAY)
