@@ -6,7 +6,7 @@
 
 local GOLD_ID = 3031											-- id of gold coin
 local PLATINUM_ID = 3035										-- id of platinum coin
-local USE_GOLD_CONVERTER_ITEM = {enabled = false, item = 5391}	-- on some servers there is an item called Gold Converter and its required to use it on stack.
+local USE_GOLD_CONVERTER_ITEM = {enabled = false, item = 7889, mode = "use"}	-- on some servers there is an item called Gold Converter, @enabled - true/false, @item - ID of gold converter, @mode - type of use: "with" - use item with gold, "use" - just use gold converter like food. 
 local ONLY_IF_NO_MONSTER_ON_SCREEN = false						-- true/false when any monsters on screen don't convert gold to avoid exhausting.
 
 -- DON'T EDIT BELOW
@@ -28,7 +28,11 @@ Module.New("Gold Changer", function()
 					if USE_GOLD_CONVERTER_ITEM.enabled then
 						local converter = Container.FindItem(USE_GOLD_CONVERTER_ITEM.item)
 						if table.count(converter) > 2 then
-							Container.UseItemWithContainer(converter.index, converter.slot, converter.id, cont.index, (j - 1), item.id, 0)
+							if string.lower(USE_GOLD_CONVERTER_ITEM.mode) == "with" then
+								Container.UseItemWithContainer(converter.index, converter.slot, converter.id, cont.index, (j - 1), item.id, 0)
+							else
+								Self.UseItem(USE_GOLD_CONVERTER_ITEM.item, false, 0)
+							end	
 						end	
 					else	
 						Container.UseItem(cont.index, (j - 1), item.id, false)
