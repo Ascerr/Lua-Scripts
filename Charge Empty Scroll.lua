@@ -15,7 +15,7 @@ Module.New("Charge Empty Scroll", function (mod)
 	local scroll = Container.FindItem(config.empty_scroll)
 	if table.count(scroll) > 1 then
 		local charge = Container.FindItem(config.charge_item)
-		if charge > 1 then
+		if table.count(charge) > 1 then
 			Container.UseItemWithContainer(charge.index, charge.slot, charge.id, scroll.index, scroll.slot, scroll.id, 0)
 		end	
 	end	
