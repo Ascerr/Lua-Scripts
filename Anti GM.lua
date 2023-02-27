@@ -65,13 +65,17 @@ local CHECK_FOR_MONSTERS_CREATION_AND_DISAPPEAR = {
 }
 
 local CHECK_FOR_MONSTERS_CREATION = {
-    enabled = false,                                    -- [!IMPORTANT: works only on servers that don't spawn monsters when player on screen] true/false check if monsters spawn on screen. 
+    enabled = true,                                    -- [!IMPORTANT: works only on servers that don't spawn monsters when player on screen] true/false check if monsters spawn on screen. 
     pauseBot = true                                     -- true/false pause bot or not (default alarm will play)
 }
 
 
 local PAUSE_CAVEBOT_ONLY = {
     enabled = false                                     -- while GM detected pause only Cavebot (targeting, walker, looter)
+}
+
+local PAUSE_LUA_SCRIPTS = {                             
+    enabled = false                                     -- will pause lua scripts too (!IMPORTANT the only way to enable it will manually press CTRL+P)
 }
 
 local RESUME = {
@@ -130,7 +134,7 @@ end
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 --> Function:       customPause()
---> Description:    Pause whole bot (*without lua scripts) or pause cavebot only (targeting, walker, looter)
+--> Description:    Pause whole bot or pause cavebot only (targeting, walker, looter)
 -->                 
 --> Return:         nil - nothing
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -140,7 +144,7 @@ function customPause()
         if Walker.isEnabled() then Walker.Enabled(false) end
         if Looter.isEnabled() then Looter.Enabled(false) end
     else
-        if Rifbot.isEnabled() then Rifbot.setEnabled(false) end
+        if Rifbot.isEnabled() then Rifbot.setEnabled(false, PAUSE_LUA_SCRIPTS.enabled) end
     end    
 end    
 
@@ -460,7 +464,7 @@ function proxy(messages)
 
                 if CHECK_FOR_PM_DEFAULT_MESSAGE.pauseBot then
                     if Rifbot.isEnabled() then
-                        Rifbot.setEnabled(false)
+                        customPause()
                     end 
                 end
 
