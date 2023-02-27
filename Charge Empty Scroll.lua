@@ -5,14 +5,14 @@
 ]]
 
 local config = {
-	empty_scroll = 5112,		-- ID of empty scroll
-	charge_item = 5129			-- ID of item to recharge scroll.
+	empty_scrolls = {5108, 5112},	-- IDs of empty scrolls can be one or more. Separate it by comma.
+	charge_item = 5129				-- ID of item to recharge scroll.
 }
 
 -- DON'T EDIT BELOW THIS LINE
 
 Module.New("Charge Empty Scroll", function (mod)
-	local scroll = Container.FindItem(config.empty_scroll)
+	local scroll = Container.FindItem(config.empty_scrolls)
 	if table.count(scroll) > 1 then
 		local charge = Container.FindItem(config.charge_item)
 		if table.count(charge) > 1 then
