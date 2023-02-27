@@ -1,15 +1,16 @@
 --[[
     Script Name: 		VIP control
-    Description: 		Check up for buddies from vip list and logout when all are offline. Edit: 2019-05-14 added relogin.
+    Description: 		Check up for buddies from vip list and logout when all are offline.
     Author: 			Ascer - example
 ]]
 
 local LIST = {"def character", "friend"} 	-- list of players from vip list to search.
 local RELOGIN = {enabled = true, delay = 5} -- relogin to game when player detected or lost connection. enabled = true/false, delay = 6 min or immediately when lost connection
+local STOP_WALKER = false					-- when you cavebotting character will stop walker and let targeting kill monsters then logout.
 
 -- DONT'T EDIT BELOW THIS LINE 
 
-local list, logoutTime, printfTime, rec = table.lower(LIST), 0, 0, false
+local list, logoutTime, printfTime, rec, noBlanks = table.lower(LIST), 0, 0, false, false
 
 
 Module.New("VIP control", function ()
@@ -23,6 +24,13 @@ Module.New("VIP control", function ()
 			-- wait 5000ms
 			wait(5000)
 
+			-- when we can enable walker
+			if STOP_WALKER then
+
+				if not Walker.isEnabled() then Walker.Enabled(true) end
+
+			end	
+
 			-- set rec false
 			rec = false
 
@@ -31,14 +39,26 @@ Module.New("VIP control", function ()
 		-- check if vip is online
 		if not VIP.isOnline(list) then
 			
-			-- logout
-			Self.Logout()
-			
-			-- set message to Rifbot console
-			printf("Logged out due a no players in vip list.")
+			-- when disable walker
+			if STOP_WALKER then
 
-			-- set time.
-			logoutTime = os.clock()
+				if Walker.isEnabled() then Walker.Enabled(false) end
+
+			end	
+
+			-- when not is in fight
+			if not Self.isInFight() then
+
+				-- logout
+				Self.Logout()
+				
+				-- set message to Rifbot console
+				printf("Logged out due a no players in vip list.")
+
+				-- set time.
+				logoutTime = os.clock()
+
+			end	
 
 		end
 
