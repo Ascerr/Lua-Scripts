@@ -24,7 +24,7 @@ Module.New("Drop Fish and Burst Arrow", function()
 		if arrows > config.burst.above then
 
 			-- we drop 100 this mean when will below this value drop full stack.
-			Self.DropItem(config.burst.pos.x, config.burst.pos.y, config.burst.pos.z, config.burst.id, 100) 
+			Self.DropItem(config.burst.pos.x, config.burst.pos.y, config.burst.pos.z, config.burst.id, (arrows - config.burst.above)) 
 
 		end	
 
@@ -35,7 +35,7 @@ Module.New("Drop Fish and Burst Arrow", function()
 		if roach > config.fish.above then
 
 			-- we drop 100 this mean when will below this value drop full stack.
-			Self.DropItem(config.fish.pos.x, config.fish.pos.y, config.fish.pos.z, config.fish.id, 100) 
+			Self.DropItem(config.fish.pos.x, config.fish.pos.y, config.fish.pos.z, config.fish.id, (roach - config.fish.above)) 
 
 		end	
 
