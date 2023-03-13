@@ -1,47 +1,65 @@
 --[[
-    Script Name:        Drop Fish and Burst Arrow
-    Description:        Drop fish and burst arrows when there is above 10 example.
+    Script Name:        Creature Alert
+    Description:        Play sound if any monster or player on screen. 
     Author:             Ascer - example
 ]]
 
-local config = {
-	fish = {id = 2667, above = 10, pos = {x = 32344, y = 32224, z = 8}},	-- fish id, drop when amount above, pos x, y, z on map where to drop.
-	burst = {id = 3449, above = 10, pos = {x = 32344, y = 32225, z = 8}}
-}
+local AMOUNT = 1                                                    -- amount of monsters to play alert
+local DETECT = 2                                                    -- detect creature type, 0 - player, 1 - monster, 2 - both 
+local SAFE_LIST = {"Defense Monster", "Friend2"}                    -- Safe list. Names need to by with Capital letter.
+local SPECIAL_LIST = {enabled = false, names = {"Rat", "Snake"}}    -- enabled = true/false if you want check for special names. Use Capital letter.
 
+Module.New("Creature Alert", function ()
+    
+    -- set var for table with players.
+    local c = "players"
 
--- DON'T EDIT BELOW THIS LINE
+    -- when detect = 1 set monsters
+    if DETECT == 1 then
+    
+        -- set var for monsters
+        c = "monsters"
 
-Module.New("Drop Fish and Burst Arrow", function()
-	
-	-- when connected
-	if Self.isConnected() then
+    elseif DETECT == 2 then
 
-		-- load amount of burst arrows
-		local arrows = Self.ItemCount(config.burst.id)
+        -- set for both.
+        c = "creatures"
 
-		-- when amount is above limit.
-		if arrows > config.burst.above then
+    end    
+    
+    -- set default count
+    local count = 0
 
-			-- drop
-			Self.DropItem(config.burst.pos.x, config.burst.pos.y, config.burst.pos.z, config.burst.id, (arrows - config.burst.above)) 
+    -- inside loop for creatures
+    for i, cre in pairs(Creature.iFunction(c, 7, false)) do
+        
+        -- when creature is not friend and we chek only for players/monsters or both and creature is not NPC
+        if not table.find(SAFE_LIST, cre.name) and (DETECT < 2 or not Creature.isNpc(cre)) then
+            
+            -- check if is enabled checking for special list
+            local var = (not SPECIAL_LIST.enabled or (SPECIAL_LIST.enabled and table.find(SPECIAL_LIST.names, cre.name)))
 
-		end	
+            -- check if var is valid.
+            if var then
 
-		-- load amount of fish
-		local roach = Self.ItemCount(config.fish.id)
+                -- add count
+                count = count + 1
 
-		-- when amount is above limit.
-		if roach > config.fish.above then
+                -- play sound only if enough count
+                if count >= AMOUNT then
 
-			-- drop
-			Self.DropItem(config.fish.pos.x, config.fish.pos.y, config.fish.pos.z, config.fish.id, (roach - config.fish.above)) 
+                    -- play sound for more search in Rifbot Lib.lua -> RIFBOT_SOUNDS = []
+                    playSound("Creature Detected.mp3") 
+                    
+                    -- break loop
+                    break 
 
-		end	
+                end    
+            
+            end    
 
-	end
-
-	-- set delay
-	mod:Delay(400, 800)
+        end
+    
+    end  
 
 end)
