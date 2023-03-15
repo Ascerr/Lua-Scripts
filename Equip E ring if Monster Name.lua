@@ -5,10 +5,11 @@
 ]]
     
 local config = {
-    ring = {off = 3051, on = 3088},          -- rings id when {off} in bp, {on} in equipment
+    ring = {off = 3051, on = 3088},                             -- rings id when {off} in bp, {on} in equipment
+    otherRing = {enabled = false, off = 2344, on = 3344},        -- {optional} put other ring instead of dequiping e ring. If ring don't change their ids then put this same is in {on} and {off}
     monsters = {
-        amount = 2,                         -- how many monsters detected on screen
-        names = {"Dragon Lord", "Demon"},   -- monsters names.
+        amount = 2,                                             -- how many monsters detected on screen
+        names = {"Dragon Lord", "Demon", "Demon Skeleton"},     -- monsters names.
     }
 }
 
@@ -37,9 +38,15 @@ Module.New("Equip E ring if Monster Name", function ()
     
     -- check for dequip
     if count < config.monsters.amount then
-        if Self.Ring().id == config.ring.on then
-            Self.DequipItem(SLOT_RING)
-        end    
+        if config.otherRing.enabled then
+            if Self.Ring().id ~= config.otherRing.on then
+               Self.EquipItem(SLOT_RING, config.otherRing.off, 1) 
+            end    
+        else    
+            if Self.Ring().id == config.ring.on then
+                Self.DequipItem(SLOT_RING)
+            end
+        end        
     end  
     
 end)
