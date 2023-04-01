@@ -6,7 +6,8 @@
 
 local config = {
 	range = 3,			-- serarch for monsters only in this range (important! this script don't check for creature reachability so keep mind that with higher range it my attack monsters behind wall)
-	only_specific_monsters = {enaled = false, names = {"rat", "cave rat", "spider"}}
+	only_specific_monsters = {enaled = false, names = {"rat", "cave rat", "spider"}},		-- attak only specific monsters with this names, enabled - true/false
+	when_monster_hpperc_below_dont_switch = {enaled = false, hpperc = 20}					-- don't switch target when hpperc is below example 20, enabled - true/false
 }
 
 -- DONT'T EDIT BELOW THIS LINE 
@@ -54,6 +55,9 @@ function getCreature()
 	    	-- when creature is already targeted store it range
 	    	if target == c.id then lastTargetDist = dist end
 
+	    	-- when enabled checking monster hpperc and is target then return it.
+	    	if target == c.id and when_monster_hpperc_below_dont_switch.enabled and c.hpperc <= when_monster_hpperc_below_dont_switch.hpperc then return c end
+
 	    	-- when we checking for monsters names and not table find then set var on false
 	    	if config.only_specific_monsters.enaled and not table.find(config.only_specific_monsters.names, string.lower(c.name)) then var = false end
 
@@ -86,13 +90,21 @@ Module.New("Attack Closest Monster", function ()
 	-- Load target.
 	local t = getCreature()
 
+	-- load current ID.
+	local target = Self.TargetID()
+
 	-- when t is diff than -1
-	if t ~= -1 then
+	if t ~= -1  then
 
-		-- attack.
-		Creature.Attack(t.id)
+		-- when current target is different than creature attack
+		if t.id ~= target then
 
-		wait(500)
+			-- attack.
+			Creature.Attack(t.id)
+
+			wait(500)
+
+		end	
 
 	end
 
