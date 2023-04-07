@@ -83,7 +83,7 @@ function getCreatureAttacking(list, range)
 	    	local creature = creatures[i]
 
 	    	-- check if valid name and if creature attack us
-	    	if not table.find(list, creature.name) and creature.attack > 0 then
+	    	if not table.find(list, creature.name) and creature.attack > 0 and Creature.isPlayer(creature) then
 
 	    		-- we found creature return.
 	    		return creature
