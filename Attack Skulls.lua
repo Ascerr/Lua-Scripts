@@ -1,6 +1,6 @@
 --[[
     Script Name: 		Attack Skulls
-    Description: 		Change target between creatures depent on hpperc.
+    Description: 		Attack Players with White and Red skulls (optional) shoot rune.
     Author: 			Ascer - example
 ]]
 
