@@ -26,14 +26,14 @@ local CHECK_FOR_PM_DEFAULT_MESSAGE = {
     enabled = true,                                     -- true/false check if gm send to as pm or default message, #IMPORTANT respond only to nicks from CHECK_IF_GM_ON_SCREEN.keywords
     pauseBot = true,                                    -- true/false pause bot or not (default alarm will play)
     respond = {
-        enabled = false,                                -- true/false respond fo default message
+        enabled = true,                                -- true/false respond fo default message
         randomMsg = {"yoyo", ":)", "^^", ":D", "?"}     -- messages to respond only once
     } 
 }
 
 local CHECK_FOR_MANA_INCREASED = {
-    enabled = false,                                     -- true/false check if mana gained fast in one tick.
-    points = 100,                                       -- minimal mana points gained to module works
+    enabled = true,                                     -- true/false check if mana gained fast in one tick.
+    points = 10,                                       -- minimal mana points gained to module works
     pauseBot = true                                     -- true/false pause bot or not (default alarm will play)
 }
 
@@ -44,7 +44,7 @@ local CHECK_FOR_HEALTH_DMG = {
 }
 
 local CHECK_FOR_SPECIAL_MONSTER = {
-    enabled = false,                                    -- true/false check if on screen appear special monster that normal don't appear in this place
+    enabled = true,                                    -- true/false check if on screen appear special monster that normal don't appear in this place
     names = {"Demon", "Black Sheep"},                   -- monster names
     useAboveListAsSafe = false,                         -- true/false if true then above list will contains safe monsters and any other will be mark as danger. If false then monsters from list will mark as danger
     pauseBot = true                                     -- true/false pause bot or not (default alarm will play)
@@ -65,17 +65,22 @@ local CHECK_FOR_MONSTERS_CREATION_AND_DISAPPEAR = {
 }
 
 local CHECK_FOR_MONSTERS_CREATION = {
-    enabled = true,                                    -- [!IMPORTANT: works only on servers that don't spawn monsters when player on screen] true/false check if monsters spawn on screen. 
+    enabled = false,                                    -- [!IMPORTANT: works only on servers that don't spawn monsters when player on screen] true/false check if monsters spawn on screen. 
     pauseBot = true                                     -- true/false pause bot or not (default alarm will play)
 }
 
+local CHECK_FOR_TARGET_MONSTER_HEALED = {
+    enabled = false,                                    -- true/false check if GM healing your current targeting monster (red square)
+    hpperc = 20,                                         -- minimal percent monster need to be healed.
+    pauseBot = true                                     -- true/false pause bot or not (default alarm will play)
+}
 
 local PAUSE_CAVEBOT_ONLY = {
     enabled = false                                     -- while GM detected pause only Cavebot (targeting, walker, looter)
 }
 
 local PAUSE_LUA_SCRIPTS = {                             
-    enabled = false                                     -- will pause lua scripts too (!IMPORTANT the only way to enable it will manually press CTRL+P)
+    enabled = true                                     -- will pause lua scripts too (!IMPORTANT the only way to enable it will manually press CTRL+P)
 }
 
 local RESUME = {
@@ -103,6 +108,7 @@ local resumeTime = 0
 local pausedTriger = false
 local mobDisappear, mobDisappearTime, disappear = -1, 0, false
 local allowCheckMobCreation, mobsCreationLevel, appearMob, appear = false, {x=0,y=0,z=0}, -1, false
+local lastTarget = {id = -1, hpperc = -1}
 
 -- reset teleported pos
 Self.GetTeleported()
@@ -396,6 +402,40 @@ function checkForRareItems()
 end
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Function:       checkTargetHealed(creatures)
+--> Description:    Read last target id and check if it's gain hpperc.
+--> Params:         
+-->                 @creatures table with creatures.
+-->                 
+--> Return:         nil - nothing
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+function checkTargetHealed(creatures)
+    if not CHECK_FOR_TARGET_MONSTER_HEALED.enabled then return end
+    local t = Self.TargetID()
+    for i = 1, #creatures do
+        local mob = creatures[i]
+        if Creature.isMonster(mob) and mob.id == t then   
+            if lastTarget.id ~= mob.id then
+                lastTarget = mob
+                break
+            else
+                print(mob.hpperc - lastTarget.hpperc)
+                if mob.hpperc - lastTarget.hpperc >= CHECK_FOR_TARGET_MONSTER_HEALED.hpperc then
+                   Rifbot.PlaySound("Default.mp3")
+                    if CHECK_FOR_TARGET_MONSTER_HEALED.pauseBot then
+                        customPause()
+                    end
+                    print("Detected target healing " .. mob.name .. " by " .. (mob.hpperc - lastTarget.hpperc) .. "%")
+                    break     
+                end
+                lastTarget = mob
+            end              
+        end    
+    end
+end    
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
 --> Function:       resume()
 --> Description:    Resume bot after beeing paused for x time.
 --> Params:         None
@@ -495,6 +535,7 @@ Module.New("Anti GM", function ()
         checkForRareItems()
         checkForMonstersCreationAndDisappear(creatures)
         checkForMonstersCreation(creatures)
+        checkTargetHealed(creatures)
         resume()
 
     end 
