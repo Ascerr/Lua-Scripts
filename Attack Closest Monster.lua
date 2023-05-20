@@ -6,8 +6,8 @@
 
 local config = {
 	range = 3,			-- serarch for monsters only in this range (important! this script don't check for creature reachability so keep mind that with higher range it my attack monsters behind wall)
-	only_specific_monsters = {enaled = false, names = {"rat", "cave rat", "spider"}},		-- attak only specific monsters with this names, enabled - true/false
-	when_monster_hpperc_below_dont_switch = {enaled = false, hpperc = 20}					-- don't switch target when hpperc is below example 20, enabled - true/false
+	only_specific_monsters = {enabled = false, names = {"rat", "cave rat", "spider"}},		-- attak only specific monsters with this names, enabled - true/false
+	when_monster_hpperc_below_dont_switch = {enabled = false, hpperc = 50}					-- don't switch target when hpperc is below example 20, enabled - true/false
 }
 
 -- DONT'T EDIT BELOW THIS LINE 
@@ -56,10 +56,10 @@ function getCreature()
 	    	if target == c.id then lastTargetDist = dist end
 
 	    	-- when enabled checking monster hpperc and is target then return it.
-	    	if target == c.id and when_monster_hpperc_below_dont_switch.enabled and c.hpperc <= when_monster_hpperc_below_dont_switch.hpperc then return c end
+	    	if target == c.id and config.when_monster_hpperc_below_dont_switch.enabled and c.hpperc <= when_monster_hpperc_below_dont_switch.hpperc then return c end
 
 	    	-- when we checking for monsters names and not table find then set var on false
-	    	if config.only_specific_monsters.enaled and not table.find(config.only_specific_monsters.names, string.lower(c.name)) then var = false end
+	    	if config.only_specific_monsters.enabled and not table.find(config.only_specific_monsters.names, string.lower(c.name)) then var = false end
 
 	    	-- when distance is below range
 	    	if dist < lastDist and dist <= config.range and var then 
