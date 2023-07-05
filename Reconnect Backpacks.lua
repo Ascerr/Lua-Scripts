@@ -5,8 +5,8 @@
 ]]
 
 local config = {
-    backpacks = {2867, 2868, 2853}, -- backpacks id, bot will start opening from frist container slot
-    amount = 2                -- amount to open
+    backpacks = {2867, 3503, 3503}, -- backpacks id, bot will start opening from frist container slot
+    amount = 3                -- amount to open
 }
 
 -- DON'T EDIT BELOW THIS LINE
@@ -21,11 +21,8 @@ Module.New("Reconect Backpacks", function ()
         -- if can chceck closeing
         if close and os.clock() - disconectTime > 0.5 then
             
-            -- load conts
-            local firstCont = Container.getInfo(0)
-            
-            -- when found
-            if table.count(firstCont) > 1 then
+            -- when found any container
+            if Container.Amount() > 0 then
                 
                 -- destroy all containers
                 for i = 0, 15 do
