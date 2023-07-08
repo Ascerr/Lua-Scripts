@@ -8,9 +8,9 @@ local BED_SLEEP_TIME = 0.5          -- mintues we are stay offline in bed.
 
 local STAY_LOGGED_SECONDS = 15     -- amount of seconts we stay logged before use bed.
 
-local BED_POS = {31329, 32431, 7}  -- position of bed in house.
+local BED_POS = {32633, 32767, 6}  -- position of bed in house.
 
-local BED_ID = 2488                -- ID of bed
+local BED_ID = 2493                -- ID of bed
 
 -- DONT'T EDIT BELOW THIS LINE
 
