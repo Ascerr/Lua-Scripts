@@ -8,7 +8,7 @@
 local config = {
 	senders = {"MyMcChar1", "MyMcChar1"},		-- nicks of your characters stayed at road to exp and sending message about players
     enemies = {"Enemy1", "Enemy2"},				-- nicks of enemies that you want mark as danger and logout character before they come to screen and kill you
-    relogin = {enabled = true, minutes = 0.5}	-- allow relogin afger
+    relogin = {enabled = false, minutes = 30}	-- allow relogin afger
 }
 
 -- DON'T EDIT BELOW THIS LINE
