@@ -20,7 +20,8 @@ local NO_BLANKS = { 			-- when no blank runes:
 Module.New("Runemaker", function (mod)
 	if Self.Mana() >= MANA_ABOVE then
 		local proxy = Proxy.ErrorGetLastMessage()
-		if string.instr(proxy, "magic item to cast") then
+		local weapon = Self.Weapon().id
+		if (string.instr(proxy, "magic item to cast") or (weapon ~= BLANKID and table.count(Container.FindItem(BLANKID)) < 2)) then
 			if NO_BLANKS.logout then
 				Self.Logout()
 				Rifbot.ConsoleWrite("[" .. os.date("%X") .. "] logged due a no more blank runes") -- set message to Rifbot Console.
@@ -34,10 +35,8 @@ Module.New("Runemaker", function (mod)
 			Self.DequipItem(SLOT_WEAPON) -- dequip to any empty
 			Proxy.ErrorClearMessage()		
 		else
-			if Self.Weapon().id ~= BLANKID then
-				if not Self.EquipItem(SLOT_WEAPON, BLANKID) then
-					Self.CastSpell(SPELL)
-				end	
+			if weapon ~= BLANKID then
+				Self.EquipItem(SLOT_WEAPON, BLANKID)
 			else
 				Self.CastSpell(SPELL)
 			end		
