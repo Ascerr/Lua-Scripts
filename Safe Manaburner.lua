@@ -49,7 +49,7 @@ function manaburner()
             end    
             Self.Say(MANA_BURNER.spell)
             wait(MANA_BURNER.ping)
-            randomManaToCast = math.random(MANA_BURNER.when_mana_between[1], MANA_BURNER.when_mana_between[2]) 
+            randomManaToCast = math.random(MANA_BURNER.when_mana_between[1], MANA_BURNER.when_mana_between[2] - 2) -- we decreasing 2 mana points because sometimes character don't cast spell when random value is on max level. 
         end    
     elseif mana > MANA_BURNER.when_mana_between[2] then
         Rifbot.PlaySound()
