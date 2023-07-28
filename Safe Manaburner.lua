@@ -22,6 +22,7 @@ local ANTI_IDLE = {
 local antiidleTime, antiidleDelay, antiidleDir, antiidleRandDir, antiidleRestore = 0, math.random(ANTI_IDLE.delay[1], ANTI_IDLE.delay[2]), -1, -1, false
 local lastMana, manaburnerPause, manaburnerTime = Self.Mana(), false, 0
 local blankPos, blankBackRune = {index = -1, slot = -1, id = -1, count = -1}, false
+local randomManaToCast = MANA_BURNER.when_mana_between[1]
 
 function manaburner()
     local mana = Self.Mana()
@@ -42,11 +43,14 @@ function manaburner()
     end
     lastMana = mana 
     if mana >= MANA_BURNER.when_mana_between[1] and mana <= MANA_BURNER.when_mana_between[2] then
-        if MANA_BURNER.equip_blank_rune.enabled then
-            if not wearBlankRune() then return end
+        if mana >= randomManaToCast then
+            if MANA_BURNER.equip_blank_rune.enabled then
+                if not wearBlankRune() then return end
+            end    
+            Self.Say(MANA_BURNER.spell)
+            wait(MANA_BURNER.ping)
+            randomManaToCast = math.random(MANA_BURNER.when_mana_between[1], MANA_BURNER.when_mana_between[2]) 
         end    
-        Self.Say(MANA_BURNER.spell)
-        wait(MANA_BURNER.ping)
     elseif mana > MANA_BURNER.when_mana_between[2] then
         Rifbot.PlaySound()
         print("[Manaburner] Detected mana above limit: " .. mana .. " while limit is " .. MANA_BURNER.when_mana_between[2])    
