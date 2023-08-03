@@ -1,6 +1,6 @@
 --[[
     Script Name: 		On/off Targeting if monsters
-    Description: 		When low amount of monsters enable lure mode, else disable and attack.
+    Description: 		When low amount of monsters turn off targeting else enable.
     Author: 			Ascer - example
 ]]
 
