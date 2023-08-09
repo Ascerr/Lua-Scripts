@@ -1,6 +1,6 @@
 --[[
     Script Name: 		If player attack SD him
-    Description: 		Change target between creatures depent on hpperc.
+    Description: 		When player not from friend list attacking you character start attacking him and optional shoot sd
     Author: 			Ascer - example
 ]]
 
