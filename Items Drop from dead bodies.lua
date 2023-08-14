@@ -1,5 +1,5 @@
 --[[
-    Script Name:        Drop Items
+    Script Name:        Items Drop from dead bodies
     Description:        Drop items under your character from specific containers names depend on cap.
     Author:             Ascer - example
 ]]
@@ -21,7 +21,7 @@ function getCropse(name)
     return false
 end --> check if cropse name is valid
 
-Module.New("Drink fluids from dead monsters", function()
+Module.New("Items Drop from dead bodies", function()
 	if Self.isConnected() then
    		if Self.Capity() <= config.whenCapBelow then
 	   		local containers = Container.getItems()
