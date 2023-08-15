@@ -27,14 +27,23 @@ Module.New("Gold Changer", function()
 			if item.count == 100 or COLLECT_GOLD_TO_POUCH then
 				if item.id == GOLD_ID or item.id == PLATINUM_ID then
 					if USE_GOLD_CONVERTER_ITEM.enabled then
-						local converter = Container.FindItem(USE_GOLD_CONVERTER_ITEM.item)
-						if table.count(converter) > 2 then
+						local ammo = Self.Ammo()
+						if ammo.id == USE_GOLD_CONVERTER_ITEM.item then
 							if string.lower(USE_GOLD_CONVERTER_ITEM.mode) == "with" then
-								Container.UseItemWithContainer(converter.index, converter.slot, converter.id, cont.index, (j - 1), item.id, 0)
+								Container.UseItemWithEquipmentOnContainer(SLOT_AMMO, ammo.id, cont.index, (j - 1), item.id, 0)
 							else
 								Self.UseItem(USE_GOLD_CONVERTER_ITEM.item, false, 0)
 							end	
-						end	
+						else	
+							local converter = Container.FindItem(USE_GOLD_CONVERTER_ITEM.item)
+							if table.count(converter) > 1 then
+								if string.lower(USE_GOLD_CONVERTER_ITEM.mode) == "with" then
+									Container.UseItemWithContainer(converter.index, converter.slot, converter.id, cont.index, (j - 1), item.id, 0)
+								else
+									Self.UseItem(USE_GOLD_CONVERTER_ITEM.item, false, 0)
+								end	
+							end
+						end		
 					else	
 						Container.UseItem(cont.index, (j - 1), item.id, false)
 					end	
