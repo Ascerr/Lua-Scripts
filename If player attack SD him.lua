@@ -1,6 +1,6 @@
 --[[
     Script Name: 		If player attack SD him
-    Description: 		When player not from friend list attacking you character start attacking him and optional shoot sd
+    Description: 		If player not from ignore list attacking you shoot SD and attack him.
     Author: 			Ascer - example
 ]]
 
@@ -31,7 +31,7 @@ function getCreatureAttacking(list, range)
 	if target > 0 then
 
 		-- read creatures
-	    local creatures = Creature.iCreatures(7, false) 
+	    local creatures = Creature.iPlayers(7, false) 
 
 	    -- in loop for creatures.
 	    for i = 1, #creatures do
@@ -74,7 +74,7 @@ function getCreatureAttacking(list, range)
 	else	
 
 		-- read creatures
-	    local creatures = Creature.iCreatures(range, false) 
+	    local creatures = Creature.iPlayers(range, false) 
 
 	    -- in loop for creatures.
 	    for i = 1, #creatures do
