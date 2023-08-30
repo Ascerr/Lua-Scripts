@@ -5,7 +5,8 @@
 ]]
 
 local config = {
-	runeid = 3270	-- id of rune to shoot
+	runeid = 3270,					-- id of rune to shoot
+	offTargetingForWhile = true		-- off targeting for while to don't lost stored last attacked monster ID.
 }
 
 -- DON'T EDIT BELOW THIS LINE
@@ -19,6 +20,9 @@ Module.New("Runelast when target lost", function()
 				Self.UseItemWithCreature(lastCreature, config.runeid, 0) --> force shoot rune 0 delay 
 			end
 			shootRune = false	--> disable shooting after 1 tries
+			if config.offTargetingForWhile then
+				Targeting.Enabled(true)
+			end
 		end	
 		local t = Self.TargetID()
 		if t > 0 then
@@ -35,6 +39,9 @@ function proxyText(messages)
 	for i, msg in ipairs(messages) do 
 		if msg.message == "Target lost." then
 			shootRune = true
+			if config.offTargetingForWhile then
+				Targeting.Enabled(false)
+			end	
 		end
 	end 
 end
