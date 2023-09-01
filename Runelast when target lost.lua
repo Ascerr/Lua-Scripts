@@ -5,7 +5,7 @@
 ]]
 
 local config = {
-	runeid = 3174,					-- id of rune to shoot
+	runeid = 3155,					-- id of rune to shoot
 	offTargetingForWhile = true,	-- off targeting for while to don't lost stored last attacked monster ID.
 	waitBeforeShoot = 1000			-- delay in miliseconds character wait after monster became invisible to shoot rune, 
 }
