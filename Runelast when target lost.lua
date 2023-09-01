@@ -5,8 +5,9 @@
 ]]
 
 local config = {
-	runeid = 3270,					-- id of rune to shoot
-	offTargetingForWhile = true		-- off targeting for while to don't lost stored last attacked monster ID.
+	runeid = 3174,					-- id of rune to shoot
+	offTargetingForWhile = true,	-- off targeting for while to don't lost stored last attacked monster ID.
+	waitBeforeShoot = 1000			-- delay in miliseconds character wait after monster became invisible to shoot rune, 
 }
 
 -- DON'T EDIT BELOW THIS LINE
@@ -17,6 +18,7 @@ Module.New("Runelast when target lost", function()
 	if Self.isConnected() then
 		if shootRune then
 			if table.count(lastCreature) > 2 then
+				wait(waitBeforeShoot)
 				Self.UseItemWithCreature(lastCreature, config.runeid, 0) --> force shoot rune 0 delay 
 			end
 			shootRune = false	--> disable shooting after 1 tries
