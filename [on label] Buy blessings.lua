@@ -5,9 +5,6 @@
 ]]
 
 
--- some params for later operations.
-local speakTime = os.clock()
-
 -- here main config table
 local CONFIG = {
     actions = {"sail", "buyBless"},     -- walker label names for sail and buy bless                   
@@ -34,6 +31,9 @@ local CONFIG = {
         }
     }
 }
+
+-- some params for later operations.
+local speakTime = os.clock()
 
 --> catch signals from labels
 function signal(label)
