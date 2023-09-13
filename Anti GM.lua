@@ -60,7 +60,8 @@ local CHECK_FOR_RARE_ITEM = {
 local CHECK_FOR_MONSTERS_CREATION_AND_DISAPPEAR = {
     enabled = false,                                    -- true/false check if GM creating monster and destroy it in short time.
     names = {"Hero", "Dragon"},                         -- name of monsters
-    isAliveLessThan = 1,                                 -- mark monsters that are alive less than 1s. (it won't works for monsters with low HP died on headshoot)
+    isAliveLessThan = 1,                                -- mark monsters that are alive less than 1s. (it won't works for monsters with low HP died on headshoot)
+    teleportedSqms = 4,                                 -- check for monster teleportation too, minimal sqms.
     pauseBot = true                                     -- true/false pause bot or not (default alarm will play) 
 }
 
@@ -310,7 +311,21 @@ function checkForMonstersCreationAndDisappear(creatures)
                     end
                     return    
                 end
-                if table.count(mobDisappear) > 1 and mob.id == mobDisappear.id then return end 
+                if table.count(mobDisappear) > 1 and mob.id == mobDisappear.id then 
+                    local absx = math.abs(mob.x - mobDisappear.x)
+                    local absy = math.abs(mob.y - mobDisappear.y)
+                    local ret = absx
+                    if absy > absx then
+                        ret = absy
+                    end
+                    if ret >= CHECK_FOR_MONSTERS_CREATION_AND_DISAPPEAR.teleportedSqms then
+                        disappear = true
+                    else    
+                        mobDisappear.x = mob.x
+                        mobDisappear.y = mob.y
+                        return
+                    end     
+                end 
             end        
         end    
     end
