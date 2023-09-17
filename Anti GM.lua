@@ -67,6 +67,7 @@ local CHECK_FOR_MONSTERS_CREATION_AND_DISAPPEAR = {
 
 local CHECK_FOR_MONSTERS_CREATION = {
     enabled = false,                                    -- [!IMPORTANT: works only on servers that don't spawn monsters when player on screen] true/false check if monsters spawn on screen. 
+    ignore = {"Stalker", "Nightstalker"},               -- List of monsters that disappear or you want just ignore.
     pauseBot = true                                     -- true/false pause bot or not (default alarm will play)
 }
 
@@ -98,6 +99,7 @@ local RESUME = {
 
 CHECK_FOR_SPECIAL_MONSTER.names = table.lower(CHECK_FOR_SPECIAL_MONSTER.names)
 CHECK_FOR_MONSTERS_CREATION_AND_DISAPPEAR.names = table.lower(CHECK_FOR_MONSTERS_CREATION_AND_DISAPPEAR.names)
+CHECK_FOR_MONSTERS_CREATION.ignore = table.lower(CHECK_FOR_MONSTERS_CREATION.ignore)
 
 local detectTime = 0
 local teleported, old = false, {x=0, y=0, z=0}
@@ -359,7 +361,7 @@ function checkForMonstersCreation(creatures)
     local count = 0
     for i = 1, #creatures do
         local mob = creatures[i]
-        if Creature.isMonster(mob) and mob.z == pos.z and math.abs(mob.x - pos.x) <= 7 and math.abs(mob.y - pos.y) <= 5 then
+        if Creature.isMonster(mob) and mob.z == pos.z and math.abs(mob.x - pos.x) <= 7 and math.abs(mob.y - pos.y) <= 5 and not table.find(CHECK_FOR_MONSTERS_CREATION.ignore, string.lower(mob.name)) then
             count = count + 1
             if allowCheckMobCreation then
                 if Creature.DistanceFromSelf(mob) < 4 then
