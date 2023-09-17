@@ -329,7 +329,7 @@ function checkForMonstersCreationAndDisappear(creatures)
             end        
         end    
     end
-    if table.count(mobDisappear) > 1 and ((Creature.isOnScreen(mobDisappear) and mobDisappear.hpperc > 20 and os.clock() - mobDisappearTime < CHECK_FOR_MONSTERS_CREATION_AND_DISAPPEAR.isAliveLessThan) or disappear) then
+    if table.count(mobDisappear) > 1 and table.find(CHECK_FOR_MONSTERS_CREATION_AND_DISAPPEAR.names, string.lower(mobDisappear.name)) and ((Creature.isOnScreen(mobDisappear) and mobDisappear.hpperc > 20 and os.clock() - mobDisappearTime < CHECK_FOR_MONSTERS_CREATION_AND_DISAPPEAR.isAliveLessThan) or disappear) then
         disappear = true
         Rifbot.PlaySound("Default.mp3")
         if CHECK_FOR_MONSTERS_CREATION_AND_DISAPPEAR.pauseBot then
