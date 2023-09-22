@@ -1,10 +1,11 @@
 --[[
     Script Name:        Pickup Free items
-    Description:        Pickup free items around your character to first slot in any opened backpack.
+    Description:        Pickup free items around your character to selected container index
     Author:             Ascer - example
 ]]
 
 local FREE_ITEMS = {3031, 3447, 3160}                       -- IDs of items to pickup
+local CONTAINER_INDEX = 0                                   -- container number to pickup items 0 - first opened backapck, 1 - second opened etc.
 local OPEN_NEXT_BP_IF_FULL = {enabled = true, id = 2854}    -- open next backpack: enabled - true/false, 
 local ALLOW_PICKUP_COVERED_ITEMS = false                    -- when item is covered by some trash up move it under yourself to pickup. 
 
@@ -28,27 +29,44 @@ Module.New("Pickup Free items", function ()
                 -- when we found item
                 if table.find(FREE_ITEMS, map.id) then
 
-                    -- when able open next bp
-                    if OPEN_NEXT_BP_IF_FULL.enabled then
-                        
-                        -- load first backpack
-                        local bp = Container.getInfo(0)
+                    -- load pickup bp
+                    local pickupCont = Container.getInfo(CONTAINER_INDEX)
+
+                    -- when found bp
+                    if table.count(pickupCont) > 1 then
 
                         -- when backpack is full
-                        if table.count(bp) > 1 and bp.amount >= bp.size then
+                        if pickupCont.amount >= pickupCont.size then
 
-                            -- open next backpack
-                            Container.Open(0, OPEN_NEXT_BP_IF_FULL.id, false, 1000)
+                            -- when able open next bp
+                            if OPEN_NEXT_BP_IF_FULL.enabled then
+                            
+                                -- open next backpack
+                                Container.Open(CONTAINER_INDEX, OPEN_NEXT_BP_IF_FULL.id, false, 1000)
+
+                            else    
+
+                                -- show info about no more space
+                                print("Pickup container is full.")
+
+                            end  
 
                             -- break loop
-                            break  
+                            break    
+
+                        else    
+
+                            -- Pickup item
+                            Self.PickupItem(pos.x + x, pos.y + y, pos.z, map.id, map.count, CONTAINER_INDEX, pickupCont.amount, 0)
 
                         end    
 
-                    end    
+                    else
 
-                    -- Pickup item
-                    Self.PickupItem(pos.x + x, pos.y + y, pos.z, map.id, map.count, Container.GetWithEmptySlots(nr), 0, 0)
+                        -- show info about closed container
+                        print("Container index (" .. CONTAINER_INDEX ..") to pickup items is closed.")
+
+                    end    
 
                     -- break loop
                     break
