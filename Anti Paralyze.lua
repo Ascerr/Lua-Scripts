@@ -29,7 +29,7 @@ end
 
 Module.New("Anti Paralyze", function ()
 	if Self.isConnected() then
-		if not Self.isParalyzed() then
+		if Self.isParalyzed() then
 			if config.ifNoMonsters and getMonsters() then return end
 			local selfHpperc = Self.HealthPercent()
 			local mp = Self.Mana()
