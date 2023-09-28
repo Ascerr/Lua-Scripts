@@ -7,7 +7,7 @@
 local config = {
 	light = {spell = "exura", hpperc = 100, mana = 25},			-- light cure, when you have full hp or little below like 30%, it's possible to use haste spell here
 	heavy = {spell = "exura vita", hpperc = 65, mana = 160},	-- heavy cure, when your hpperc is low and better cure para with restoring hpperc too.
-	ifNoMonsters = true,										-- true/false heal only when no monsters on screen
+	ifNoMonsters = false,										-- true/false heal only when no monsters on screen
 	useLightSpellWhenNoManaForHeavy = false						-- true/false when you don't have enough mana for cure para with heavy spell use light
 }
 
