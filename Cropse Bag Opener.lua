@@ -5,8 +5,9 @@
 ]]
 
 local BAG_ID = 2853 -- id of bag to open
-local CROPSE = {"The", "Demonic", "Dead", "Slain", "Dissolved", "Remains", "Elemental", "Split", "Pile"} -- names od dead cropses, add your if list no contains enough
+local CROPSE = {"The", "Demonic", "Dead", "Slain", "Dissolved", "Remains", "Elemental", "Split", "Pile", "Monster", "loot", "Giant", "Lifeless", "Fallen"} -- names od dead cropses, add your if list no contains enough
 local OPEN_IF_NOT_FOUND_ITEMS = {3031, 3492} -- open only if this items not found, need to be set to give Rifbot.looter time to collect items.
+
 
 -- DON'T EDIT BELOW THIS LINE
 
