@@ -7,6 +7,10 @@
 
 local list = Rifbot.FriendsList(true)
 
+--> here we adding our character name to safe list of message alert
+local selfName = string.lower(Self.Name())
+table.insert(list, selfName)
+
 function proxy(messages) 
 	for i, msg in ipairs(messages) do 
 		if not table.find(list, string.lower(msg.speaker)) and msg.mode <= 5 and msg.channel <= 5 then
