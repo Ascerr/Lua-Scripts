@@ -21,7 +21,7 @@ local config = {
 --> Return: 		boolean true or false
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 function getMonsters()
-	for i, mob in pairs(Creature.iMonsters(MONSTERS_RANGE, false)) do
+	for i, mob in pairs(Creature.iMonsters(7, false)) do
 		return true
 	end
 	return false
