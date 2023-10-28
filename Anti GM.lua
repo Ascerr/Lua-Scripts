@@ -436,7 +436,6 @@ function checkTargetHealed(creatures)
                 lastTarget = mob
                 break
             else
-                print(mob.hpperc - lastTarget.hpperc)
                 if mob.hpperc - lastTarget.hpperc >= CHECK_FOR_TARGET_MONSTER_HEALED.hpperc then
                    Rifbot.PlaySound("Default.mp3")
                     if CHECK_FOR_TARGET_MONSTER_HEALED.pauseBot then
