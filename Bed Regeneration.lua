@@ -14,7 +14,7 @@ local BED_ID = 2489                -- ID of bed
 
 -- DONT'T EDIT BELOW THIS LINE
 
-local mainTime, firstTime = 0, true
+local mainTime, firstTime, logout = 0, true, false
 
 -- mod to run functions
 Module.New("Bed Regeneration", function (mod)
@@ -25,25 +25,37 @@ Module.New("Bed Regeneration", function (mod)
         -- if we are connected to game.
         if Self.isConnected() then
             
-            -- wait 15s 
-            wait(STAY_LOGGED_SECONDS * 1000)
+            if not logout then
 
-            -- set logout true
-            logout = true              
+                -- wait 15s 
+                wait(STAY_LOGGED_SECONDS * 1000)
 
-            -- use house bed
-            Map.UseItem(BED_POS[1], BED_POS[2], BED_POS[3], BED_ID, 0)
+                -- set logout true
+                logout = true 
 
-            -- set time to wait before we login again   
-            mainTime = os.clock()
+            else
+            
+                -- use house bed
+                Map.UseItem(BED_POS[1], BED_POS[2], BED_POS[3], BED_ID, 0)
 
-            -- disable firstTime
-            firstTime = false
+                -- disable firstTime
+                firstTime = false
+
+            end  
 
         else
-                     
+             
+            if logout then
+
+                -- set time to wait before we login again   
+                mainTime = os.clock()
+                
+            end
+
             -- reconnect to game
             Rifbot.PressKey(13, 2000)  -- press enter key
+
+            logout = false
 
         end 
                  
