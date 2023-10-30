@@ -5,62 +5,30 @@
 ]]
 
 local BED_SLEEP_TIME = 90.0          -- mintues we are stay offline in bed.
-
 local STAY_LOGGED_SECONDS = 15     -- amount of seconts we stay logged before use bed.
-
-local BED_POS = {33074, 32815, 7}  -- position of bed in house.
-
+local BED_POS = {32348, 32218, 5}  -- position of bed in house.
 local BED_ID = 2489                -- ID of bed
 
 -- DONT'T EDIT BELOW THIS LINE
 
-local mainTime, firstTime, logout = 0, true, false
+local stayTime, sleepTime = 0, 0
 
--- mod to run functions
 Module.New("Bed Regeneration", function (mod)
-    
-    -- check if we should login.
-    if firstTime or ((os.clock() - mainTime) >= (BED_SLEEP_TIME * 60)) then
-        
-        -- if we are connected to game.
-        if Self.isConnected() then
-            
-            if not logout then
-
-                -- wait 15s 
-                wait(STAY_LOGGED_SECONDS * 1000)
-
-                -- set logout true
-                logout = true 
-
-            else
-            
-                -- use house bed
-                Map.UseItem(BED_POS[1], BED_POS[2], BED_POS[3], BED_ID, 0)
-
-                -- disable firstTime
-                firstTime = false
-
-            end  
-
+    if Self.isConnected() then
+        if stayTime == 0 then
+            stayTime = os.clock()
+            sleepTime = 0
         else
-             
-            if logout then
-
-                -- set time to wait before we login again   
-                mainTime = os.clock()
-                
-            end
-
-            -- reconnect to game
+            if os.clock() - stayTime >= STAY_LOGGED_SECONDS then
+                Map.UseItem(BED_POS[1], BED_POS[2], BED_POS[3], BED_ID, 0)
+                sleepTime = os.clock()
+            end    
+        end    
+    else
+        stayTime = 0
+        if os.clock() - sleepTime > (BED_SLEEP_TIME * 60) then
             Rifbot.PressKey(13, 2000)  -- press enter key
-
-            logout = false
-
-        end 
-                 
-    end     
-
+        end    
+    end    
     mod:Delay(200, 350)
-
 end) 
