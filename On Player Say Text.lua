@@ -12,6 +12,7 @@ local WAIT_SAY_ON_PLAYER_FOCUS = 2000 -- wait this miliseconds after player ente
 
 local RESPOND_MESSAGES = {"hola amigo what skills?", "How are you?", "If you want to kill me go on i wait..", "Don't take make food", "have food?"}
 
+local PAUSE_CAVEBOT = {enabled = true, delay = 5000}    -- pause cavebot true/false, for delay in miliseconds
 
 -- DON'T EDIT BELOW THIS LINE
 
@@ -34,6 +35,20 @@ Module.New("On Player Say Text", function ()
             -- check for safe list
             if not table.find(SAFE_LIST, player.name) and not table.find(markedPlayers, player.name) then
                 
+                -- set wait time for 0
+                local waitAfterResumeCavebot = 0
+
+                -- when pausing cavebot
+                if PAUSE_CAVEBOT.enabled then
+                    
+                    -- pause cavebot and set time to wait after that
+                    if Walker.isEnabled() or Targeting.isEnabled() or Looter.isEnabled() then 
+                        Cavebot.Enabled(false) 
+                        waitAfterResumeCavebot = PAUSE_CAVEBOT.delay - WAIT_SAY_ON_PLAYER_FOCUS
+                    end
+
+                end 
+
                 -- wait some miliseconds before say message
                 wait(WAIT_SAY_ON_PLAYER_FOCUS)
 
@@ -42,6 +57,12 @@ Module.New("On Player Say Text", function ()
 
                 -- add player to array we don't respond again.
                 table.insert(markedPlayers, player.name)
+
+                -- wait extra time after pausing cavebot
+                wait(waitAfterResumeCavebot)
+
+                -- activate cavebot
+                Cavebot.Enabled(true) 
 
             end
 
