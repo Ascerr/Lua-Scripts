@@ -8,6 +8,7 @@ local AMOUNT = 1                                                    -- amount of
 local DETECT = 2                                                    -- detect creature type, 0 - player, 1 - monster, 2 - both 
 local SAFE_LIST = {"Defense Monster", "Friend2"}                    -- Safe list. Names need to by with Capital letter.
 local SPECIAL_LIST = {enabled = false, names = {"Rat", "Snake"}}    -- enabled = true/false if you want check for special names. Use Capital letter.
+local MULTIFLOOR = false                                            -- true/false check creatures on multifloors
 
 Module.New("Creature Alert", function ()
     
@@ -31,7 +32,7 @@ Module.New("Creature Alert", function ()
     local count = 0
 
     -- inside loop for creatures
-    for i, cre in pairs(Creature.iFunction(c, 7, false)) do
+    for i, cre in pairs(Creature.iFunction(c, 7, MULTIFLOOR)) do
         
         -- when creature is not friend and we chek only for players/monsters or both and creature is not NPC
         if not table.find(SAFE_LIST, cre.name) and (DETECT < 2 or not Creature.isNpc(cre)) then
