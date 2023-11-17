@@ -53,6 +53,12 @@ local WHEN_FIRE_NEAR_DOOR_WAIT = {
 	fields = {2118, 2119, 2120, 2121, 2122, 2123} 	-- fields id to check (ofc if someone trash field there is no way to check it)
 }
 
+local WHEN_DOOR_BLOCKED_BY_ITEM_STAY_IN_HOUSE = {
+	enabled = false,								-- true/false don't go out using alana sio if at the door there is blocking item like pot, barrel etc. Player will be ignored.
+	door_pos = {x = 32333, y = 32234, z = 7},		-- position of house door.
+	alert = true									-- true/false play sound.
+}
+
 local PICKUP_BLANK_DROP_BP_RUNES = {
 	enabled = false, 								-- enabled true/false
 	blank_backpack_id = 2868, 						-- id of backpack with blank runes
@@ -118,6 +124,35 @@ function delayedLog(text, delay)
 		printf(text)
 		logTime = os.clock()
 	end
+end	
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+--> Function:		tileIsBlockedByItem(x, y, z)
+--> Description: 	Check is tile is blocked by items and you can walk through.	
+--> Params:			
+-->					@x coordinate in the map on the x-axis
+-->					@y coordinate in the map on the y-axis
+-->					@z coordinate in the map on the z-axis
+-->
+--> Return: 		boolean true or false
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+function tileIsBlockedByItem(x, y, z)
+	local path = 0
+	local items = Map.GetItems(x, y, z)
+	for i, item in ipairs(items) do
+		if item.id ~= 99 then 
+			if Item.hasAttribute(item.id, ITEM_FLAG_NOT_WALKABLE) then return true end
+			if Item.hasAttribute(item.id, ITEM_FLAG_NOT_PATHABLE) then
+				if table.find(ALLOW_WALK_IDS, item.id) then
+					path = path + 1
+					if path >= 2 then return true end
+				else
+					return true	
+				end	
+			end
+		end		
+	end
+	return false
 end	
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -656,6 +691,39 @@ Module.New("Go House Make Rune and Back", function ()
 		    				break
 
 		    			end	
+
+		    		end	
+
+		    	end	
+
+		    	-- when checking for blocked door by item
+		    	if WHEN_DOOR_BLOCKED_BY_ITEM_STAY_IN_HOUSE.enabled then
+
+		    		-- load map
+		    		local map = Map.GetTopMoveItem(WHEN_DOOR_BLOCKED_BY_ITEM_STAY_IN_HOUSE.door_pos.x, WHEN_DOOR_BLOCKED_BY_ITEM_STAY_IN_HOUSE.door_pos.y, WHEN_DOOR_BLOCKED_BY_ITEM_STAY_IN_HOUSE.door_pos.z)
+
+		    		-- when tile is blocked
+		    		if tileIsBlockedByItem(WHEN_DOOR_BLOCKED_BY_ITEM_STAY_IN_HOUSE.door_pos.x, WHEN_DOOR_BLOCKED_BY_ITEM_STAY_IN_HOUSE.door_pos.y, WHEN_DOOR_BLOCKED_BY_ITEM_STAY_IN_HOUSE.door_pos.z) then
+
+		    			-- disable back
+	    				ableBack = false
+
+	    				-- reset time
+	    				backTime = os.clock()
+
+	    				-- set param to field	
+						lastPlayer = "<blocked door>"
+
+	    				-- show log.
+	    				delayedLog("deteced blocked door: " .. map.id, 1000)
+
+	    				-- play sound
+	    				if WHEN_DOOR_BLOCKED_BY_ITEM_STAY_IN_HOUSE.alert then
+
+	    					-- default laud alert
+	    					Rifbot.PlaySound()
+
+	    				end	
 
 		    		end	
 
