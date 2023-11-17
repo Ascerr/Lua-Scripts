@@ -1,6 +1,8 @@
 --[[
     Script Name:        [on label] Buy blessings 
     Description:        It's lua side where you will do actions on label near npc, sail/buy bless.
+    Required:           Put valid names of labels, near npc location put in walker label with npc name, you can also check sail labels in function signal(label) there is label: sail thais->carlin, if you put it in walker character will auto sail if npc near.
+    Suggestion:         Start walking from thais.
     Author:             Ascer - example
 ]]
 
