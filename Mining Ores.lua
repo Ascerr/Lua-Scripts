@@ -7,7 +7,8 @@
 local config = {
     pick = 20495,                   -- id of mining pick
     rock = {34812, 34813, 34831, 34833, 34834, 34835, 34800, 34814, 34815, 34817, 34818, 34819, 34820, 34810, 34809, 34780, 34778, 34776, 34802}, -- id of rocks with ores, cannot be empty rocks
-    stopIfTarget = false,            -- don't mine if currently targeting some creature.
+    stopIfTarget = false,           -- don't mine if currently targeting some creature.
+    disableWalker = true,           -- true/false disable walker if found ore, later enable it back.
     maxTimeIfCannotReach = 20000,   -- max time in miliseconds to bot ignore ore location if cannot stand near to mine. It will remove ignore ore after 5 mins possible to edit in function removeOreFromIgnored
     delay = 1500                    -- delay between usage of pick
 }
@@ -57,14 +58,17 @@ function mine()
     end
     if currentOre == -1 then
         currentOre = getOreLocation()
+        if currentOre ~= -1 and config.disableWalker then Walker.Enabled(false) end
     else
         local pos = Self.Position()
         if pos.z ~= currentOre.z then 
-            currentOre = -1 
+            currentOre = -1
+            if config.disableWalker then Walker.Enabled(true) end
             return
         end
         local map = Map.GetTopMoveItem(currentOre.x, currentOre.y, currentOre.z)
         if not table.find(config.rock, map.id) then 
+            if config.disableWalker then Walker.Enabled(true) end
             currentOre = -1 
             return
         end   
@@ -73,6 +77,7 @@ function mine()
             if os.clock() - oreTime >= config.maxTimeIfCannotReach/1000 then 
                 print("Ignore mining ore at location: " .. currentOre.x .. ", " .. currentOre.y .. ", " .. currentOre.z .. " due max reach time.")
                 table.insert(ignoredOres, {x = currentOre.x, y = currentOre.y, z = currentOre.z, time = os.clock()})
+                if config.disableWalker then Walker.Enabled(true) end
                 currentOre = -1
             return
         end 
