@@ -5,13 +5,24 @@
 ]]
 
 local config = {
-    backpacks = {2867, 3503, 3503}, -- backpacks id, bot will start opening from frist container slot
-    amount = 3                -- amount to open
+    backpacks = {2853, 2853, 3503},     -- backpacks id, bot will start opening from frist container slot
+    amount = 3,                         -- amount to open
+    active_on_script_startup = true,    -- re-open bps on script startup
+    minimize = {
+        enabled = false,                                                 -- true/false minimize 
+        first_container_minimize_button_pos = {x = 1336, y = 356},       -- position of first container minimize button (x, y). You can check this executing this lua: Module.New("check mouse pos", function() local mouse = Rifbot.GetMousePos() print("x = " .. mouse.x .. ", y = " .. mouse.y) end)
+        offset = 20                                                      -- difference between position y in next container button, pos x is always this same.
+    }    
 }
 
 -- DON'T EDIT BELOW THIS LINE
 
-local loop, open, slots, lastAmount, close, reactivateLooter, disconectTime, opening = 0, false, {}, 0, false, false, 0, false
+local loop, open, slots, lastAmount, close, reactivateLooter, disconectTime, opening, lastMinimized = 0, false, {}, 0, false, false, 0, false, -1
+
+if config.active_on_script_startup then
+    open = true
+    close = true
+end    
 
 Module.New("Reconect Backpacks", function ()
     
@@ -44,12 +55,26 @@ Module.New("Reconect Backpacks", function ()
             
             -- load amount od opened backpacks
             local bps = Container.Amount()
+
+            if config.minimize.enabled then
+
+                if bps > lastAmount and lastMinimized ~= lastAmount then
+
+                    -- left click (we adding + 20 due some error in mouse pos connected with game window bar)
+                    Rifbot.MouseClick(config.minimize.first_container_minimize_button_pos.x, config.minimize.first_container_minimize_button_pos.y + (config.minimize.offset * lastAmount) + 20)
+                    lastMinimized = lastAmount
+
+                end 
+
+            end    
             
             -- when amout of backpack is equal our target break
             if bps == config.amount then 
 
                 -- set open on false all backpacks are open already.
                 open = false 
+
+                lastMinimized = -1
 
                 -- when enabling looter is active enable
                 if reactivateLooter then 
@@ -87,7 +112,7 @@ Module.New("Reconect Backpacks", function ()
                                             
                                             -- open container in new slot
                                             Container.UseItem(contIndex, slot, item.id, true, 0) 
-                                            lastAmount = bps + 1
+                                            lastAmount = bps
                                             loop = os.clock()
 
                                             opening = true
@@ -98,9 +123,9 @@ Module.New("Reconect Backpacks", function ()
                                         else
                                                                                     
 
-                                            if bps == lastAmount then
+                                            if bps == (lastAmount + 1) then
                                                 table.insert(slots, slot)   
-                                            end
+                                            end    
 
                                             opening = false
 
@@ -124,8 +149,13 @@ Module.New("Reconect Backpacks", function ()
         open = true -- set open on true to start reconnect after relogin 
         slots = {} -- reset internal variables
         lastAmount = 0
+        lastMinimized = -1
         opening = false
         Looter.Enabled(false) -- disable looter
         disconectTime = os.clock()
     end    
 end)
+
+
+--> here you can check pos of mouse on screen
+--Module.New("check mouse pos", function() local mouse = Rifbot.GetMousePos() print("x = " .. mouse.x .. ", y = " .. mouse.y) end)
