@@ -18,8 +18,9 @@ function proxy(messages)
         if msg.speaker == npcName then
         	balance = string.match(msg.message, "Your account balance is (.+) gold.") --> this message can be different depend on server and amount you have
         	if balance ~= nil then
-        		balance = tonumber(balance)
-        		if balance > 0 then
+        		balance = string.gsub(balance, ",", "")
+			balance = tonumber(balance)
+			if balance > 0 then
 	        		canTransfer = true
 	        	end	
         	end
