@@ -6,7 +6,8 @@
 
 local FURNITURE_IDS = {2982, 2472, 2524, 2319, 2358, 3504} -- list of items to destroy
 local MACHETE_ID = 3308 	-- id of weapon or machete to destroy.
-local RANGE = 1				-- distance between you and furniture	
+local RANGE = 1				-- distance between you and furniture
+local ALERT = false			-- true/false play sound if item detect.	
 
 -- DON'T EDIT BELOW
 
@@ -40,6 +41,9 @@ Module.New("Destroy Furniture", function (mod)
 
 		-- destroy item
 		if object ~= -1 then
+			if ALERT then
+				Rifbot.PlaySound()
+			end	
 			Self.UseItemWithGround(MACHETE_ID, object.x, object.y, object.z, math.random(1000, 1500))
 		end	
 
