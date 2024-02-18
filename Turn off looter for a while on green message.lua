@@ -2,7 +2,7 @@
     Script Name:        Turn off looter for a while on green message
     Description:        When you botting on servers that send you green message with loot 
                         this script will turn off looter if loot message don't contain specific items.
-                        It's useless if you killing monsters using area spell or runes.
+                        if you killing monsters using area spell or runes it may failure.
 
     Required:           Rifbot version 2.39 release 2022-09-27 or later                               
     
@@ -39,13 +39,14 @@ end
 function proxy(messages) 
     for i, msg in ipairs(messages) do 
         if string.instr(msg.message, "Loot of") then
-            if not isItemInMessage(string.lower(msg.message)) then
-                Looter.Enabled(false)
-                offLooter = true
-                offTime = os.clock()
+            if isItemInMessage(string.lower(msg.message)) then
+                return true
             end
         end         
-    end 
+    end
+    Looter.Enabled(false)
+    offLooter = true
+    offTime = os.clock() 
 end
 Proxy.TextNew("proxy")
 
