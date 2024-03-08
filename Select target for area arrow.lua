@@ -51,7 +51,6 @@ end --> choose target to shoot max amount with area arrow.
 Module.New("Select target for area arrow", function()
     if Self.isConnected() then
         local t = selectTarget(Creature.iMonsters(config.searchForRange, false))
-        print(table.count(t))
         if table.count(t) > 3 then
             if Self.TargetID() ~= t.id then
                 Creature.Attack(t.id)
