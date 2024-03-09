@@ -5,16 +5,18 @@
 ]]
 
 
-
 -- RED CODE FROM KELTERA
 function proxyText(messages) 
 	for i, msg in ipairs(messages) do 
 		print(msg.message, msg.mode)
 		if string.instr(msg.message, "antibot") then
 			Rifbot.PlaySound()
-			local code = tonumber(string.match(msg.message, '%d+'))
-			if code > 100 then
-				Self.Say("!antibot " .. code)
+			local code = string.match(msg.message, '%d+')
+			if code ~= nil then
+				code = tonumber(code)	
+				if code > 100 then
+					Self.Say("!antibot " .. code)
+				end	
 			end	
 		end	
 	end 
