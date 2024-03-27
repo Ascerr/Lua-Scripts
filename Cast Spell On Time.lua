@@ -35,8 +35,6 @@ end
 
 -- mod to run functions
 Module.New("Cast Spell On Time", function ()
-    
-    print(os.time() - mainTime, EVERY_TIME_SECONDS + randomTime)
 
     -- check if we should cast.
     if (os.time() - mainTime) >= (EVERY_TIME_SECONDS + randomTime)  then
