@@ -36,8 +36,10 @@ end
 -- mod to run functions
 Module.New("Cast Spell On Time", function ()
     
+    print(os.time() - mainTime, EVERY_TIME_SECONDS + randomTime)
+
     -- check if we should cast.
-    if (os.clock() - mainTime) >= (EVERY_TIME_SECONDS + randomTime)  then
+    if (os.time() - mainTime) >= (EVERY_TIME_SECONDS + randomTime)  then
         
         -- if we are connected to game.
         if Self.isConnected() then
@@ -60,7 +62,7 @@ Module.New("Cast Spell On Time", function ()
                 Self.CastSpell(SPELL, 0)
 
                 -- set time casting spell   
-                mainTime = os.clock()
+                mainTime = os.time()
 
                 -- if we adding extra random time
                 if ADD_RANDOM.enabled then
@@ -73,7 +75,7 @@ Module.New("Cast Spell On Time", function ()
             else        
 
                 -- set checking for next 10s  
-                mainTime = os.clock() - EVERY_TIME_SECONDS + 10
+                mainTime = os.time() - EVERY_TIME_SECONDS + 10
 
             end
 
