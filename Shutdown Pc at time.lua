@@ -34,7 +34,7 @@ Module.New("Logout at time", function ()
 	if (h .. ":" .. min) == SHUTDOWN_TIME  then
 
 		-- create batch file
-		createBatchFile(command)
+		createBatchFile(SHUTDOWN_COMMAND)
 
 		-- execute command
 		os.execute(BATCH)
