@@ -9,7 +9,7 @@ local config = {
     otherRing = {enabled = false, off = 2344, on = 3344},        -- {optional} put other ring instead of dequiping e ring. If ring don't change their ids then put this same is in {on} and {off}
     monsters = {
         amount = 2,                                             -- how many monsters detected on screen
-        names = {"Dragon Lord", "Rat", "Demon Skeleton"},     -- monsters names.
+        names = {"Dragon Lord", "Cyclops", "Demon Skeleton"},     -- monsters names.
     }
 }
 
