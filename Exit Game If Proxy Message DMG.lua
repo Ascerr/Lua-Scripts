@@ -48,7 +48,7 @@ function proxyText(messages)
                 Rifbot.PlaySound("Default.mp3")
 
                 -- show who entered to screen.
-                showLogs(msg.speaker)
+                showLogs(msg.message)
      
                 -- load game client stats
                 local client = Rifbot.getClientInfo()
