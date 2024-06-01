@@ -19,7 +19,7 @@ local DMG = 5                           -- amount of dmg received to exit game
 --> Returns:         void nothing.
 ----------------------------------------------------------------------------------------------
 function createBatchFile(pid)
-    file = io.open(BATCH, 'w')
+    local file = io.open(BATCH, 'w')
     file:write("taskkill /F /PID " .. pid .. "\n")
     file:write("start " .. LOGS)
     return file:close()
@@ -33,7 +33,7 @@ end
 --> Returns:         void nothing.
 ----------------------------------------------------------------------------------------------
 function showLogs(data)
-    file = io.open(LOGS, 'w')
+    local file = io.open(LOGS, 'w')
     file:write(data)
     file:close()
 end
