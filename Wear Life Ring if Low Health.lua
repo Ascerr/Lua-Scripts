@@ -1,6 +1,6 @@
 --[[
     Script Name: 		Wear Life Ring if Low Health
-    Description: 		Equip Life ring when mana % below value else dequip.
+    Description: 		Equip Life ring when health % below value else dequip.
     Author: 			Ascer - example
 ]]
 
