@@ -1,12 +1,13 @@
 --[[
     Script Name: 		Soft Boots Changer
-    Description: 		Load a new softs boots from backpacks if other worn or use equipment slot to auto charge.
+    Description: 		Load a new softs boots from backpacks if other worn or use equipment slot to auto charge or use special item with soft.
     Author: 			Ascer - example
 ]]
 
 local config = {
-    soft_boots = {new = 6529, using = 3549, worn = 6530},       -- id for soft boots: new - brand new in backpack, using - working in equipment, worn - run out of time boots.
-    useEquipmentSlotToCharge = false                            -- allow to use worn equipment boots to charge it.
+    soft_boots = {new = 6529, using = 3549, worn = 6530},       -- id for soft boots: [new] - brand new in backpack, [using] - working in equipment, [worn] - run out of time boots.
+    useEquipmentSlotToCharge = false,                           -- allow to use worn equipment boots to charge it.
+    repairWithItem = {enabled = false, item = 1234}             -- @enabled: true/false use item with to repair soft boots, @item - id to use with.
 }
 
 -- DON'T EDIT BELOW THIS LINE
@@ -24,6 +25,14 @@ Module.New("Soft Boots Changer", function (mod)
 
             -- use equimpent feet slot.
             Self.UseItemFromEquipment(SLOT_FEET)
+
+        elseif config.repairWithItem.enabled then
+
+            local itemToUseWith = Container.FindItem(config.repairWithItem.item, nil)
+
+            if table.count(itemToUseWith) > 1 then
+                Container.UseItemWithEquipment(itemToUseWith.index, itemToUseWith.slot, itemToUseWith.id, SLOT_FEET, config.soft_boots.worn) 
+            end
 
         else
             
