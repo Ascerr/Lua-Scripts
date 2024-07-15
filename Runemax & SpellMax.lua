@@ -45,7 +45,7 @@ Module.New("Runemax & SpellMax", function()
             local c = Creature.getCreatures(target)
 
             -- when is table.
-            if table.count(c) > 0 and getMonsters() > CONFIG.amount then
+            if table.count(c) > 0 and getMonsters() >= CONFIG.amount then
 
                 -- when creature is alive and is valid monster name.
                 if c.hpperc > 0 and table.find(CONFIG.monsters, string.lower(c.name)) then
