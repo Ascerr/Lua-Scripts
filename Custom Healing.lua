@@ -22,7 +22,7 @@ local HEALING = {
 Module.New("Custom Healing", function (mod)
     if Self.isConnected() then
         local selfHpperc, selfMana = Self.HealthPercent(), Self.Mana()
-        if (not USE_ONLY_IF_MONSTER_ON_SCREEN or (USE_ONLY_IF_MONSTER_ON_SCREEN and Creature.iMonsters(7,false) > 0)) then
+        if (not USE_ONLY_IF_MONSTER_ON_SCREEN or (USE_ONLY_IF_MONSTER_ON_SCREEN and table.count(Creature.iMonsters(7,false)) > 0)) then
             for i, mode in pairs(HEALING) do
                 if selfHpperc <= mode.hpperc and selfMana >= mode.mana then
                     if type(mode.item) == "string" then
