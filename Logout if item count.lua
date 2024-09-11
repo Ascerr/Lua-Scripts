@@ -5,6 +5,7 @@
 ]]
 
 local ITEM = {id = 2853, count = 2}  -- item.id and item.count if below logout.
+local STOP_CAVEBOT = false           -- true/false stop cavebot before logout
 
 -- DON'T EDIT BELOW THIS LINE.
 
@@ -31,8 +32,16 @@ end
 Module.New("Logout if item count", function ()
     if Self.isConnected() then
         if getItemCount(ITEM.id) < ITEM.count then
-            Self.Logout()
-        end
+            if STOP_CAVEBOT then
+                if Walker.isEnabled() then Walker.Enabled(false) end
+                if Looter.isEnabled() then Looter.Enabled(false) end
+                if not Self.isInFight() then
+                    Self.Logout()
+                end
+            else    
+                Self.Logout()
+            end     
+        end     
     end        
 end)
 
