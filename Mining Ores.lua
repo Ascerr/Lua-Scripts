@@ -10,7 +10,8 @@ local config = {
     stopIfTarget = false,           -- don't mine if currently targeting some creature.
     disableWalker = true,           -- true/false disable walker if found ore, later enable it back.
     maxTimeIfCannotReach = 20000,   -- max time in miliseconds to bot ignore ore location if cannot stand near to mine. It will remove ignore ore after 5 mins possible to edit in function removeOreFromIgnored
-    delay = 1500                    -- delay between usage of pick
+    delay = 1500,                    -- delay between usage of pick
+    just_use_vein = false           -- true/false if we use map position instead use pick with ground.
 }
 
 -- DONT'T EDIT BELOW THIS LINE
@@ -79,10 +80,14 @@ function mine()
                 table.insert(ignoredOres, {x = currentOre.x, y = currentOre.y, z = currentOre.z, time = os.clock()})
                 if config.disableWalker then Walker.Enabled(true) end
                 currentOre = -1
-            return
-        end 
+                return
+            end 
         else
-            Self.UseItemWithGround(config.pick, currentOre.x, currentOre.y, currentOre.z, config.delay)
+            if config.just_use_vein then
+                Map.UseItem(currentOre.x, currentOre.y, currentOre.z, map.id, 1, config.delay)
+            else    
+                Self.UseItemWithGround(config.pick, currentOre.x, currentOre.y, currentOre.z, config.delay)
+            end    
         end    
     end    
 end --> general mine function    
