@@ -1,6 +1,6 @@
 --[[
     Script Name:        Use Area Rune on you if dmg from stalker.
-    Description:        Script will fast disable and enable looter module when you looting more than x miliseonds.
+    Description:        When Stalker hits you dmg then character auto use rune with yourself.
     Author:             Ascer - example
 ]]
 
