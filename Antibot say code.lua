@@ -49,6 +49,7 @@ function proxy(messages)
 end
 Proxy.New("proxy")
 
+
 -- RED CODE FROM WEAREDRAGONS
 function extractNumbers(string)
 	local numbers = {}
@@ -59,14 +60,14 @@ function extractNumbers(string)
 end --> return table with numbers extracted from string message
 
 
-function proxyText(messages) 
+function proxyChannel(messages) 
 	for i, msg in ipairs(messages) do 
 		if string.instr(msg.message, "bot check!") then
 			local nums = extractNumbers(msg.message)
 			if table.count(nums) >= 2 then
-				Self.Say("answer " .. nums[1] + nums[2])
+				Self.SayOnChannel("answer " .. nums[1] + nums[2], msg.channel)
 			end 
 		end	
 	end 
 end 
-Proxy.TextNew("proxyText")
+Proxy.New("proxyChannel")
