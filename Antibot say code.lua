@@ -71,3 +71,15 @@ function proxyChannel(messages)
 	end 
 end 
 Proxy.New("proxyChannel")
+
+function proxyChannelText(messages) 
+	for i, msg in ipairs(messages) do 
+		if string.instr(msg.message, "bot check!") then
+			local nums = extractNumbers(msg.message)
+			if table.count(nums) >= 2 then
+				Self.SayOnChannel("answer " .. nums[1] + nums[2], 17) -- 17 is Antibot Channel nr.
+			end 
+		end	
+	end 
+end 
+Proxy.TextNew("proxyChannelText")
