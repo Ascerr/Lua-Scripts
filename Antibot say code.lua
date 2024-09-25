@@ -72,7 +72,7 @@ function proxyChannelText(messages)
 			local nums = extractNumbers(msg.message)
 			if table.count(nums) >= 2 and not var then
 				var = true
-				respond = "answer " .. nums[1] + nums[2]
+				respond = nums[1] + nums[2]
 			end 
 		end	
 	end 
