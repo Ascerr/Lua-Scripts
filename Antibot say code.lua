@@ -1,8 +1,10 @@
 --[[
     Script Name:        Antibot say code
-    Description:        Read game channels for incomming antibot message and type code. [IMPORTANT !] each game client could have their own messages.
+    Description:        Read game channels for incomming antibot message and type code. 
+    					[IMPORTANT !] each game client could have their own messages. COPY ONLY CODE RELATED TO SERVER WHERE YOU PLAY.
     Author:             Ascer - example
 ]]
+
 
 
 -- RED CODE FROM KELTERA
