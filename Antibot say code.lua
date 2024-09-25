@@ -50,7 +50,10 @@ end
 Proxy.New("proxy")
 
 
--- RED CODE FROM WEAREDRAGONS
+-- RED CODE FROM WEAREDRAGONS {Required Rifbot version 2.81+ released 2024-09-22 11:50 CET}
+
+local POSSIBLE_ANTIBOT_CHANNELS = {11, 13, 17} -- respond to this channels, we don't know which is antibot so executing message every 2.5s on all from this list.
+
 function extractNumbers(string)
 	local numbers = {}
 	for num in string.gmatch(string, "%d+") do
@@ -60,26 +63,31 @@ function extractNumbers(string)
 end --> return table with numbers extracted from string message
 
 
-function proxyChannel(messages) 
-	for i, msg in ipairs(messages) do 
-		if string.instr(msg.message, "bot check!") then
-			local nums = extractNumbers(msg.message)
-			if table.count(nums) >= 2 then
-				Self.SayOnChannel("answer " .. nums[1] + nums[2], msg.channel)
-			end 
-		end	
-	end 
-end 
-Proxy.New("proxyChannel")
+local var, respond = false, ""
 
 function proxyChannelText(messages) 
 	for i, msg in ipairs(messages) do 
 		if string.instr(msg.message, "bot check!") then
+			Rifbot.PlaySound()
 			local nums = extractNumbers(msg.message)
-			if table.count(nums) >= 2 then
-				Self.SayOnChannel("answer " .. nums[1] + nums[2], 17) -- 17 is Antibot Channel nr.
+			if table.count(nums) >= 2 and not var then
+				var = true
+				respond = "answer " .. nums[1] + nums[2]
 			end 
 		end	
 	end 
 end 
 Proxy.TextNew("proxyChannelText")
+
+Module.New("executeRespond", function()
+	if Self.isConnected() then
+		if var then
+			for i = 1, #POSSIBLE_ANTIBOT_CHANNELS do
+				Self.SayOnChannel(respond, POSSIBLE_ANTIBOT_CHANNELS[i])
+				wait(2500)
+			end
+			var = false
+			respond = ""	
+		end	
+	end	
+end)
