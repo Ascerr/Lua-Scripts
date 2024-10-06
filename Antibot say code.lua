@@ -69,7 +69,7 @@ local var, respond = false, ""
 
 function proxyChannelText(messages) 
 	for i, msg in ipairs(messages) do 
-		if string.instr(msg.message, "bot check!") then
+		if string.instr(msg.message, "give me the result of") then
 			Rifbot.PlaySound()
 			local nums = extractNumbers(msg.message)
 			if table.count(nums) >= 2 and not var then
