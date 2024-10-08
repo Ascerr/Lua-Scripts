@@ -31,7 +31,7 @@ function moveToQuiver(ammoID, ifBelow)
             if string.instr(quiver.name, "quiver") then -- here name of quiver
                 local arrowsInQuiver = Self.ItemCount(ammoID, i)
                 if arrowsInQuiver <= ifBelow then
-                    local items = Container.getItems(special)
+                    local items = Container.getItems()
                     for j = 1, #items do
                         local cont = items[j]
                         local contItems = cont.items
