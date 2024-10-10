@@ -54,7 +54,7 @@ Proxy.New("proxy")
 
 -- RED CODE FROM WEAREDRAGONS {Required Rifbot version 2.81+ released 2024-09-22 11:50 CET}
 
-local POSSIBLE_ANTIBOT_CHANNELS = {9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25} -- respond to this channels, we don't know which is antibot so executing message every 2.5s on all from this list.
+local POSSIBLE_ANTIBOT_CHANNELS = {9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27} -- respond to this channels, we don't know which is antibot so executing message every 2.5s on all from this list.
 
 function extractNumbers(string)
 	local numbers = {}
