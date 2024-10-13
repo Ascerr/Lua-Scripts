@@ -5,6 +5,10 @@
 ]]
 
 
+local IGNORE_MESSAGES = {enabled = false, keywords = {"exura", "exura gran", "utevo lux"}} -- ignore common messages lower case use only
+
+-- DON'T EDIT BELOW THIS LINE
+
 local list = Rifbot.FriendsList(true)
 
 --> here we adding our character name to safe list of message alert
@@ -14,8 +18,9 @@ table.insert(list, selfName)
 function proxy(messages) 
 	for i, msg in ipairs(messages) do 
 		if not table.find(list, string.lower(msg.speaker)) and msg.mode <= 5 and msg.channel <= 5 then
-			print(msg.speaker, msg.message, msg.channel, msg.mode, msg.level)
-			Rifbot.PlaySound("Default.mp3")
+			if not IGNORE_MESSAGES.enabled or (IGNORE_MESSAGES.enabled and not table.find(IGNORE_MESSAGES.keywords, string.lower(msg.message))) then
+				Rifbot.PlaySound("Default.mp3")
+			end	
 		end	
 	end 
 end 
