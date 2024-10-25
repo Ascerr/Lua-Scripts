@@ -6,6 +6,7 @@
 
 local GOLD_ID = 3031											-- id of gold coin
 local PLATINUM_ID = 3035										-- id of platinum coin
+local CRYSTAL_ID = 1111											-- id of crystal coin, PUT IT ONLY WHEN YOU WANT CONVERT CRYSTAL COINS TO OTHER ITEMS LIKE GOLD BARS ON WEAREDRAGONS. Default is 3043
 local USE_GOLD_CONVERTER_ITEM = {enabled = false, item = 7889, mode = "use"}	-- on some servers there is an item called Gold Converter, @enabled - true/false, @item - ID of gold converter, @mode - type of use: "with" - use item with gold, "use" - just use gold converter like food. 
 local ONLY_IF_NO_MONSTER_ON_SCREEN = false						-- true/false when any monsters on screen don't convert gold to avoid exhausting.
 local COLLECT_GOLD_TO_POUCH = false								-- use gold no matter of amount to collect it into gold pouch.
@@ -25,7 +26,7 @@ Module.New("Gold Changer", function()
 		for j = 1, #contItems do
 			local item = contItems[j]
 			if item.count == 100 or COLLECT_GOLD_TO_POUCH then
-				if item.id == GOLD_ID or item.id == PLATINUM_ID then
+				if item.id == GOLD_ID or item.id == PLATINUM_ID or item.id == CRYSTAL_ID then
 					if USE_GOLD_CONVERTER_ITEM.enabled then
 						local ammo = Self.Ammo()
 						if ammo.id == USE_GOLD_CONVERTER_ITEM.item then
