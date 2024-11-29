@@ -4,10 +4,12 @@
     Author: 			Ascer - example
 ]]
 
-local SPELL = "utani hur"	-- spell to cast
+local SPELL = "utani hur"							-- spell to cast
+local IGNORE_MOBS = {"rat", "snake", "rabbit"}		-- ignore checking this monsters.
 
 -- DON'T EDIT BELOW THIS LINE
 
+IGNORE_MOBS = table.lower(IGNORE_MOBS)
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 --> Function:		getMonsters()
@@ -18,7 +20,9 @@ local SPELL = "utani hur"	-- spell to cast
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 function getMonsters()
 	for i, mob in pairs(Creature.iMonsters(7, false)) do
-		return true
+		if not table.find(IGNORE_MOBS, string.lower(mob.name)) then
+			return true
+		end	
 	end
 	return false
 end
