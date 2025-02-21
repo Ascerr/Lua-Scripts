@@ -11,7 +11,8 @@ local config = {
     disableWalker = true,           -- true/false disable walker if found ore, later enable it back.
     maxTimeIfCannotReach = 20000,   -- max time in miliseconds to bot ignore ore location if cannot stand near to mine. It will remove ignore ore after 5 mins possible to edit in function removeOreFromIgnored
     delay = 1500,                    -- delay between usage of pick
-    just_use_vein = false           -- true/false if we use map position instead use pick with ground.
+    just_use_vein = false,           -- true/false if we use map position instead use pick with ground.
+    walkToOre = false                -- true/false if character should walk to ore or just execute usage.
 }
 
 -- DONT'T EDIT BELOW THIS LINE
@@ -74,14 +75,22 @@ function mine()
             return
         end   
         if Self.DistanceFromPosition(currentOre.x, currentOre.y, currentOre.z) > 1 then
-            Self.WalkTo(currentOre.x, currentOre.y, currentOre.z)
+            if config.walkToOre then
+                Self.WalkTo(currentOre.x, currentOre.y, currentOre.z)
+            else
+                if config.just_use_vein then
+                    Map.UseItem(currentOre.x, currentOre.y, currentOre.z, map.id, 1, config.delay)
+                else    
+                    Self.UseItemWithGround(config.pick, currentOre.x, currentOre.y, currentOre.z, config.delay)
+                end    
+            end    
             if os.clock() - oreTime >= config.maxTimeIfCannotReach/1000 then 
                 print("Ignore mining ore at location: " .. currentOre.x .. ", " .. currentOre.y .. ", " .. currentOre.z .. " due max reach time.")
                 table.insert(ignoredOres, {x = currentOre.x, y = currentOre.y, z = currentOre.z, time = os.clock()})
                 if config.disableWalker then Walker.Enabled(true) end
                 currentOre = -1
                 return
-            end 
+            end       
         else
             if config.just_use_vein then
                 Map.UseItem(currentOre.x, currentOre.y, currentOre.z, map.id, 1, config.delay)
