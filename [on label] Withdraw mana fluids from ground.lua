@@ -95,7 +95,7 @@ function withdrawMF()
                                     if item.count < toPcikup then
                                         toPcikup = item.count
                                     end    
-                                    Container.MoveItemToContainer(index, i - 1, config.container_index, dest.amount, item.id, 1, config.moveItemsDelay)
+                                    Container.MoveItemToContainer(index, i - 1, config.container_index, dest.amount, item.id, item.count, config.moveItemsDelay)
                                     return false
                                 end    
                             else
