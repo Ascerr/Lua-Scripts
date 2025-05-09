@@ -8,6 +8,7 @@ local RECEIVERS = {"Receiver1", "Receiver2"}               -- characters to rece
 local SAFE_LIST = {"friend1", "friend2"}        -- avoid sending message with your friends
 local INSTANT = true                            -- send message always or only when a new player enter on screen
 local SPEAK_DELAY = 3                           -- time in seconds between sending msg.
+local MULTIFLOOR = false                        -- true/false check players on multiple floors
 
 -- DON'T EDIT BELOW THIS LINE
 
@@ -35,7 +36,7 @@ end
 Module.New("PM With Players On Screen", function ()
     local names, amount = "", 0
     if os.clock() - speakTime > SPEAK_DELAY then
-        for i, player in pairs(Creature.iPlayers(7)) do
+        for i, player in pairs(Creature.iPlayers(7, MULTIFLOOR)) do
             if not table.find(SAFE_LIST, player.name) then
                 if not INSTANT then
                     if not table.find(storage, player.name) then
