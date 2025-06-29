@@ -7,7 +7,7 @@
 local AMULET_ID = 3081 		     -- id amulet to wear (default ssa 3081)
 local TYPE = "mana"              -- which value to read "mana" or "hp"
 local VALUE = 75			     -- when mpperc or hpperc <= this percent then wear ssa else dequip.
-local ONLY_IF_PLAYER = true     -- true/false wear amulet only if player on screen
+local ONLY_IF_PLAYER = false     -- true/false wear amulet only if player on screen
 
 -- DON'T EDIT BELOW THIS LINE
 
