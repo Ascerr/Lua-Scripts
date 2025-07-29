@@ -1,7 +1,7 @@
 --[[
     Script Name:        Bed Runemaker
-    Description:        Login to character, cast spell, use bed -> repat for all chars.
-    Required:           1. Valid mouse x, y of first character index on select window and nextIndex difference in pixels.
+    Description:        Login to character, cast spell, use bed -> repeat for all chars.
+    Required:           1. Valid mouse x, y of first character index on select window and nextIndex difference in pixels. On servers with huge icons inside select character window this script won't works. 
                         2. You can't have any Settings saved to character name logged becuase bot will autoload it on login. Just login first character -> run this lua script + set what you want else in bot, don't save.
     Author:             Ascer - example
 ]]
