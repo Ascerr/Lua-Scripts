@@ -112,6 +112,7 @@ local pausedTriger = false
 local mobDisappear, mobDisappearTime, disappear = -1, 0, false
 local allowCheckMobCreation, mobsCreationLevel, appearMob, appear = false, {x=0,y=0,z=0}, -1, false
 local lastTarget = {id = -1, hpperc = -1}
+local monsterCreationTable, monsterCreationMyLastZ = -1, -1
 
 -- reset teleported pos
 Self.GetTeleported()
@@ -354,29 +355,51 @@ end
 function checkForMonstersCreation(creatures)
     if not CHECK_FOR_MONSTERS_CREATION.enabled then return end
     local pos = Self.Position()
-    if mobsCreationLevel.z ~= pos.z or math.abs(mobsCreationLevel.x - pos.x) > 7 or math.abs(mobsCreationLevel.y - pos.y) > 5 then 
-        allowCheckMobCreation = false
-    end   
-    mobsCreationLevel = pos
-    local count = 0
-    for i = 1, #creatures do
-        local mob = creatures[i]
-        if Creature.isMonster(mob) and mob.z == pos.z and math.abs(mob.x - pos.x) <= 7 and math.abs(mob.y - pos.y) <= 5 and not table.find(CHECK_FOR_MONSTERS_CREATION.ignore, string.lower(mob.name)) then
-            count = count + 1
-            if allowCheckMobCreation then
-                if Creature.DistanceFromSelf(mob) < 4 then
-                    appear = true
-                    appearMob = mob
-                    break
-                end    
+
+    if pos.z ~= monsterCreationMyLastZ then 
+        monsterCreationTable = -1
+    end 
+
+    if monsterCreationTable == -1 then
+        for i = 1, #creatures do
+            local mob = creatures[i]
+            if Creature.isMonster(mob) and mob.z == pos.z and not table.find(CHECK_FOR_MONSTERS_CREATION.ignore, string.lower(mob.name)) then
+                if monsterCreationTable == -1 then            
+                    monsterCreationTable = {}
+                end 
+                table.insert(monsterCreationTable, mob)
             end    
-        end    
-    end
-    if count > 0 then
-        allowCheckMobCreation = false
+        end
     else
-        allowCheckMobCreation = true
-    end    
+        for i = 1, #creatures do
+            local mob = creatures[i]
+            if Creature.isMonster(mob) and mob.z == pos.z and not table.find(CHECK_FOR_MONSTERS_CREATION.ignore, string.lower(mob.name)) then
+                local foundMob = false
+                for _, oldMob in ipairs(monsterCreationTable) do
+                    if oldMob.id == mob.id then
+                        foundMob = true
+                        break
+                    end     
+                end
+                
+                if not foundMob then
+                    if math.abs(mob.x - pos.x) <= 6 or math.abs(mob.y - pos.z) <= 4 then
+                        appear = true
+                        appearMob = mob
+                        break
+                    end 
+                end 
+                if monsterCreationTable == -1 then            
+                    monsterCreationTable = {}
+                end 
+                table.insert(monsterCreationTable, mob)
+            end    
+        end 
+
+    end 
+
+    monsterCreationMyLastZ = pos.z
+    
     if appear then
         Rifbot.PlaySound("Default.mp3")
         if CHECK_FOR_MONSTERS_CREATION.pauseBot then
@@ -557,4 +580,5 @@ Module.New("Anti GM", function ()
     end 
 
 end)
+
 
