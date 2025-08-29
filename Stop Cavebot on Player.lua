@@ -42,7 +42,7 @@ Module.New("Stop cavebot on Player", function ()
     
     -- when detected player before then executed say action
     if say then
-        if os.clock() - sayTime > 3 then
+        if os.clock() - sayTime > SAY_MESSAGE.delay then
             Self.Say(SAY_MESSAGE.message)
             say = false
         end  
