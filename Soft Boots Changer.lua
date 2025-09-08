@@ -7,7 +7,8 @@
 local config = {
     soft_boots = {new = 6529, using = 3549, worn = 6530},       -- id for soft boots: [new] - brand new in backpack, [using] - working in equipment, [worn] - run out of time boots.
     useEquipmentSlotToCharge = false,                           -- allow to use worn equipment boots to charge it.
-    repairWithItem = {enabled = false, item = 1234}             -- @enabled: true/false use item with to repair soft boots, @item - id to use with.
+    repairWithItem = {enabled = false, item = 1234},            -- @enabled: true/false use item with to repair soft boots, @item - id to use with.
+    repairWithCommand = {enabled = false, text = "!soft"}       -- @enabled: true/false say command to recharged softs. @text - command to say
 }
 
 -- DON'T EDIT BELOW THIS LINE
@@ -33,6 +34,11 @@ Module.New("Soft Boots Changer", function (mod)
             if table.count(itemToUseWith) > 1 then
                 Container.UseItemWithEquipment(itemToUseWith.index, itemToUseWith.slot, itemToUseWith.id, SLOT_FEET, config.soft_boots.worn) 
             end
+
+        elseif repairWithCommand.enabled then    
+
+            Self.Say(repairWithCommand.text)
+            wait(2500)
 
         else
             
