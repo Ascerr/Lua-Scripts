@@ -35,9 +35,9 @@ Module.New("Soft Boots Changer", function (mod)
                 Container.UseItemWithEquipment(itemToUseWith.index, itemToUseWith.slot, itemToUseWith.id, SLOT_FEET, config.soft_boots.worn) 
             end
 
-        elseif repairWithCommand.enabled then    
+        elseif config.repairWithCommand.enabled then    
 
-            Self.Say(repairWithCommand.text)
+            Self.Say(config.repairWithCommand.text)
             wait(2500)
 
         else
@@ -62,3 +62,4 @@ Module.New("Soft Boots Changer", function (mod)
     end    
 
 end)
+
