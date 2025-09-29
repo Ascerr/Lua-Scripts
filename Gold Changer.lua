@@ -19,7 +19,7 @@ Module.New("Gold Changer", function()
 	 		return false
 	 	end
 	end 		
-	local items = Container.getItems(special)
+	local items = Container.getItems()
 	for i = 1, #items do
 		local cont = items[i]
 		local contItems = cont.items
@@ -55,3 +55,4 @@ Module.New("Gold Changer", function()
 	end
 	mod:Delay(500, 1200)
 end)
+
