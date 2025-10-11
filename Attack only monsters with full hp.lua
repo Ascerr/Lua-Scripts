@@ -6,6 +6,7 @@
 
 local MONSTERS = {"troll", "rat"}			-- monsters list to attack
 local RANGE = 5								-- range sqms to check
+local DELAY = {100, 200}					-- attack random delay
 
 -- DON'T EDIT BELOW THIS LINE
 
@@ -23,7 +24,7 @@ function getTarget()
 end	
 
 
-Module.New("Attack only monsters with full hp", function()
+Module.New("Attack only monsters with full hp", function(mod)
 	if Self.isConnected() then
 		local t = Self.TargetID()
 		if t <= 0 then
@@ -32,5 +33,6 @@ Module.New("Attack only monsters with full hp", function()
 				Creature.Attack(target.id)
 			end	
 		end	
-	end	
+	end
+	mod:Delay(DELAY[1], DELAY[2])	
 end)
