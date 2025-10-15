@@ -116,6 +116,8 @@ Module.New("executeRespond", function()
 	end	
 end)
 
+-- GREEN ANIMATED TEXT (ONLY) WEAREDRAGONS PLAY SOUND IF ANY OF THIS KEYWORDS APPEAR ON SCREEN
+
 local keywords = {"send the word", "bot test"}
 
 keywords = table.lower(keywords)
@@ -133,4 +135,5 @@ function proxyAnimatedText(messages)
 	end 
 end
 proxyAnimatedTextNew("proxyAnimatedText")
+
 
