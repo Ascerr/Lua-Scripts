@@ -116,4 +116,21 @@ Module.New("executeRespond", function()
 	end	
 end)
 
+local keywords = {"send the word", "bot test"}
+
+keywords = table.lower(keywords)
+
+function proxyAnimatedText(messages) 
+	local me = Self.Position()
+	for i, msg in ipairs(messages) do 
+		for k = 1, #keywords do
+			-- check if message appear on this same floor as our character
+			if me.z == msg.z string.find(string.lower(msg.message), keywords[k]) then
+				Rifbot.PlaySound()
+				print("Detected animated keyword: " .. msg.message, msg.x, msg.y, msg.z) 
+			end	
+		end	
+	end 
+end
+proxyAnimatedTextNew("proxyAnimatedText")
 
