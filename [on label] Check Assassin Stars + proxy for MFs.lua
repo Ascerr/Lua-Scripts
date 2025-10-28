@@ -7,7 +7,7 @@
 
 local config = {
     labelCheck = "check",                               -- only if character stay during cavebot on this label check will make.
-    assassinStars = {id = 1111, amount = 40},           -- when low amount of assasin starts go to label back
+    assassinStars = {id = 3031, amount = -1},           -- when low amount of assasin starts go to label back
     manaFluids = {id = 2854, amount = 18},              -- when low amount of go to label back.
     labelBack = "back"                                  -- label to go.
 }
@@ -52,6 +52,7 @@ function proxyText(messages)
     end 
 end 
 Proxy.TextNew("proxyText")     
+
 
 
 
