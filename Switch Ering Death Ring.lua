@@ -5,7 +5,7 @@
 ]]
 
 local ENERGY_RING = {on = 3088, off = 3051} -- set id for ering on - equiped, off - not
-local DEATH_RING = 6299                     -- ID of ring to swirch
+local DEATH_RING = 6299                     -- ID of ring to switch
 local HPPERC = 40							-- when hpperc below or equal rquip ring else dequip
 
 Module.New("Switch Ering Death Ring", function ()
@@ -21,3 +21,4 @@ Module.New("Switch Ering Death Ring", function ()
         end
     end
 end)
+
