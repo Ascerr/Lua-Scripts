@@ -28,9 +28,10 @@ Module.New("Cure Poison", function ()
 	        	if config.ifNoMonsters and table.count(Creature.iMonsters(7, false)) > 0 then return end
 	        	if var then
 	        		Self.CastSpell(config.spell, 30)
-	        		dmg = false
 	        	end	
-	        end	
+	        end
+	    else    	
+	    	dmg = false
 	    end
 	end        
 end)
