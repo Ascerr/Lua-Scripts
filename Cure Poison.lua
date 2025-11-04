@@ -11,7 +11,7 @@ local config = {
 	cureOnlyIfHighDMG = {					-- use cure spell only when you getting high dmg from poison , 
 		enabled = false, 					-- @enabled - true/false
 		minDmg = 15, 						-- @minDmg - minimal dmg
-		msg = "You lose (.+) hitpoints"		-- @msg - proxy message we catch for hitpoints: (.+) is place where number will be placed in msg to recignize it. You can also use: "You lose (.+) hitpoints due to an attack by a scorpion."
+		msg = "You lose (.+) hitpoints due to an attack by a scorpion." -- @msg - proxy message we catch for hitpoints: (.+) is place where number will be placed in msg to recignize it. You can also use: "You lose (.+) hitpoints"
 	}	
 }
 
