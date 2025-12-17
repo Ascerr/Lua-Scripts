@@ -6,13 +6,18 @@
 
 local CHESTS = {3031, 3492, 3160}                       -- IDs of chest on map area
 local DISABLE_WALKER = true                             -- true/false disale walker when chest found
-
+local CLICK_ONLY_IF_NO_MONSTERS = true                  -- true/false click check only in no monsters in range 5sqm
 
 -- DON'T EDIT BELOW
 
 Module.New("Convert chests to monsters", function ()
     if Self.isConnected() and Self.TargetID() <= 0 then
         local pos = Self.Position()
+        if CLICK_ONLY_IF_NO_MONSTERS then
+            if table.count(Creature.iMonsters(5, false)) > 0 then
+                return
+            end    
+        end    
         for x = -7, 7 do
             for y = -5 , 5 do
                 local map = Map.GetTopMoveItem(pos.x + x, pos.y + y, pos.z)
