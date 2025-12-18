@@ -26,7 +26,7 @@ local waypoints = {										-- wpts list, possible: {stand, node, weak node, us
 
 
 
-local backgroundClick = false 					-- click mouse in background mode (true) or real mouse simulation = lock screen (false)
+local backgroundClick = true 					-- click mouse in background mode (true) or real mouse simulation = lock screen (false)
 local afterKillDelay = 2 						-- seconds to wait after kill monster to continue walking.
 local clickDelay = 1 							-- seconds between mouse click if not walking 
 
@@ -42,6 +42,10 @@ function walk()
 	end	
 	local wpt = waypoints[index]
 	wpt.i = string.lower(wpt.i)
+	if wpt.i == "wait" then
+		wait(wpt.x)
+		return nextWpt()
+	end	
 	local dist = 0
 	if wpt.i == "node" then
 		dist = 1
@@ -129,3 +133,4 @@ Module.New("Record Nodes", function()
 		end
 	end	
 end, false) -- default disabled it's only for record nodes.
+
