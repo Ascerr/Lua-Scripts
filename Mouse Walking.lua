@@ -5,14 +5,14 @@
     Author:             Ascer - example
 ]]
 
-local waypoints = {										-- wpts list, possible: {stand, node, weak node, use} position must be visible on screen to character will able click on ground so every 5 sqms is good idea and not under roof
+local waypoints = {										-- wpts list, possible: {stand, node, weak node, use, wait} position must be visible on screen to character will able click on ground so every 5 sqms is good idea and not under roof
 	{i = "node", x = 32115, y = 32244, z = 8},
 	{i = "node", x = 32114, y = 32240, z = 8},
 	{i = "node", x = 32114, y = 32236, z = 8},
 	{i = "node", x = 32118, y = 32234, z = 8},
 	{i = "node", x = 32122, y = 32234, z = 8},
 	{i = "node", x = 32126, y = 32236, z = 8},
-	{i = "node", x = 32130, y = 32236, z = 8},
+	{i = "wait", x = 1000, y = 32236, z = 8},
 	{i = "node", x = 32134, y = 32235, z = 8},
 	{i = "stand", x = 32137, y = 32239, z = 8},
 	{i = "node", x = 32138, y = 32243, z = 8},
@@ -20,7 +20,7 @@ local waypoints = {										-- wpts list, possible: {stand, node, weak node, us
 	{i = "use", x = 32130, y = 32248, z = 8},
 	{i = "node", x = 32126, y = 32249, z = 8},
 	{i = "node", x = 32122, y = 32249, z = 8},
-	{i = "node", x = 32118, y = 32248, z = 8},
+	{i = "weak node", x = 32118, y = 32248, z = 8},
 	{i = "node", x = 32114, y = 32245, z = 8}
 }
 
@@ -133,4 +133,5 @@ Module.New("Record Nodes", function()
 		end
 	end	
 end, false) -- default disabled it's only for record nodes.
+
 
