@@ -5,7 +5,7 @@
     Author:             Ascer - example
 ]]
 
-local waypoints = {										-- wpts list, possible: stand, node, weak node. position must be visible on screen to character will able click on ground so every 5 sqms is good idea
+local waypoints = {										-- wpts list, possible: {stand, node, weak node, use} position must be visible on screen to character will able click on ground so every 5 sqms is good idea
 	{i = "node", x = 32115, y = 32244, z = 8},
 	{i = "node", x = 32114, y = 32240, z = 8},
 	{i = "node", x = 32114, y = 32236, z = 8},
@@ -43,7 +43,7 @@ function walk()
 	local wpt = waypoints[index]
 	wpt.i = string.lower(wpt.i)
 	local dist = 0
-	if wpt.i == "node" then
+	if wpt.i == "node" or wpt.i == "use" then
 		dist = 1
 	elseif wpt.i == "weak node" then
 		dist = 2	
@@ -69,7 +69,9 @@ function walk()
 				if backgroundClick then
 					pixels.y = pixels.y + 20
 				end	
-				Rifbot.MouseClick(pixels.x, pixels.y, 0, backgroundClick)
+				local side = 0
+				if wpt.i == "use" then side = 1 end	
+				Rifbot.MouseClick(pixels.x, pixels.y, side, backgroundClick)
 				forceClick = false
 				clickTime = os.clock()
 			end
