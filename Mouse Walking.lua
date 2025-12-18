@@ -5,7 +5,7 @@
     Author:             Ascer - example
 ]]
 
-local waypoints = {										-- wpts list, possible: {stand, node, weak node, use} position must be visible on screen to character will able click on ground so every 5 sqms is good idea
+local waypoints = {										-- wpts list, possible: {stand, node, weak node, use} position must be visible on screen to character will able click on ground so every 5 sqms is good idea and not under roof
 	{i = "node", x = 32115, y = 32244, z = 8},
 	{i = "node", x = 32114, y = 32240, z = 8},
 	{i = "node", x = 32114, y = 32236, z = 8},
@@ -14,10 +14,10 @@ local waypoints = {										-- wpts list, possible: {stand, node, weak node, us
 	{i = "node", x = 32126, y = 32236, z = 8},
 	{i = "node", x = 32130, y = 32236, z = 8},
 	{i = "node", x = 32134, y = 32235, z = 8},
-	{i = "node", x = 32137, y = 32239, z = 8},
+	{i = "stand", x = 32137, y = 32239, z = 8},
 	{i = "node", x = 32138, y = 32243, z = 8},
 	{i = "node", x = 32134, y = 32246, z = 8},
-	{i = "node", x = 32130, y = 32248, z = 8},
+	{i = "use", x = 32130, y = 32248, z = 8},
 	{i = "node", x = 32126, y = 32249, z = 8},
 	{i = "node", x = 32122, y = 32249, z = 8},
 	{i = "node", x = 32118, y = 32248, z = 8},
@@ -26,7 +26,7 @@ local waypoints = {										-- wpts list, possible: {stand, node, weak node, us
 
 
 
-local backgroundClick = true 					-- click mouse in background mode (true) or real mouse simulation = lock screen (false)
+local backgroundClick = false 					-- click mouse in background mode (true) or real mouse simulation = lock screen (false)
 local afterKillDelay = 2 						-- seconds to wait after kill monster to continue walking.
 local clickDelay = 1 							-- seconds between mouse click if not walking 
 
@@ -43,23 +43,26 @@ function walk()
 	local wpt = waypoints[index]
 	wpt.i = string.lower(wpt.i)
 	local dist = 0
-	if wpt.i == "node" or wpt.i == "use" then
+	if wpt.i == "node" then
 		dist = 1
 	elseif wpt.i == "weak node" then
 		dist = 2	
 	end	
-	if Self.DistanceFromPosition(wpt.x, wpt.y, wpt.z) <= dist then 
-		--print("ignore due reached")
-		forceClick = true
-		index = index + 1
-		return
-	end	
 	local me = Self.Position()
+	if wpt.i == "use" then
+		if math.abs(wpt.z - me.z) > 0 then
+			--print("ignore due different floor")
+			return nextWpt()
+		end	
+	else	
+		if Self.DistanceFromPosition(wpt.x, wpt.y, wpt.z) <= dist then 
+			--print("ignore due reached")
+			return nextWpt()
+		end	
+	end	
 	if (math.abs(wpt.x - me.x) > 7 or math.abs(wpt.y - me.y) > 5 or math.abs(wpt.z - me.z) > 0) then
 		--print("ignore wpt due out of sceen.")
-		forceClick = true
-		index = index + 1
-		return
+		return nextWpt()
 	end
 	local pixels = Rifbot.GetMousePosFromGround(wpt.x, wpt.y)
 	if table.count(pixels) > 0 and (not Self.isWalking() or forceClick) then
@@ -77,11 +80,16 @@ function walk()
 			end
 		else		
 			--print("ignore wpt due out of sceen 2.")
-			index = index + 1
+			nextWpt()
 			return
 		end
 	end		
 end	
+
+function nextWpt()
+	forceClick = true
+	index = index + 1
+end --> actions related to switch next wpt
 
 function fileAppend(path, data)
 	file = io.open(path, 'a')
