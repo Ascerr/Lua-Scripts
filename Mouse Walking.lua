@@ -32,7 +32,7 @@ local clickDelay = 1 							-- seconds between mouse click if not walking
 
 -- EDIT BELOW ONLY IF YOU KNOW WHAT YOU DOING.
 
-local index, clickTime, targetTime, lastPos, allWpt, showAllWptTime, forceClick = 1, 0, 0, {x = 0, y = 0, z =0}, "", 0, false
+local index, clickTime, targetTime, lastPos, allWpt, showAllWptTime, forceClick, recordMod = 1, 0, 0, {x = 0, y = 0, z =0}, "", 0, false, 0
 local logsPath = string.sub(FRIENDS_PATH, 1, -12) .. "wpt.txt"
 
 
@@ -101,9 +101,11 @@ function fileAppend(path, data)
 	return file:close()
 end --> append new data at the end of file
 
-
 -- Loop module
 Module.New("Mouse Walking", function()
+	if table.count(recordMod) > 0 then
+		if recordMod:IsActive() then return false end				-- DON'T ALLOW mouse walking if recording nodes. 
+	end	
 	if Self.isConnected() then
 		if Self.TargetID() <= 0 then -- walk only if no target
 			if os.clock() - targetTime >= afterKillDelay then
@@ -111,12 +113,12 @@ Module.New("Mouse Walking", function()
 			end	
 		else	
 			targetTime = os.clock()
-		end	
+		end			
 	end	
 end)
 
-
-Module.New("Record Nodes", function()
+-- register record nodes module default disabled.
+recordMod = Module.New("Record Nodes", function()
 	if Self.isConnected() then
 		if lastPos.x == 0 then 
 			local startData = "[" .. os.date("%X") .. "] Recording nodes..\n"
@@ -133,5 +135,6 @@ Module.New("Record Nodes", function()
 		end
 	end	
 end, false) -- default disabled it's only for record nodes.
+
 
 
