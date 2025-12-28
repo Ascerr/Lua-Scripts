@@ -1,3 +1,9 @@
+--[[
+    Script Name:        Pickup Spears (old map)
+    Description:        Pickup spears based on classic tibia old map both with rifbot old version
+    Author:             Ascer - example
+]]
+
 
 local SPEARS = {3277}     			-- Spears ids to pickup
 local DELAY = {500, 1000}			-- delay for pickup object
@@ -24,7 +30,7 @@ function targetDied()
 end	--> check if last target died (exisits or not)
 
 
-Module.New("Pickup Spears", function (mod)
+Module.New("Pickup Spears (old map)", function (mod)
 	if Self.isConnected() then
 		rememberTarget() -- remember last target
 		local var = (not PICKUP_AFTER_KILL) or (PICKUP_AFTER_KILL and (targetDied() or (not table.find(SPEARS, Self.Weapon().id) and not table.find(SPEARS, Self.Shield().id)) ))
