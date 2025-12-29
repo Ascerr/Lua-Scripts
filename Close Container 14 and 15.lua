@@ -1,6 +1,6 @@
 --[[
     Script Name:        Close Container 14 and 15
-    Description:        Max contaier opened limit for most of tibia server is 16 (index 0-15) so you will expect bugs in this case script will close selected containers indexs if they opened more than 5s (enough to pickup loot)
+    Description:        Max opened containers limit for most of tibia server is 16 (index 0-15) so you will expect bugs in this case script will close selected containers indexs if they opened more than 5s (enough to pickup loot)
     Author:             Ascer - example
 ]]
 
