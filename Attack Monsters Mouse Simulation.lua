@@ -1,6 +1,6 @@
 --[[
     Script Name: 		Attack Monsters Mouse Simulation
-    Description: 		Attack cosest monsters using mouse simulation
+    Description: 		Attack closest monsters using mouse simulation
     Author: 			Ascer - example
 ]]
 
@@ -36,4 +36,5 @@ Module.New("Attack Monsters Mouse Simulation", function()
 			end
 		end	
 	end	
+
 end)
