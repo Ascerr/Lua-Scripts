@@ -13,7 +13,7 @@ local weapon = Self.Weapon()
 local cap = Self.Capity()
 
 if weapon.id == 0 or weapon.id == SPEAR_ID then
-	local map = Map.getArea(RANGE) -- load map with 1 sqm range
+	local map = Map.getArea(1) -- load map with 1 sqm range
 	for i, square in pairs(map) do
 		local sqareItems = square.items
 		for j, item in pairs(sqareItems) do
@@ -29,4 +29,5 @@ if weapon.id == 0 or weapon.id == SPEAR_ID then
 			end
 		end			
 	end
+
 end	
