@@ -23,7 +23,7 @@ if weapon.id == 0 or weapon.id == SPEAR_ID then
 					amount = math.floor(cap / 20)
 				end		
 				if amount > 0 then
-					Self.EquipItemFromGround(SLOT_WEAPON, square.x, square.y, square.z, item.id, item.count, 150)
+					Self.EquipItemFromGround(SLOT_WEAPON, square.x, square.y, square.z, item.id, item.count, 50)
 			    	break
 			    end	
 			end
@@ -31,3 +31,4 @@ if weapon.id == 0 or weapon.id == SPEAR_ID then
 	end
 
 end	
+
