@@ -4,6 +4,10 @@
     Author: 			Ascer - example
 ]]
 
+local USE_MOUSE_TO_OPEN = true
+
+
+-- DON'T EDIT BELOW
 
 
 local lastT = -1
@@ -16,7 +20,11 @@ function test()
 			if table.count(lastT) > 0 then
 				if lastT.id ~= c.id then
 					wait(1000)
-					Map.UseItem(lastT.x, lastT.y, lastT.z, getPseudoTop(lastT.x, lastT.y, lastT.z), 0, 0)
+					if USE_MOUSE_TO_OPEN then 
+						MouseOpenCorpse(lastT.x, lastT.y)
+					else	
+						Map.UseItem(lastT.x, lastT.y, lastT.z, getPseudoTop(lastT.x, lastT.y, lastT.z), 0, 0)
+					end	
 					lastT = -1
 				end
 			end		
@@ -25,7 +33,11 @@ function test()
 	else		
 		if table.count(lastT) > 0 then
 			wait(1000)
-			Map.UseItem(lastT.x, lastT.y, lastT.z, getPseudoTop(lastT.x, lastT.y, lastT.z), 0, 0)
+			if USE_MOUSE_TO_OPEN then 
+				MouseOpenCorpse(lastT.x, lastT.y)
+			else
+				Map.UseItem(lastT.x, lastT.y, lastT.z, getPseudoTop(lastT.x, lastT.y, lastT.z), 0, 0)
+			end	
 			lastT = -1
 		end	
 	end	
@@ -44,6 +56,11 @@ function getPseudoTop(x, y, z)
 		end			
 	end
 end	
+
+function MouseOpenCorpse(x, y)
+	local pos = Rifbot.GetMousePosFromGround(x, y)
+	Rifbot.MouseClick(pos.x, pos.y+20, 1)
+end	--> open cropse using right click
 
 
 Module.New("Pseudo looter (old map)", function()
