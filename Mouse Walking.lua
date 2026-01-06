@@ -183,7 +183,7 @@ Module.New("Mouse Walking", function()
 end)
 
 Module.New("Walker Stuck", function()
-	if Self.isConnected() and walkerStuck.enabled then
+	if Self.isConnected() and walkerStuck.enabled and not recordNodes then
 		local me = Self.Position()
 		if me.x == lastMyPos.x and me.y == lastMyPos.y and me.z == lastMyPos.z then 
 			if os.clock() - lastMyPosTime >= walkerStuck.time then
@@ -208,7 +208,9 @@ recordMod = Module.New("Record Nodes", function()
 			local startData = "[" .. os.date("%X") .. "] Recording nodes..\n"
 			fileAppend(logsPath, startData) 
 			print(startData)
+			wait(1000)
 			print("Waypoints are stored at location: " .. logsPath) 
+			wait(2000)
 		end
 		if Self.DistanceFromPosition(lastPos.x, lastPos.y, lastPos.z) >= 4 then -- record every 4 sqm to be able click on map
 			local me = Self.Position()
@@ -219,4 +221,5 @@ recordMod = Module.New("Record Nodes", function()
 		end
 	end	
 end, recordNodes) -- default disabled it's only for record nodes.
+
 
