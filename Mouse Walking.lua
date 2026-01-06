@@ -115,9 +115,10 @@ function walk()
 		if pixels.x > 0 then
 			if os.clock() - clickTime > clickDelay then
 				if wpt.i == "usewith" then
-					Self.UseItemWithGround(wpt.id, wpt.x, wpt.y, wpt.z, 1000) -- delay 1s
-					
-					return nextWpt()
+					Self.UseItemWithGround(wpt.id, wpt.x, wpt.y, wpt.z, 0) -- force use without delay
+					nextWpt()
+					wait(1000) --> waits some time
+					return 
 				else	
 					--print("click", pixels.x, pixels.y)
 					if backgroundClick then
@@ -218,3 +219,4 @@ recordMod = Module.New("Record Nodes", function()
 		end
 	end	
 end, recordNodes) -- default disabled it's only for record nodes.
+
