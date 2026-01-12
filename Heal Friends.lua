@@ -10,7 +10,7 @@ local HEAL_PARTY = true						-- heal party members true/false
 local FRIENDS = {"friend1", "friend2"} 		-- list of friends
 local HEALTH_PERCENT = 60					-- heal below 60% hp.
 local HEAL_WITH_UHS = true					-- heal with uh rune
-local HEAL_WITH_SIO = true					-- heal with exura sio, when HEAL_WITH_UHS = true and uhs not found use sio.
+local HEAL_WITH_SIO = {enabled = true, spell = "exura sio"}	-- heal with exura sio, @enabled - true/false, @spell - name. when HEAL_WITH_UHS = true and uhs not found use sio.
 local SELF_SAFE_HPPERC = 50					-- don't heal friends when you hpperc is below.
 
 -- DON'T EDIT BELOW THIS LINE
@@ -25,14 +25,14 @@ Module.New("Heal Friends", function (mod)
 				if HEAL_WITH_UHS then
 					local item = Container.FindItem(UHID)
 					if not item then
-						if HEAL_WITH_SIO then
-							Self.CastSpell("exura sio \"" .. player.name, 60) -- cast exura sio when no uhs found.
+						if HEAL_WITH_SIO.enabled then
+							Self.CastSpell(HEAL_WITH_SIO.spell .. " \"" .. player.name, 60) -- cast exura sio when no uhs found.
 						end
 					else
 						Container.UseItemWithCreature(item.index, item.slot, item.id, player, math.random(1500, 2200)) -- use uh
 					end
-				elseif HEAL_WITH_SIO then
-					Self.CastSpell("exura sio \"" .. player.name, 60) -- cast exura sio when no uhs found.
+				elseif HEAL_WITH_SIO.enabled then
+					Self.CastSpell(HEAL_WITH_SIO.spell .. " \"" .. player.name, 60) -- cast exura sio when no uhs found.
 				end
 				break -- end loop
 			end
