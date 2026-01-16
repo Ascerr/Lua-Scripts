@@ -1,6 +1,7 @@
 --[[
     Script Name: 		On Antibot test slow down healing
     Description: 		When you will under antibot test {catching keyword from on sever log} then default bot panel will be paused and this lua will heal your character with 1s+ delay.
+    Required:			Don't use other lua scripts for healing because bot will be paused but lua scripts nope.
     Author: 			Ascer - example
 ]]
 
@@ -12,31 +13,34 @@ local KEYWORD = "tested by our anti-bot system"					-- catch for this keyword.
 
 -- DON'T EDIT BELOW THIS LINE
 
-local startTime, startDelay = 0, 0
+local startTime, startDelay, tested = 0, 0, false
 Module.New("On Antibot test slow down healing", function()
 	if Self.isConnected() then
-		if Self.HealthPercent() <= SAFE_HEAL_BELOW then
-			if startTime == 0 then
-				startTime = os.clock()
-				startDelay = math.random(DELAY[1], DELAY[2])
-			else	
-				if os.clock() - startTime > (startDelay/1000) then
-					if HEAL_TYPE.method == "rune" then
-						Self.UseItemWithMe(tonumber(HEAL_TYPE.object)) --> heal with rune
-					else
-						Self.Say(HEAL_TYPE.object) --> heal with spell
-						wait(1000, 1500)
+		if tested then
+			if Self.HealthPercent() <= SAFE_HEAL_BELOW then
+				if startTime == 0 then
+					startTime = os.clock()
+					startDelay = math.random(DELAY[1], DELAY[2])
+				else	
+					if os.clock() - startTime > (startDelay/1000) then
+						if HEAL_TYPE.method == "rune" then
+							Self.UseItemWithMe(tonumber(HEAL_TYPE.object)) --> heal with rune
+						else
+							Self.Say(HEAL_TYPE.object) --> heal with spell
+							wait(1000, 1500)
+						end	
 					end	
-				end	
+				end
+			else		
+				wait(1500, 2000) -- waits some time to restore back bot from paused state.
+				startTime = 0
+				startDelay = 0
+				tested = false
+				if not Rifbot.isEnabled() then 
+					Rifbot.setEnabled(true) 
+				end 
 			end
-		else		
-			wait(1500, 2000) -- waits some time to restore back bot from paused state.
-			startTime = 0
-			startDelay = 0
-			if not Rifbot.isEnabled() then 
-				Rifbot.setEnabled(true) 
-			end 
-		end	
+		end		
 	end	
 end)
 
@@ -47,6 +51,7 @@ function proxyText(messages)
 			if Rifbot.isEnabled() then 
 				Rifbot.setEnabled(false) 
 			end
+			tested = true
 		end	
 	end 
 end
