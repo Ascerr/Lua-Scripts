@@ -9,6 +9,7 @@ local DETECT = 2                                                    -- detect cr
 local SAFE_LIST = {"Defense Monster", "Friend2"}                    -- Safe list. Names need to by with Capital letter.
 local SPECIAL_LIST = {enabled = false, names = {"Rat", "Snake"}}    -- enabled = true/false if you want check for special names. Use Capital letter.
 local MULTIFLOOR = false                                            -- true/false check creatures on multifloors
+local PAUSE_BOT = false                                            -- true/false pause bot + lua scripts, required enabling manually.
 
 Module.New("Creature Alert", function ()
     
@@ -51,6 +52,13 @@ Module.New("Creature Alert", function ()
 
                     -- play sound for more search in Rifbot Lib.lua -> RIFBOT_SOUNDS = []
                     playSound("Creature Detected.mp3") 
+
+                    -- pause bot
+                    if PAUSE_BOT then 
+
+                        Rifbot.setEnabled(false, true)
+
+                    end    
                     
                     -- break loop
                     break 
