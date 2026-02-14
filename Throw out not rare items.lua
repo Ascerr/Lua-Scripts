@@ -7,9 +7,10 @@
 
 
 local config = {
-	keyword = {"epic", "rare", "legendary", "gold coin", "platinum coin"},			-- catch this keywords, if not found item will be dropped under your character
+	keyword = {"epic", "rare", "legendary"},			-- catch this keywords, if not found item will be dropped under your character
 	container_index = 0,															-- look on items only in this container index 0 = first opened
-	max_look_slots = 3																-- looks only 3 first slots to reduce time for finding items. 
+	max_look_slots = 3,																-- looks only 3 first slots to reduce time for finding items. 
+	move_back_to_container = false													-- if true then common items will be moved back to last container, if false then throw to ground.
 }
 
 -- DON'T EDIT BELOW THIS LINE
@@ -43,10 +44,31 @@ function dropSpecificSlot()
 		if (i-1) == lookIndex then
 			local me = Self.Position()
 			lookIndex = 0
-			return Container.MoveItemToGround(config.container_index, (i-1), me.x, me.y, me.z, item.id, item.count, 0)
+			if config.move_back_to_container then
+				local lastCont = getLastCont()
+				if table.count(lastCont) < 1 or lastCont.index == config.container_index then
+					-- throw on ground
+					return Container.MoveItemToGround(config.container_index, (i-1), me.x, me.y, me.z, item.id, item.count, 0)
+				else	
+					-- move to last opened container
+					Container.MoveItemToContainer(config.container_index, (i-1), lastCont.index, (lastCont.size-1), item.id, item.count, 0)
+				end	
+			else
+				return Container.MoveItemToGround(config.container_index, (i-1), me.x, me.y, me.z, item.id, item.count, 0)
+			end
 		end		
 	end	
 end	--> Drop common item to ground under your character
+
+function getLastCont()
+	for i = 0, 15 do
+		local cont = Container.getInfo(15-i)
+		if table.count(cont) > 1 then 
+			cont["index"] = 15-i
+			return cont
+		end
+	end	
+end	--> Get last opened container
 
 function isKeyword(msg)
 	for i = 1, #config.keyword do
