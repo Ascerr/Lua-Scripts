@@ -8,12 +8,13 @@ local SPELL = "utevo lux"                               -- spell we will cast in
 local EVERY_TIME_SECONDS = 80                           -- every this time in seconds will countinue cast spell
 local ADD_RANDOM = {enabled = false, time = {5, 10}}    -- add random time +5, 10 seconds [true/false]
 local IF_PLAYER_DONT_CAST = false                       -- don't cast if on screen, ignore players from Friends.txt
-local WEAR_BLANK_RUNE = false                           -- wear blank rune before casting spell
-local BLANK_RUNE_ID = 2260                               -- id of blank rune
+local WEAR_BLANK_RUNE = false                            -- wear blank rune before casting spell
+local BLANK_RUNE_ID = 3147                              -- id of blank rune
+local REPEAT_TIMES = 1                                  -- repeat 1-x times when you want create few runes.
 
 -- DONT'T EDIT BELOW THIS LINE
 
-local mainTime, randomTime, friends = 0, 0, Rifbot.FriendsList(true)
+local mainTime, randomTime, friends, tries = 0, 0, Rifbot.FriendsList(true), 0
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -59,16 +60,31 @@ Module.New("Cast Spell On Time", function ()
                 -- cast spell
                 Self.CastSpell(SPELL, 0)
 
-                -- set time casting spell   
-                mainTime = os.time()
+                -- increase tries
+                tries = tries + 1
 
-                -- if we adding extra random time
-                if ADD_RANDOM.enabled then
+                if tries >= REPEAT_TIMES then
 
-                    -- set random time
-                    randomTime = math.random(ADD_RANDOM.time[1], ADD_RANDOM.time[2])
+                    -- reset tries
+                    tries = 0
 
-                end
+                    -- set time casting spell   
+                    mainTime = os.time()
+
+                    -- if we adding extra random time
+                    if ADD_RANDOM.enabled then
+
+                        -- set random time
+                        randomTime = math.random(ADD_RANDOM.time[1], ADD_RANDOM.time[2])
+
+                    end
+
+                else
+                    
+                    -- wait time for next rune
+                    wait(2000, 3000)
+
+                end    
 
             else        
 
