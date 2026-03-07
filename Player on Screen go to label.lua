@@ -7,8 +7,8 @@
 local config = {
 	safeList = {"Friend1", "Friend2"},		-- list of players to ignore
 	label = "safe place",					-- label name we go when player attack us. 
-	secondsAppearOnScreen = 2,				-- minimal amount of seconds player/s stay on screen to play sound.
-	canReadCheckAgainForMins = 10			-- how many minutes to enable re-checking for player attacking when we already go to label.
+	secondsAppearOnScreen = 2,				-- minimal amount of seconds player/s stay on screen.
+	canReadCheckAgainForMins = 10			-- how many minutes to enable re-checking for player when we already go to label.
 
 }	
 
@@ -102,3 +102,4 @@ Module.New("Player on Screen go to label", function ()
 	end
 
 end)
+
