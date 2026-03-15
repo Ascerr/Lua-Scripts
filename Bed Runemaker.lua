@@ -14,7 +14,11 @@ local start = {
     maxIndex = 5            -- max characters indexs to process until switch again to index 0
 }
 
-local bed = {x = 33333, y = 44444, z = 7, id = 1234}    -- x, y, z and id of house bed.
+local BED_ID = {2489}                   -- IDs of clickable beds
+local BED_POS = {                       -- positions of beds in house. 
+    {32343, 32225, 7},
+    {32341, 32225, 7}
+}                      
 
 local spell = "exura"                                   -- spell to cast
 
@@ -27,12 +31,27 @@ local logout = true
 local click = false
 local sleept = 0
 
+function getBed()
+    for _, pos in ipairs(BED_POS) do
+        local map = Map.GetTopMoveItem(pos[1], pos[2], pos[3])
+        if table.find(BED_ID, map.id) then
+            return pos, map.id
+        end 
+    end
+    return -1    
+end    
+
+
 Module.New("Bed Runemaker", function()
     if Self.isConnected() then
         wait(1000)
         Self.Say(spell)
         wait(500)
-        Map.UseItem(bed.x, bed.y, bed.z, bed.id, 1, 0)
+        local bed, idOfSelectedBed = getBed()
+        if bed ~= -1 then  
+            Map.UseItem(bed[1], bed[2], bed[3], idOfSelectedBed, 1, 3000) -- 3s delay between usages.
+            sleepTime = os.clock()
+        end    
         logout = true
         if index == (start.maxIndex - 1) then
             sleept = os.clock()
