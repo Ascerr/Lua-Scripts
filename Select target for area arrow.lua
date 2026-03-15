@@ -12,10 +12,10 @@ local config = {
 
 function creatureDistanceFromCreature(c, c2)
     if type(c) ~= "table" then
-        return 10
+        return 20
     end
     if type(c2) ~= "table" then
-        return 10
+        return 20
     end
     local absx = math.abs(c.x - c2.x)
     local absy = math.abs(c.y - c2.y)
