@@ -23,6 +23,7 @@ local BED_POS = {                             -- positions of beds in house.
 local SPELL = "exura"                                  -- spell to cast
 local MANA = 25                                        -- min mana to cast spell
 local SLEEPTIME = 90.0                                 -- how many minutes we will sleep when all char beeing logged.
+local FOOD = 3725                                      -- ID food to eat, it will eat 7 times.
 
 -- DON'T EDIT BELOW THIS LINE
 
@@ -39,7 +40,14 @@ function getBed()
         end 
     end
     return -1    
-end --> get free bed position and map.id  
+end --> get free bed position and map.id 
+
+function eatFood()
+    for i = 1, 7 do
+        Self.UseItem(FOOD, false, 0)
+        wait(700, 1000)
+    end    
+end --> eat food 7 times
 
 -- module run in loop
 Module.New("Bed Runemaker", function()
@@ -49,6 +57,7 @@ Module.New("Bed Runemaker", function()
             Self.Say(SPELL)
         end    
         wait(500)
+        eatFood()
         local bed, idOfSelectedBed = getBed()
         if bed ~= -1 then  
             Map.UseItem(bed[1], bed[2], bed[3], idOfSelectedBed, 1, 3000) -- 3s delay between usages.
