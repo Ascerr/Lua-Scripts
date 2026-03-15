@@ -34,6 +34,7 @@ function selectTarget(monsters)
         for _, c2 in ipairs(monsters) do
             if creatureDistanceFromCreature(c, c2) <= config.arrowAttackRange then
                 monstersNear = monstersNear + 1
+                Looter.AddCreature(c2)
             end 
         end
         if monstersNear > lastCount then
