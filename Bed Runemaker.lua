@@ -14,15 +14,15 @@ local start = {
     maxIndex = 5            -- max characters indexs to process until switch again to index 0
 }
 
-local BED_ID = {2489}                   -- IDs of clickable beds
-local BED_POS = {                       -- positions of beds in house. 
-    {32343, 32225, 7},
+local BED_ID = {2489}                           -- IDs of clickable beds
+local BED_POS = {                             -- positions of beds in house. 
+    {32372, 32236, 7},
     {32341, 32225, 7}
 }                      
 
-local spell = "exura"                                   -- spell to cast
-
-local sleepTime = 90.0                                  -- how many minutes we will sleep when all char beeing logged.
+local SPELL = "exura"                                  -- spell to cast
+local MANA = 25                                        -- min mana to cast spell
+local SLEEPTIME = 90.0                                 -- how many minutes we will sleep when all char beeing logged.
 
 -- DON'T EDIT BELOW THIS LINE
 
@@ -39,25 +39,26 @@ function getBed()
         end 
     end
     return -1    
-end    
+end --> get free bed position and map.id  
 
-
+-- module run in loop
 Module.New("Bed Runemaker", function()
     if Self.isConnected() then
         wait(1000)
-        Self.Say(spell)
+        if Self.Mana() >= MANA then
+            Self.Say(SPELL)
+        end    
         wait(500)
         local bed, idOfSelectedBed = getBed()
         if bed ~= -1 then  
             Map.UseItem(bed[1], bed[2], bed[3], idOfSelectedBed, 1, 3000) -- 3s delay between usages.
-            sleepTime = os.clock()
         end    
         logout = true
         if index == (start.maxIndex - 1) then
             sleept = os.clock()
         end 
     else
-        if sleept <= 0 or (os.clock() - sleept) >= (sleepTime * 60) then
+        if sleept <= 0 or (os.clock() - sleept) >= (SLEEPTIME * 60) then
             if logout then 
                 index = index + 1
                 if index >= start.maxIndex then 
