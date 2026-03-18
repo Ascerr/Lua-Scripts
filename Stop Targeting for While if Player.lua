@@ -5,7 +5,8 @@
 ]]
 
 local FRIENDS = {"friend1", "friend2"}                      -- ignore this friend list.
-local ENABLE_TARGETING_AFTER_SECONDS = 30                   -- enable targeting after 30 seconds no matter is player still follow you
+local ENABLE_TARGETING_AFTER_SECONDS = 30                   -- enable targeting after 30 seconds no matter if player still follow you
+local STOP_WALKER = false                                   -- true/false stop walker or not
 
 -- DONT'T EDIT BELOW THIS LINE 
 
@@ -44,6 +45,13 @@ Module.New("Stop Targeting for While if Player", function ()
         -- when action not started or still targeting is enabled
         if action == 0 then
 
+            -- stop walker module.
+            if STOP_WALKER then
+                if Walker.isEnabled() then
+                    Walker.Enabled(false)
+                end
+            end        
+
             -- disable targeting and walker when enabled.
             if targeting then 
                 
@@ -63,6 +71,13 @@ Module.New("Stop Targeting for While if Player", function ()
 
     -- when time diff between disable
     if action > 0 and os.clock() - action > ENABLE_TARGETING_AFTER_SECONDS then
+
+        -- starts walker module.
+        if STOP_WALKER then
+            if not Walker.isEnabled() then
+                Walker.Enabled(true)
+            end
+        end  
 
         if not targeting then 
             Targeting.Enabled(true) 
