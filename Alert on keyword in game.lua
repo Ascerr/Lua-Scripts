@@ -4,7 +4,8 @@
     Author:             Ascer - example
 ]]
 
-local KEYWORDS = {"<--- Xonk --->", "other keyword to detect#"}
+local KEYWORDS = {"Uhzudo Roxtonzera","<--- Xonk --->", "other keyword to detect#", "You lose"}     -- keywords to detect
+local PAUSE_BOT = false                                                                             -- true/false pause bot.
 
 -- DON'T EDIT BELOW.
 
@@ -22,6 +23,9 @@ function proxyText(messages)
 		if isKeyword(msg.message) then
 			print("proxyText: " .. msg.message, msg.mode) 
 			Rifbot.PlaySound()
+            if PAUSE_BOT then
+                Rifbot.setEnabled(false, true)
+            end    
 		end	
 		
 	end 
@@ -33,6 +37,9 @@ function proxy(messages)
 		if isKeyword(msg.message) then
 			print("proxy: " .. msg.speaker, msg.message, msg.channel, msg.mode, msg.level)
 			Rifbot.PlaySound()
+            if PAUSE_BOT then
+                Rifbot.setEnabled(false, true)
+            end   
 		end
 		
 	end 
