@@ -6,15 +6,16 @@
 
 local LOOT = {
 
-	{index = 0, items = {3031, 3492, 7138,  3577}}, -- index of container to loot 0 = first open backpack, items = table with items id
-	--{index = 0, items = {3031, 2853, "*"}}				-- here is example how to pickup all items "*" from container CROPSE missing only this ids listed: Character will pickup all items without gold and bag.
+	{index = 0, items = {3031, 3492}}, -- index of container to loot 0 = first open backpack, items = table with items id
+	--{index = 0, items = {2334, 2853, "*"}}				-- here is example how to pickup all items "*" from container CROPSE missing only this ids listed: Character will pickup all items without gold and bag.
 	-- add your next index here
 
 }
 
-local DELAY = {200, 500} -- delay between movements.
+local DELAY = {1200, 1500}              -- delay between movements.
 local CROPSE = {"The", "Demonic", "Dead", "Slain", "Dissolved", "Remains", "Elemental", "Split"} -- names of dead cropses, add your if list no contains enough, top pickup from bag add it to list: "Bag"
-local OPEN_NEXT_CONT_IF_FULL = true	-- when container you pickup loot is full open next as this same index.
+local OPEN_NEXT_CONT_IF_FULL = true	    -- when container you pickup loot is full open next as this same index.
+local RIGHT_CLICK_COLLECT_ITEMS = false  -- on some servers you can right click to collect items.
 
 -- DONT'T EDIT BELOW THIS LINE
 
@@ -120,6 +121,14 @@ function sortItems()
 								toSlot = destCont.size
 
 							end
+
+                            -- if collecting with right click
+                            if RIGHT_CLICK_COLLECT_ITEMS then
+
+                                -- use item in container
+                                return Container.UseItem(cont.index, (j-1), item.id, false, 0)
+
+                            end
 
 							-- move item to destination container.
 							return Container.MoveItemToContainer(cont.index, (j-1), lootCont.index, (toSlot -1), item.id, item.count, 0)
