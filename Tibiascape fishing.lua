@@ -14,6 +14,7 @@ local FISHING_POS = {                           -- where to fish, spots: x, y, z
     {x = 32374, y = 32178, z = 7},
 }
 
+local MIN_CAP = 10                              -- stop fishing when cap below.
 
 -- DON'T EDIT BELOW THIS LINA
 
@@ -22,6 +23,7 @@ local selectedSpot, fishingStatus, fishingTime, fishingDelay = -1, 0, 0, 0
 Module.New("Tibiascape fishing", function()
     if Self.isConnected() then
         if selectedSpot == -1 then
+            if Self.Cap() <= MIN_CAP then return end
             selectedSpot = FISHING_POS[math.random(1, #FISHING_POS)]
         else    
             if fishingStatus == 0 then
