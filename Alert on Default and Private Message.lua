@@ -1,4 +1,4 @@
---[[
+=--[[
     Script Name:        Alert on Default and Private Message
     Description:        Play sound if someone send message on default or private. Safe list = Friends.txt
     Author:             Ascer - example
@@ -6,6 +6,7 @@
 
 
 local IGNORE_MESSAGES = {enabled = false, keywords = {"exura", "exura gran", "utevo lux"}} -- ignore common messages lower case use only
+local STOP_BOT = false  -- true/false pause bot.
 
 -- DON'T EDIT BELOW THIS LINE
 
@@ -20,6 +21,9 @@ function proxy(messages)
 		if not table.find(list, string.lower(msg.speaker)) and msg.mode <= 5 and msg.channel <= 5 then
 			if not IGNORE_MESSAGES.enabled or (IGNORE_MESSAGES.enabled and not table.find(IGNORE_MESSAGES.keywords, string.lower(msg.message))) then
 				Rifbot.PlaySound("Default.mp3")
+                if STOP_BOT then
+                    Rifbot.setEnabled(false, true)
+                end    
 			end	
 		end	
 	end 
