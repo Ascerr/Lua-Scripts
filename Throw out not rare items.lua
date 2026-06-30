@@ -16,6 +16,7 @@ local config = {
 -- DON'T EDIT BELOW THIS LINE
 
 local lookIndex, lastItemsAmount, canCheckProxy = 0, 0, false
+config.keyword = table.lower(config.keyword)
 
 function lookContainerItems()
 	local items = Container.getItems(config.container_index)
@@ -72,7 +73,7 @@ end	--> Get last opened container
 
 function isKeyword(msg)
 	for i = 1, #config.keyword do
-		if string.find(msg, config.keyword[i]) then
+		if string.find(string.lower(msg), config.keyword[i]) then
 			return true
 		end	
 	end 
