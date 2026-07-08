@@ -6,14 +6,22 @@
 ]]
 
 local MANA_PERCENT = {min = 50, max = 90}  -- Pause walker when mana percent below min - 50%, refill up to max - 90% then enable walker.
-
+local IF_NO_CREATURES = false              -- pause only if no creatures on screen
 
 -- DON'T EDIT BELOW THIS LINE
+
+function getCreatures()
+    for _, c in ipairs(Creature.iMonsters(7, false)) do
+        return true
+    end
+    return false    
+end 
+
 
 Module.New("Pause walker for while to refill mana", function()
     if Self.isConnected() then
         local mpperc = Self.ManaPercent()
-        if mpperc <= MANA_PERCENT.min then
+        if mpperc <= MANA_PERCENT.min and (IF_NO_CREATURES and getCreatures() or not IF_NO_CREATURES) then
             if Walker.isEnabled() then Walker.Enabled(false) end
         else
             if mpperc >= MANA_PERCENT.min then
