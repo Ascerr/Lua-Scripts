@@ -9,7 +9,7 @@ local DONT_LOGOUT_WHEN_GM_APPEAR = {enabled = true, keywords = {"GM ", "CM ", "A
 local BELOW = true							-- check for players below you
 local ABOVE = false							-- check for player above you
 local LEVELS = 2							-- search for one floor above or below / limit is 2 / do not check floors below on level 7
-local RELOGIN = {enabled = true, delay = 0.1} -- relogin to game when player detected or lost connection. enabled = true/false, delay = 6 min or immediately when lost connection
+local RELOGIN = {enabled = true, delay = 6} -- relogin to game when player detected or lost connection. enabled = true/false, delay = 6 min or immediately when lost connection
 
 -- DON'T EDIT BELOW THIS LINE
 
