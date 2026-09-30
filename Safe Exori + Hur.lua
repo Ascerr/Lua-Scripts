@@ -7,6 +7,7 @@
 local EXORI = "exori"					-- name of spell to cast
 local MANA = 200						-- min mana need to cast spell
 local FRIENDS = {"Friend1", "Friend2"} 	-- list of friends we can use exori Capital letters like a Character Name
+local MONSTERS = {"Rat", "Snake"}		-- monsters to cast.
 local MONSTERS_AMOUNT_TO_USE = 2		-- min monsters amount to cast spell
 local DONT_CAST_WHEN_PLAYER_DIST = 2	-- don't use spell when player distance from self is equal or below this sqms.
 local SELF_MIN_HPPERC = 50              -- don't cast spell if your character health percent is below this value
@@ -14,7 +15,7 @@ local SELF_MIN_HPPERC = 50              -- don't cast spell if your character he
 -- DON'T EDIT BELOW THIS LINE.
 
 local useSpellTime = 0
-
+MONSTERS = table.lower(MONSTERS)
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 --> Function:		ableToCastExori(friends, monstersAmount, playerRange)
 --> Description: 	Check if character is able to cast exori spell in current situation.
@@ -54,7 +55,7 @@ function ableToCastExori(friends, monstersAmount, playerRange)
             end
 
         -- if creature is monster count amount.   
-        elseif Creature.isMonster(c) then
+        elseif Creature.isMonster(c) and table.find(MONSTERS, string.lower(c.name)) then
 
         	-- if creature distance from self is 1 and hpperc is above 0.
         	if math.abs(c.x - pos.x) <= 1 and math.abs(c.y - pos.y) <= 1 and math.abs(c.z - pos.z) == 0 and c.hpperc > 0 then
@@ -104,14 +105,30 @@ Module.New("Safe Exori + Hur", function ()
 
             else    
 
+            	-- load target
+            	local t = Self.TargetID()
+
                 -- when self target id is > 0
-                if Self.TargetID() > 0 then
+                if t > 0 then
 
-                    -- say spell
-                    Self.CastSpell("exori hur", 40, 2000)
+                	-- load target creature
+                	local tc = Creature.getCreatures(t)
 
-                    -- update time.
-                    --useSpellTime = os.time()
+                	-- if target is valid.
+                	if table.count(tc) > 0 then
+
+                		-- if creature name match
+                		if table.find(MONSTERS, string.lower(tc.name)) then
+
+		                    -- say spell
+		                    Self.CastSpell("exori hur", 40, 2000)
+
+		                    -- update time.
+		                    --useSpellTime = os.time()
+
+		                end    
+
+	                end    
 
                 end 
 
