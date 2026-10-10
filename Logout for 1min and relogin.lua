@@ -1,6 +1,6 @@
 --[[
     Script Name:        Logout for 1min and relogin
-    Description:        Run this script from walker the best way: lua: lua: Rifbot.ExecuteScript("Logout for 1min and relogin")
+    Description:        Run this script from walker the best way: lua: Rifbot.ExecuteScript("Logout for 1min and relogin")
     Author:             Ascer - example
 ]]
 
